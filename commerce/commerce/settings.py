@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'auctions'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'auctions.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -105,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Chicago'
 
 USE_I18N = True
 
@@ -118,3 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR.joinpath('static'))
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(BASE_DIR.joinpath('media'))

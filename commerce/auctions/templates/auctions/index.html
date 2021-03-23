@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% for object in context  %}
+        
+        <ul>
+            <a href="{{ object.get_absolute_url }}  ">{{ object }}</a> 
+            
+        </ul>
+        
+        
+    {% endfor %}
+
+    
+{% endblock %}
+

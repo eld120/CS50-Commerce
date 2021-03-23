@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>{{ object.title }}</h2>
+        
+        <img class="image" src="{{ object.image.url}}"  alt="{{object.title}}">
+    <strong><p>Description: </p> </strong>{{ object.description }}
+    <strong><p>Starting Price</p> </strong>${{object.start_price}}
+    <strong>
+        <p>{{object.auction_length}}</p>
+    </strong>
+    
+    <a href="{% url 'listing_delete' object.slug %}">Delete this listing</a>
+    
+    
+{% endblock %}
