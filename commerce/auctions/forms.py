@@ -7,8 +7,8 @@ from .models import Listing, Bid, Comment
 class ListingCreateForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = [ 'title','image', 'description', 'active', 'start_price']
-   
+        fields = ["title", "image", "description", "active", "start_price"]
+
 
 # class BidForm(ModelForm):
 #     class Meta:

@@ -3,36 +3,41 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+    DetailView,
+)
 from .forms import ListingCreateForm
 from .models import Listing, User
 
 
-
 class IndexView(ListView):
     model = Listing
-    template_name = 'auctions/index.html'
-    context_object_name = 'context'
+    template_name = "auctions/index.html"
+    context_object_name = "context"
 
 
 class ListingDetail(DetailView):
     model = Listing
-    template_name = 'auctions/listing_detail.html'
-    
+    template_name = "auctions/listing_detail.html"
+
 
 class ListingCreate(CreateView):
     model = Listing
-    template_name = 'auctions/listing_create.html'
+    template_name = "auctions/listing_create.html"
     form_class = ListingCreateForm
-    #fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
-    success_url = reverse_lazy('index')
+    # fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
+    success_url = reverse_lazy("index")
 
 
 class ListingDelete(DeleteView):
     model = Listing
     template_name = "auctions/listing_create.html"
     form_class = ListingCreateForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy("index")
 
 
 class ListingUpdate(UpdateView):
@@ -54,9 +59,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(
+                request,
+                "auctions/login.html",
+                {"message": "Invalid username and/or password."},
+            )
     else:
         return render(request, "auctions/login.html")
 
@@ -75,18 +82,20 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(
+                request, "auctions/register.html", {"message": "Passwords must match."}
+            )
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
+            return render(
+                request,
+                "auctions/register.html",
+                {"message": "Username already taken."},
+            )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:

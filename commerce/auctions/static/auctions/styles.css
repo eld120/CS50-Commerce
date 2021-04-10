@@ -1,0 +1,49 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.image {
+  max-width: 550px;
+  max-height: 550px;
+}
+
+.header__navbar {
+  background-color: burlywood;
+}
+.header__navcontainer {
+  padding: 10px;
+  background-color: burlywood;
+}
+
+.main__heading {
+  margin: 0 auto;
+}
+.main__section {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.main__form {
+  display: flex;
+  flex-direction: column;
+  max-width: 50vw;
+  margin: 0 auto;
+}
+.main__submit {
+  max-width: 10rem;
+}
+
+.footer {
+  margin-top: auto;
+  background-color: burlywood;
+}
+.footer__logo {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 200;
+}
+
+/*# sourceMappingURL=styles.css.map */
