@@ -29,7 +29,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=150, null=True)
     description = models.TextField(max_length=500, null=True)
     image = models.ImageField(upload_to="images/", null=True)
-    active = models.BooleanField(default=True, null=True)
+    active = models.BooleanField(default=True, null=False, blank=False)
     start_price = models.FloatField(null=True)
     end_price = models.FloatField(blank=True, null=True)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)

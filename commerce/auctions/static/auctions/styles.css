@@ -6,8 +6,8 @@ body {
 }
 
 .image {
-  max-width: 550px;
-  max-height: 550px;
+  max-width: 350px;
+  margin: 1rem auto;
 }
 
 .header__navbar {
@@ -34,6 +34,45 @@ body {
 }
 .main__submit {
   max-width: 10rem;
+}
+.main__listdetail {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  min-width: 16rem;
+  max-width: 350px;
+  margin: 1rem auto;
+  background-color: burlywood;
+  border-radius: 4px;
+  box-shadow: 2px 2px 8px gray;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 1rem;
+  background-color: blanchedalmond;
+  border-radius: 4px;
+  position: relative;
+}
+
+.wrapper * * {
+  color: black;
+  font-weight: 600;
+}
+
+.wrapper a {
+  z-index: 1;
+}
+
+.wrapper a::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  content: " ";
 }
 
 .footer {
