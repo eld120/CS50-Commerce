@@ -32,11 +32,17 @@ class ListingCreate(CreateView):
     # fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
     success_url = reverse_lazy("index")
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ListingDelete(DeleteView):
     model = Listing
     template_name = "auctions/listing_create.html"
+    #need a listing delete form and relevant deletion "are you sure" content
     form_class = ListingCreateForm
+
     success_url = reverse_lazy("index")
 
 

@@ -1,27 +1,19 @@
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.db.models.fields import DateTimeField, IntegerField, SlugField
+from django.utils import text, timezone
+
 import datetime
+
 
 
 class User(AbstractUser):
     cash = models.IntegerField(default=1000, null=True)
-    my_bids = models.ForeignKey("auctions.Bid", on_delete=models.CASCADE, null=True)
-    my_comments = models.ForeignKey(
-        "auctions.Comment", on_delete=models.CASCADE, null=True
-    )
-
+    
     def __str__(self):
         return self.first_name + self.last_name
-
-
-class Watchlist(models.Model):
-    user = models.ForeignKey("auctions.User", on_delete=models.DO_NOTHING)
-    listing = models.ForeignKey("auctions.Listing", on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 
 
 class Listing(models.Model):
@@ -39,7 +31,7 @@ class Listing(models.Model):
         blank=True,
     )
     owner = models.ForeignKey(
-        "auctions.User", blank=True, null=True, on_delete=models.DO_NOTHING
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
 
     # ends auction, flags winning bid
@@ -56,21 +48,28 @@ class Listing(models.Model):
         return reverse("listing_detail", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
-        self.slug = self.title.replace(" ", "-")
+        self.slug = text.slugify(self.title)
         super(Listing, self).save(*args, **kwargs)
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
+    listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
+
+        
 class Bid(models.Model):
     slug = models.SlugField(null=True)
     bid_amount = models.FloatField(blank=True, null=True)
     date = models.DateTimeField(auto_now=True, null=True)
     current_bid = models.FloatField(blank=True, null=True)
     winning_bid = models.BooleanField(blank=True, null=True)
-    contact_id = models.ForeignKey(
-        "auctions.User", null=True, on_delete=models.DO_NOTHING
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True,  on_delete=models.DO_NOTHING
     )
-    listing_id = models.ForeignKey(
-        "auctions.Listing", null=True, on_delete=models.DO_NOTHING
+    listing = models.ForeignKey(
+        Listing, null=True, on_delete=models.DO_NOTHING
     )
 
     # allows valid bids to be placed
@@ -100,11 +99,11 @@ class Comment(models.Model):
     slug = models.SlugField(null=True)
     text = models.TextField(max_length=500)
     comment_date = models.DateTimeField(auto_now=True, null=True)
-    contact_id = models.ForeignKey(
-        "auctions.User", null=True, on_delete=models.DO_NOTHING
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  null=True, on_delete=models.DO_NOTHING
     )
-    listing_id = models.ForeignKey(
-        "auctions.Listing", null=True, on_delete=models.DO_NOTHING
+    listing = models.ForeignKey(
+        Listing, null=True, on_delete=models.DO_NOTHING
     )
 
     def __str__(self):
