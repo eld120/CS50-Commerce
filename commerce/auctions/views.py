@@ -3,6 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import FormMixin
+from .models import Comment, Bid, Watchlist
 from django.views.generic import (
     ListView,
     CreateView,
@@ -10,8 +12,8 @@ from django.views.generic import (
     UpdateView,
     DetailView,
 )
-from .forms import ListingCreateForm
-from .models import Listing, User
+from .forms import ListingCreateForm, BidForm, CommentForm
+from .models import Listing, User, Comment, Bid
 
 
 class IndexView(ListView):
@@ -20,9 +22,47 @@ class IndexView(ListView):
     context_object_name = "context"
 
 
-class ListingDetail(DetailView):
-    model = Listing
-    template_name = "auctions/listing_detail.html"
+# class ListingDetail(FormMixin, DetailView):
+#     model = Listing
+#     template_name = "auctions/listing_detail.html"
+#     form_class = CommentForm
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["comments"] = Comment.objects.all()
+        
+#         return context
+    
+#     def form_valid(self, form):
+#         return super(ListingDetail, self).form_valid(form)
+
+
+def Listing_detail(request, slug):
+    f_comment = CommentForm(request.POST)
+    f_bid = BidForm(request.POST)
+    comment_db = Comment.objects.filter(listing__)
+    bid_db = Bid.objects.filter(listing=)
+        
+    if request.method == 'POST':
+
+        if f_comment.is_valid():
+            
+
+            return render(request, 'listing_detail', {
+            'comments' : f_comment, 
+            'bids' : f_bid
+        })
+        elif f_bid.is_valid():
+            
+            return render(request, 'listing_detail', {
+            'comments' : f_comment, 
+            'bids' : f_bid
+        })
+    else:
+        return render(request, 'listing_detail', {
+            'comments' : f_comment, 
+            'bids' : f_bid
+        })
 
 
 class ListingCreate(CreateView):

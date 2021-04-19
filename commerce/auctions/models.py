@@ -26,7 +26,7 @@ class Listing(models.Model):
     end_price = models.FloatField(blank=True, null=True)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=datetime.datetime.now() + datetime.timedelta(days=7),
+        default=datetime.datetime.now() + datetime.timedelta(days=7), # not timezone aware? needs testing
         null=True,
         blank=True,
     )
@@ -60,11 +60,11 @@ class Watchlist(models.Model):
 
         
 class Bid(models.Model):
-    slug = models.SlugField(null=True)
-    bid_amount = models.FloatField(blank=True, null=True)
+    
+    bid_amount = models.FloatField(blank=True, null=True, verbose_name='Your Bid')
     date = models.DateTimeField(auto_now=True, null=True)
-    current_bid = models.FloatField(blank=True, null=True)
-    winning_bid = models.BooleanField(blank=True, null=True)
+    current_bid = models.BooleanField(default=False, null=True)
+    winning_bid = models.BooleanField(default=False, null=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,  on_delete=models.DO_NOTHING
     )
@@ -75,9 +75,6 @@ class Bid(models.Model):
     # allows valid bids to be placed
     def valid_bid(self):
         pass
-
-    def display_bids(self, Listing_id):
-        return Bid.objects.get(pk=Listing_id)
 
     def __str__(self):
         return (
@@ -91,12 +88,8 @@ class Bid(models.Model):
         return reverse("Bid", kwargs={"slug": self.slug})
 
 
-class Transaction(models.Model):
-    pass
-
-
 class Comment(models.Model):
-    slug = models.SlugField(null=True)
+    
     text = models.TextField(max_length=500)
     comment_date = models.DateTimeField(auto_now=True, null=True)
     owner = models.ForeignKey(
@@ -109,9 +102,9 @@ class Comment(models.Model):
     def __str__(self):
         return (
             "Contact ID: "
-            + str(self.contact_id)
+            + str(self.owner)
             + "Listing ID: "
-            + str(self.listing_id)
+            + str(self.listing)
             + str(self.comment_date)
         )
 

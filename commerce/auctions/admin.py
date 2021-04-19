@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
-from .models import Listing, User, Bid, Comment
+from .models import Listing, User, Bid, Comment, Watchlist
 
 
 class ListingAdmin(admin.ModelAdmin):
@@ -17,21 +17,27 @@ class ListingAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
-# class UserAdmin(admin.ModelAdmin):
-#     list_display = (
-#         "username",
-#         "first_name",
-#         "email",
-#         "last_name",
-#         "cash",
-#         "my_bids",
-#         "my_comments",
-#     )
 
 
 class BidAdmin(admin.ModelAdmin):
     list_display = ("bid_amount", "date", "current_bid", "contact_id", "listing_id")
 
 
+
+class WatchlistAdmin(admin.ModelAdmin):
+    list_display = ("user", "listing")
+
+
+class BidAdmin(admin.ModelAdmin):
+    list_display = ("bid_amount", "date", "current_bid", "winning_bid", "owner", "listing")
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("text", "comment_date", "owner", "listing")
+
+
 admin.site.register(Listing, ListingAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(Watchlist, WatchlistAdmin)
+admin.site.register(Bid, BidAdmin)
+admin.site.register(Comment, CommentAdmin)

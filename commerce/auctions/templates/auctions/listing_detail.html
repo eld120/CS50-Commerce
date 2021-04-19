@@ -1,17 +1,32 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
+<div class="main__detail">
+  <h2>{{ object.title }}</h2>
 
-{% block body %}
+  <img class="image" src="{{ object.image.url}}" alt="{{object.title}}" />
+  <strong><p>Description:</p> </strong>{{ object.description }}
+  <strong><p>Starting Price</p> </strong>${{object.start_price}}
+  <strong>
+    <p>{{object.auction_length}}</p>
+  </strong>
+  {% comment %} Needs to check if user is owner of listing for deletion
+  priviliges {% endcomment %}
+  <div>
+    {% if user.is_authenticated %} Signed in as
+    <strong>{{ user.username }}</strong>.
+    <a class="delete" href="{% url 'listing_delete' object.slug %}"
+      >Delete this listing</a
+    >
+    {% else %} Not signed in. {%endif%}
+  </div>
+</div>
+<div class="comments">
+  <hr />
+  <h5 class="title">Comments</h5>
+  {% for comment in comments %}
+  <p class="comments__owner">
+    <strong>{{comment.owner}} :</strong> {{ comment.text }}
+  </p>
+  {% endfor %}
+</div>
 
-    <h2>{{ object.title }}</h2>
-        
-        <img class="image" src="{{ object.image.url}}"  alt="{{object.title}}">
-    <strong><p>Description: </p> </strong>{{ object.description }}
-    <strong><p>Starting Price</p> </strong>${{object.start_price}}
-    <strong>
-        <p>{{object.auction_length}}</p>
-    </strong>
-    
-    <a href="{% url 'listing_delete' object.slug %}">Delete this listing</a>
-    
-    
 {% endblock %}

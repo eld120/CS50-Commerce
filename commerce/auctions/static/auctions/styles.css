@@ -46,6 +46,10 @@ body {
   border-radius: 4px;
   box-shadow: 2px 2px 8px gray;
 }
+.main__detail {
+  margin: 0 auto;
+  max-width: 768px;
+}
 
 .wrapper {
   display: flex;
@@ -73,6 +77,18 @@ body {
   bottom: 0;
   top: 0;
   content: " ";
+}
+
+.comments {
+  margin: 0 auto;
+  max-width: 768px;
+}
+.comments__owner > strong {
+  color: rgba(0, 0, 255, 0.555);
+}
+
+.delete {
+  list-style-type: none;
 }
 
 .footer {

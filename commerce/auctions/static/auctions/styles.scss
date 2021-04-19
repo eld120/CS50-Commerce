@@ -47,6 +47,10 @@ body {
     border-radius: 4px;
     box-shadow: 2px 2px 8px gray;
   }
+  &__detail {
+    margin: 0 auto;
+    max-width: 768px;
+  }
 }
 
 .wrapper {
@@ -73,6 +77,17 @@ body {
   bottom: 0;
   top: 0;
   content: " ";
+}
+.comments {
+  margin: 0 auto;
+  max-width: 768px;
+
+  &__owner > strong {
+    color: rgba(0, 0, 255, 0.555);
+  }
+}
+.delete {
+  list-style-type: none;
 }
 .footer {
   margin-top: auto;
