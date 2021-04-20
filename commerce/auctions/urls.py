@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, ListingCreate, ListingDetail, ListingDelete, ListingUpdate, Listing_detail
+from .views import IndexView, ListingCreate, ListingDelete, ListingUpdate, Listing_detail
 from . import views
 
 

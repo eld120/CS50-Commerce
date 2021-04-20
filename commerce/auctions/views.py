@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -13,8 +13,9 @@ from django.views.generic import (
     DetailView,
 )
 from .forms import ListingCreateForm, BidForm, CommentForm
-from .models import Listing, User, Comment, Bid
+from .models import Listing, Comment, Bid
 
+U = get_user_model()
 
 class IndexView(ListView):
     model = Listing
@@ -38,30 +39,40 @@ class IndexView(ListView):
 
 
 def Listing_detail(request, slug):
+    l_detail = Listing.objects.get(slug=slug)
     f_comment = CommentForm(request.POST)
     f_bid = BidForm(request.POST)
-    comment_db = Comment.objects.filter(listing__)
-    bid_db = Bid.objects.filter(listing=)
+
+    comment_db = Comment.objects.filter(listing__id=request.user.id)
+    bid_db = Bid.objects.filter(listing__id=request.user.id)
         
     if request.method == 'POST':
 
         if f_comment.is_valid():
             
 
-            return render(request, 'listing_detail', {
+            return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
-            'bids' : f_bid
+            'listing' : l_detail,
+            'bids' : f_bid,
+            'success' : 'new comment',
+            'comment_db' : comment_db
         })
         elif f_bid.is_valid():
             
-            return render(request, 'listing_detail', {
+            return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
-            'bids' : f_bid
+            'listing' : l_detail,
+            'bids' : f_bid,
+            'success' : 'your bid has been received',
+            'comment_db' : comment_db
         })
     else:
-        return render(request, 'listing_detail', {
+        return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
-            'bids' : f_bid
+            'listing' : l_detail,
+            'bids' : f_bid,
+            'comment_db' : comment_db
         })
 
 

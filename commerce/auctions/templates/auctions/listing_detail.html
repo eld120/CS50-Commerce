@@ -1,30 +1,34 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <div class="main__detail">
-  <h2>{{ object.title }}</h2>
+  <h2>{{ listing.title }}</h2>
 
-  <img class="image" src="{{ object.image.url}}" alt="{{object.title}}" />
-  <strong><p>Description:</p> </strong>{{ object.description }}
-  <strong><p>Starting Price</p> </strong>${{object.start_price}}
+  <img class="image" src="{{ listing.image.url}}" alt="{{listing.title}}" />
+  <strong><p>Description:</p> </strong>{{ listing.description }}
+  <strong><p>Starting Price</p> </strong>${{listing.start_price}}
+  <form action="">{% csrf_token %}{{bids}}</form>
   <strong>
-    <p>{{object.auction_length}}</p>
+    <p>{{listing.auction_length}}</p>
   </strong>
   {% comment %} Needs to check if user is owner of listing for deletion
   priviliges {% endcomment %}
   <div>
     {% if user.is_authenticated %} Signed in as
-    <strong>{{ user.username }}</strong>.
+    <strong>{{ user.username }}</strong>. {% comment %}
     <a class="delete" href="{% url 'listing_delete' object.slug %}"
       >Delete this listing</a
     >
-    {% else %} Not signed in. {%endif%}
+    {% endcomment %} {% else %} Not signed in. {%endif%}
   </div>
 </div>
 <div class="comments">
   <hr />
+
   <h5 class="title">Comments</h5>
-  {% for comment in comments %}
+  <p><strong>{% if success %} {{ success }} {% endif %}</strong></p>
+  <form action="">{% csrf_token %} {{comments}}</form>
+  {% for comm in comment_db %}
   <p class="comments__owner">
-    <strong>{{comment.owner}} :</strong> {{ comment.text }}
+    <strong>{{comm.owner}} :</strong> {{ comm.text }}
   </p>
   {% endfor %}
 </div>
