@@ -1,7 +1,4 @@
-{% extends "auctions/layout.html" %} {% block body %}
-<h2>Active Listings</h2>
-
-{% for object in context %}
+{% extends "auctions/layout.html" %} {% block body %} {% for object in context%}
 <div class="main__wrapper wrapper">
   <img
     class="main__image image"
@@ -10,7 +7,9 @@
   />
   <div class="main__listdetail">
     <h3>
-      <a class="main__link" href="{{ object.get_absolute_url }}  "
+      <a
+        class="main__link"
+        href=" {% url  'auctions:listing_detail' object.slug %}"
         >{{ object.title }}</a
       >
     </h3>

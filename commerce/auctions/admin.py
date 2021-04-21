@@ -20,16 +20,19 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 class BidAdmin(admin.ModelAdmin):
-    list_display = ("bid_amount", "date", "current_bid", "contact_id", "listing_id")
+    list_display = (
+        "bid_current",
+        "bid_max", 
+        "date", 
+        "owner", 
+        "listing"
+        )
 
 
 
 class WatchlistAdmin(admin.ModelAdmin):
     list_display = ("user", "listing")
 
-
-class BidAdmin(admin.ModelAdmin):
-    list_display = ("bid_amount", "date", "current_bid", "winning_bid", "owner", "listing")
 
 
 class CommentAdmin(admin.ModelAdmin):

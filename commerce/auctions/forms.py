@@ -14,7 +14,7 @@ class ListingCreateForm(ModelForm):
 class BidForm(ModelForm):
     class Meta:
         model = Bid
-        fields = ['bid_amount']
+        fields = ['bid_max']
 
 class CommentForm(ModelForm):
     class Meta:

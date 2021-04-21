@@ -40,16 +40,18 @@ class IndexView(ListView):
 
 def Listing_detail(request, slug):
     l_detail = Listing.objects.get(slug=slug)
-    f_comment = CommentForm(request.POST)
-    f_bid = BidForm(request.POST)
+    f_comment = CommentForm()
+    f_bid = BidForm()
 
     comment_db = Comment.objects.filter(listing__id=request.user.id)
     bid_db = Bid.objects.filter(listing__id=request.user.id)
         
     if request.method == 'POST':
-
+        f_comment = CommentForm(request.POST)
+        f_bid = BidForm(request.POST)
         if f_comment.is_valid():
-            
+            #text = f_comment.cleaned_data['text']
+            f_comment.save()
 
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
@@ -59,7 +61,9 @@ def Listing_detail(request, slug):
             'comment_db' : comment_db
         })
         elif f_bid.is_valid():
-            
+            #bid_now = f_bid.cleaned_data['bid_max']
+            f_bid.save()
+
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
             'listing' : l_detail,

@@ -2,6 +2,7 @@ from django.urls import path
 from .views import IndexView, ListingCreate, ListingDelete, ListingUpdate, Listing_detail
 from . import views
 
+app_name = 'auctions'
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),

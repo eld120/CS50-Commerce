@@ -22,8 +22,7 @@ class Listing(models.Model):
     description = models.TextField(max_length=500, null=True)
     image = models.ImageField(upload_to="images/", null=True)
     active = models.BooleanField(default=True, null=False, blank=False)
-    start_price = models.FloatField(null=True)
-    end_price = models.FloatField(blank=True, null=True)
+    start_price = models.FloatField(default=0.99 )
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
         default=datetime.datetime.now() + datetime.timedelta(days=7), # not timezone aware? needs testing
@@ -60,11 +59,10 @@ class Watchlist(models.Model):
 
         
 class Bid(models.Model):
-    
-    bid_amount = models.FloatField(blank=True, null=True, verbose_name='Your Bid')
+    bid_current= models.FloatField(default=0.00)
+    bid_max = models.FloatField(default=0.00, verbose_name='Place Bid')
     date = models.DateTimeField(auto_now=True, null=True)
-    current_bid = models.BooleanField(default=False, null=True)
-    winning_bid = models.BooleanField(default=False, null=True)
+    winning_bid = models.BooleanField(default=False)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,  on_delete=models.DO_NOTHING
     )
@@ -90,7 +88,7 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     
-    text = models.TextField(max_length=500)
+    text = models.TextField(max_length=500, verbose_name='Comments')
     comment_date = models.DateTimeField(auto_now=True, null=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,  null=True, on_delete=models.DO_NOTHING

@@ -1,20 +1,31 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <div class="main__detail">
-  <h2>{{ listing.title }}</h2>
+  {% load crispy_forms_tags %}
 
   <img class="image" src="{{ listing.image.url}}" alt="{{listing.title}}" />
-  <strong><p>Description:</p> </strong>{{ listing.description }}
-  <strong><p>Starting Price</p> </strong>${{listing.start_price}}
-  <form action="">{% csrf_token %}{{bids}}</form>
-  <strong>
-    <p>{{listing.auction_length}}</p>
-  </strong>
+  <div class="main__detail-wrapper">
+    <h2>{{ listing.title }}</h2>
+    <strong><p>Description:</p> </strong>{{ listing.description }}
+    <strong><p>Starting Price</p> </strong>${{listing.start_price}}
+    <form
+      action="{% url 'auctions:listing_detail' listing.slug %}"
+      method="POST"
+    >
+      {% csrf_token %}{{bids | crispy}}
+      <button type="submit">Place Bid</button>
+    </form>
+
+    <strong>
+      <p>End date:</p>
+    </strong>
+    <p>{{listing.auction_end}}</p>
+  </div>
+
   {% comment %} Needs to check if user is owner of listing for deletion
   priviliges {% endcomment %}
   <div>
-    {% if user.is_authenticated %} Signed in as
-    <strong>{{ user.username }}</strong>. {% comment %}
-    <a class="delete" href="{% url 'listing_delete' object.slug %}"
+    {% if user.is_authenticated %} {% comment %}
+    <a class="delete" href="{% url 'auctions:listing_delete' listing.slug %}"
       >Delete this listing</a
     >
     {% endcomment %} {% else %} Not signed in. {%endif%}
@@ -23,9 +34,13 @@
 <div class="comments">
   <hr />
 
-  <h5 class="title">Comments</h5>
+  <!-- <h5 class="title">Comments</h5> -->
   <p><strong>{% if success %} {{ success }} {% endif %}</strong></p>
-  <form action="">{% csrf_token %} {{comments}}</form>
+  <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
+    {% csrf_token %} {{comments | crispy}}
+    <button type="submit">Send</button>
+  </form>
+
   {% for comm in comment_db %}
   <p class="comments__owner">
     <strong>{{comm.owner}} :</strong> {{ comm.text }}
