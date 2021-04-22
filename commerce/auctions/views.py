@@ -50,10 +50,11 @@ def Listing_detail(request, slug):
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
         if f_comment.is_valid():
-            f_comment.save
-            f_comment.cleaned_data['owner'] = request.user.id
-            f_comment.save()
-            print(f_comment.cleaned_data)
+            new_form = f_comment.save(commit=False)
+            new_form.owner = request.user
+            new_form.listing_id = l_detail.id
+            new_form.save()
+            print(l_detail.id)
 
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
