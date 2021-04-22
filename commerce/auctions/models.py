@@ -64,7 +64,7 @@ class Bid(models.Model):
     date = models.DateTimeField(auto_now=True, null=True)
     winning_bid = models.BooleanField(default=False)
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True,  on_delete=models.DO_NOTHING
+        settings.AUTH_USER_MODEL,  null=True,  on_delete=models.DO_NOTHING
     )
     listing = models.ForeignKey(
         Listing, null=True, on_delete=models.DO_NOTHING
@@ -96,6 +96,10 @@ class Comment(models.Model):
     listing = models.ForeignKey(
         Listing, null=True, on_delete=models.DO_NOTHING
     )
+
+    #def save(self, *args, **kwargs):
+        
+
 
     def __str__(self):
         return (

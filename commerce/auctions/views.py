@@ -50,8 +50,10 @@ def Listing_detail(request, slug):
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
         if f_comment.is_valid():
-            #text = f_comment.cleaned_data['text']
+            f_comment.save
+            f_comment.cleaned_data['owner'] = request.user.id
             f_comment.save()
+            print(f_comment.cleaned_data)
 
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
@@ -61,7 +63,7 @@ def Listing_detail(request, slug):
             'comment_db' : comment_db
         })
         elif f_bid.is_valid():
-            #bid_now = f_bid.cleaned_data['bid_max']
+            
             f_bid.save()
 
             return render(request, 'auctions/listing_detail.html', {
