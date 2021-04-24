@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %} 
+{% block body %} 
+<h2>Your Watchlist</h2>
+    <div class="main__index">
+        {% for obj in listing%}
+            
+            <div class="main__wrapper wrapper">
+                <img class="main__image image" src="{{ obj.image.url  }}" alt="{{ obj.title }}"/>
+                <div class="main__listdetail">
+                    <h3>
+                        <a class="main__link" href="">{{obj.title}}</a>
+                        {{obj.user}}
+                    {{obj.listing.title}}
+                    </h3>
+                    
+                    <span>Starting Bid: </span>${{ obj.start_price }}
+                </div>
+            </div>
+            {% endfor %} 
+    </div>
+{% endblock %}

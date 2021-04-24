@@ -53,7 +53,7 @@ class Listing(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
-
+    active = models.BooleanField( verbose_name='Watchlist')
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 

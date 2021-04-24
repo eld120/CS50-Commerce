@@ -1,20 +1,16 @@
-{% extends "auctions/layout.html" %} {% block body %} {% for object in context%}
-<div class="main__wrapper wrapper">
-  <img
-    class="main__image image"
-    src="{{ object.image.url  }}"
-    alt="{{ object.title }}"
-  />
-  <div class="main__listdetail">
-    <h3>
-      <a
-        class="main__link"
-        href=" {% url  'auctions:listing_detail' object.slug %}"
-        >{{ object.title }}</a
-      >
-    </h3>
+{% extends "auctions/layout.html" %} {% block body %} 
+  <div class="main__index">
+    {% for obj in context%}
+      <div class="main__wrapper wrapper">
+        <img class="main__image image" src="{{ obj.image.url  }}" alt="{{ obj.title }}"/>
+        <div class="main__listdetail">
+          <h3>
+            <a class="main__link" href=" {% url 'auctions:listing_detail' obj.slug %}">{{ obj.title }}</a>
+          </h3>
 
-    <span>Starting Bid: </span>${{ object.start_price }}
+          <span>Starting Bid: </span>${{ obj.start_price }}
+        </div>
+      </div>
+    {% endfor %} 
   </div>
-</div>
-{% endfor %} {% endblock %}
+{% endblock %}

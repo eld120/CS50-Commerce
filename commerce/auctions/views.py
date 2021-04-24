@@ -1,9 +1,8 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import FormMixin
 from .models import Comment, Bid, Watchlist
 from django.views.generic import (
     ListView,
@@ -12,8 +11,8 @@ from django.views.generic import (
     UpdateView,
     DetailView,
 )
-from .forms import ListingCreateForm, BidForm, CommentForm
-from .models import Listing, Comment, Bid
+from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm
+from .models import Listing, Comment, Bid, User
 
 U = get_user_model()
 
@@ -23,41 +22,57 @@ class IndexView(ListView):
     context_object_name = "context"
 
 
-# class ListingDetail(FormMixin, DetailView):
-#     model = Listing
-#     template_name = "auctions/listing_detail.html"
-#     form_class = CommentForm
+def watchlistview(request):
+    l_watch = Watchlist.objects.filter(user_id=request.user)
+    l_listing = Listing.objects.all()
+    user_lists = []
+    watch_lists = []
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["comments"] = Comment.objects.all()
-        
-#         return context
+    for obj in l_watch:
+        if obj.user_id == request.user.id:
+            user_lists.append(obj)
+
+    for obj in l_listing:
+        print(obj.title)
+        if obj.title in user_lists:
+            
+            watch_lists.append(obj)
+    print(watch_lists)
+    print(user_lists)
+    context = {
+       'listing': watch_lists
+
+    }
+    return render(request, 'auctions/watchlist.html', context)
     
-#     def form_valid(self, form):
-#         return super(ListingDetail, self).form_valid(form)
-
 
 def Listing_detail(request, slug):
+    #the specific listing requested
     l_detail = Listing.objects.get(slug=slug)
+    #the watchlist queryset associated with the logged in user
+    watchlst = Watchlist.objects.filter(user_id = request.user.id)
     f_comment = CommentForm()
     f_bid = BidForm()
-
-    comment_db = Comment.objects.filter(listing__id=request.user.id)
+    f_watch = WatchlistForm()
+    
+    
+    comment_db = Comment.objects.filter(listing__id=l_detail.id)
     bid_db = Bid.objects.filter(listing__id=request.user.id)
         
     if request.method == 'POST':
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
+        f_watch = WatchlistForm(request.POST)
         if f_comment.is_valid():
             new_form = f_comment.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = l_detail.id
             new_form.save()
-            print(l_detail.id)
+            
 
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
+            'watchlist': f_watch,
             'listing' : l_detail,
             'bids' : f_bid,
             'success' : 'new comment',
@@ -65,18 +80,41 @@ def Listing_detail(request, slug):
         })
         elif f_bid.is_valid():
             
+            new_bid = f_bid.save(commit=False)
+            new_bid.listing_id = l_detail.id
+            new_bid.owner_id = request.user.id
             f_bid.save()
 
             return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
+            'watchlist': f_watch,
             'listing' : l_detail,
             'bids' : f_bid,
             'success' : 'your bid has been received',
             'comment_db' : comment_db
         })
+        elif f_watch.is_valid():
+            new_watch = f_watch.save(commit=False)
+            
+            new_watch.user = request.user
+            new_watch.listing = l_detail
+            new_watch.save()
+            
+            
+
+
+            return render(request, 'auctions/listing_detail.html', {
+            'comments' : f_comment, 
+            'watchlist': f_watch,
+            'listing' : l_detail,
+            'bids' : f_bid,
+            'success' : 'your bid has been received',
+            'comment_db' : comment_db
+            })
     else:
         return render(request, 'auctions/listing_detail.html', {
             'comments' : f_comment, 
+            'watchlist': f_watch,
             'listing' : l_detail,
             'bids' : f_bid,
             'comment_db' : comment_db
