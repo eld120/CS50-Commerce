@@ -23,6 +23,7 @@ class IndexView(ListView):
 
 
 def watchlistview(request):
+    
     l_watch = Watchlist.objects.filter(user_id=request.user)
     l_listing = Listing.objects.all()
     user_lists = []
@@ -30,20 +31,17 @@ def watchlistview(request):
 
     for obj in l_watch:
         if obj.user_id == request.user.id:
-            user_lists.append(obj)
-
-    for obj in l_listing:
-        print(obj.title)
-        if obj.title in user_lists:
-            
             watch_lists.append(obj)
-    print(watch_lists)
-    print(user_lists)
-    context = {
-       'listing': watch_lists
-
-    }
-    return render(request, 'auctions/watchlist.html', context)
+    
+    for obj in watch_lists:
+        if obj.listing in l_listing:
+            user_lists.append(obj.listing)
+    
+    
+    
+    return render(request, 'auctions/watchlist.html', {
+       'listing': user_lists
+    })
     
 
 def Listing_detail(request, slug):
