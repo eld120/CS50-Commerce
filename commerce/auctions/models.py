@@ -8,10 +8,9 @@ from django.utils import text, timezone
 import datetime
 
 
-
 class User(AbstractUser):
     cash = models.IntegerField(default=1000, null=True)
-    
+
     def __str__(self):
         return self.first_name + self.last_name
 
@@ -22,10 +21,11 @@ class Listing(models.Model):
     description = models.TextField(max_length=500, null=True)
     image = models.ImageField(upload_to="images/", null=True)
     active = models.BooleanField(default=True, null=False, blank=False)
-    start_price = models.FloatField(default=0.99 )
+    start_price = models.FloatField(default=0.99)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=datetime.datetime.now() + datetime.timedelta(days=7), # not timezone aware? needs testing
+        default=datetime.datetime.now()
+        + datetime.timedelta(days=7),  # not timezone aware? needs testing
         null=True,
         blank=True,
     )
@@ -50,34 +50,33 @@ class Listing(models.Model):
         self.slug = text.slugify(self.title)
         super(Listing, self).save(*args, **kwargs)
 
+
 class Watchlist(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
+    )
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
-    active = models.BooleanField( verbose_name='Watchlist')
+    active = models.BooleanField(verbose_name="Watchlist")
+
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 
-        
+
 class Bid(models.Model):
-    bid_current= models.FloatField(default=0.00)
-    bid_max = models.FloatField(default=0.00, verbose_name='Place Bid')
+    bid_current = models.FloatField(default=0.00)
+    bid_max = models.FloatField(default=0.00, verbose_name="Place Bid")
     date = models.DateTimeField(auto_now=True, null=True)
     winning_bid = models.BooleanField(default=False)
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  null=True,  on_delete=models.DO_NOTHING
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
-    listing = models.ForeignKey(
-        Listing, null=True, on_delete=models.DO_NOTHING
-    )
-
-    # allows valid bids to be placed
-    def valid_bid(self):
-        pass
+    listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return (
             "Contact ID: "
-            + str(self.contact_id)
+            + str(self.owner_id)
             + "Listing ID: "
             + str(self.listing_id)
         )
@@ -87,19 +86,15 @@ class Bid(models.Model):
 
 
 class Comment(models.Model):
-    
-    text = models.TextField(max_length=500, verbose_name='Comments')
+
+    text = models.TextField(max_length=500, verbose_name="Comments")
     comment_date = models.DateTimeField(auto_now=True, null=True)
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  null=True, on_delete=models.DO_NOTHING
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
-    listing = models.ForeignKey(
-        Listing, null=True, on_delete=models.DO_NOTHING
-    )
+    listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
 
-    #def save(self, *args, **kwargs):
-        
-
+    # def save(self, *args, **kwargs):
 
     def __str__(self):
         return (

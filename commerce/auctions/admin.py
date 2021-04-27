@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
 # Register your models here.
 from .models import Listing, User, Bid, Comment, Watchlist
 
@@ -17,22 +18,12 @@ class ListingAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
-
-
 class BidAdmin(admin.ModelAdmin):
-    list_display = (
-        "bid_current",
-        "bid_max", 
-        "date", 
-        "owner", 
-        "listing"
-        )
-
+    list_display = ("bid_current", "bid_max", "date", "owner", "listing")
 
 
 class WatchlistAdmin(admin.ModelAdmin):
     list_display = ("user", "listing")
-
 
 
 class CommentAdmin(admin.ModelAdmin):

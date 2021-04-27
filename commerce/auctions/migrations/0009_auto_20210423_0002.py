@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0008_auto_20210423_0002'),
+        ("auctions", "0008_auto_20210423_0002"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2021, 4, 30, 0, 2, 12, 692809), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2021, 4, 30, 0, 2, 12, 692809),
+                null=True,
+            ),
         ),
     ]

@@ -13,8 +13,10 @@ from django.views.generic import (
 )
 from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm
 from .models import Listing, Comment, Bid, User
+from .services import get_max_bid
 
 U = get_user_model()
+
 
 class IndexView(ListView):
     model = Listing
@@ -23,7 +25,7 @@ class IndexView(ListView):
 
 
 def watchlistview(request):
-    
+
     l_watch = Watchlist.objects.filter(user_id=request.user)
     l_listing = Listing.objects.all()
     user_lists = []
@@ -32,91 +34,75 @@ def watchlistview(request):
     for obj in l_watch:
         if obj.user_id == request.user.id:
             watch_lists.append(obj)
-    
+
     for obj in watch_lists:
         if obj.listing in l_listing:
             user_lists.append(obj.listing)
-    
-    
-    
-    return render(request, 'auctions/watchlist.html', {
-       'listing': user_lists
-    })
-    
+
+    return render(request, "auctions/watchlist.html", {"listing": user_lists})
+
 
 def Listing_detail(request, slug):
-    #the specific listing requested
+    # the specific listing requested
     l_detail = Listing.objects.get(slug=slug)
-    #the watchlist queryset associated with the logged in user
-    watchlst = Watchlist.objects.filter(user_id = request.user.id)
+    # the watchlist queryset associated with the logged in user
+    watchlst = Watchlist.objects.filter(user_id=request.user.id)
     f_comment = CommentForm()
     f_bid = BidForm()
     f_watch = WatchlistForm()
-    
-    
     comment_db = Comment.objects.filter(listing__id=l_detail.id)
     bid_db = Bid.objects.filter(listing__id=request.user.id)
-        
-    if request.method == 'POST':
+
+    if request.method == "POST":
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
         f_watch = WatchlistForm(request.POST)
+
         if f_comment.is_valid():
             new_form = f_comment.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = l_detail.id
             new_form.save()
-            
 
-            return render(request, 'auctions/listing_detail.html', {
-            'comments' : f_comment, 
-            'watchlist': f_watch,
-            'listing' : l_detail,
-            'bids' : f_bid,
-            'success' : 'new comment',
-            'comment_db' : comment_db
-        })
+            return redirect(
+                "auctions:listing_detail",
+                slug=slug,
+            )
+
         elif f_bid.is_valid():
-            
+
             new_bid = f_bid.save(commit=False)
             new_bid.listing_id = l_detail.id
             new_bid.owner_id = request.user.id
             f_bid.save()
 
-            return render(request, 'auctions/listing_detail.html', {
-            'comments' : f_comment, 
-            'watchlist': f_watch,
-            'listing' : l_detail,
-            'bids' : f_bid,
-            'success' : 'your bid has been received',
-            'comment_db' : comment_db
-        })
+            return redirect(
+                "auctions:listing_detail",
+                slug=slug,
+            )
         elif f_watch.is_valid():
             new_watch = f_watch.save(commit=False)
-            
+
             new_watch.user = request.user
             new_watch.listing = l_detail
             new_watch.save()
-            
-            
 
-
-            return render(request, 'auctions/listing_detail.html', {
-            'comments' : f_comment, 
-            'watchlist': f_watch,
-            'listing' : l_detail,
-            'bids' : f_bid,
-            'success' : 'your bid has been received',
-            'comment_db' : comment_db
-            })
+            return redirect(
+                "auctions:listing_detail",
+                slug=slug,
+            )
     else:
-        return render(request, 'auctions/listing_detail.html', {
-            'comments' : f_comment, 
-            'watchlist': f_watch,
-            'listing' : l_detail,
-            'bids' : f_bid,
-            'comment_db' : comment_db
-        })
+        return render(
+            request,
+            "auctions/listing_detail.html",
+            {
+                "comments": f_comment,
+                "watchlist": f_watch,
+                "listing": l_detail,
+                "bids": f_bid,
+                "comment_db": comment_db,
+            },
+        )
 
 
 class ListingCreate(CreateView):
@@ -124,7 +110,7 @@ class ListingCreate(CreateView):
     template_name = "auctions/listing_create.html"
     form_class = ListingCreateForm
     # fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("auctions:index")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -134,7 +120,7 @@ class ListingCreate(CreateView):
 class ListingDelete(DeleteView):
     model = Listing
     template_name = "auctions/listing_create.html"
-    #need a listing delete form and relevant deletion "are you sure" content
+    # need a listing delete form and relevant deletion "are you sure" content
     form_class = ListingCreateForm
 
     success_url = reverse_lazy("index")

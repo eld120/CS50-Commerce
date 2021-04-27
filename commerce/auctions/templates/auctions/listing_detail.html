@@ -8,6 +8,7 @@
     <div class="main__detail-wrapper">
     
       <h2>{{ listing.title }}</h2>
+{% comment %} watchlist form {% endcomment %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}"
         method="POST" >{% csrf_token %}
         {{ watchlist | crispy }}
@@ -16,7 +17,7 @@
 
       <strong><p>Description:</p> </strong>{{ listing.description }}
       <strong><p>Starting Price</p> </strong>${{listing.start_price}}
-
+{% comment %} bid form {% endcomment %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}"
         method="POST"
       >

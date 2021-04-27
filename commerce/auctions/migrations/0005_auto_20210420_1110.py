@@ -7,50 +7,54 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0004_auto_20210419_2235'),
+        ("auctions", "0004_auto_20210419_2235"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='bid',
-            name='bid_amount',
+            model_name="bid",
+            name="bid_amount",
         ),
         migrations.RemoveField(
-            model_name='bid',
-            name='current_bid',
+            model_name="bid",
+            name="current_bid",
         ),
         migrations.RemoveField(
-            model_name='listing',
-            name='end_price',
+            model_name="listing",
+            name="end_price",
         ),
         migrations.AddField(
-            model_name='bid',
-            name='bid_current',
+            model_name="bid",
+            name="bid_current",
             field=models.FloatField(default=0.0),
         ),
         migrations.AddField(
-            model_name='bid',
-            name='bid_max',
-            field=models.FloatField(default=0.0, verbose_name='Place Bid'),
+            model_name="bid",
+            name="bid_max",
+            field=models.FloatField(default=0.0, verbose_name="Place Bid"),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='winning_bid',
+            model_name="bid",
+            name="winning_bid",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='comment',
-            name='text',
-            field=models.TextField(max_length=500, verbose_name='Comments'),
+            model_name="comment",
+            name="text",
+            field=models.TextField(max_length=500, verbose_name="Comments"),
         ),
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2021, 4, 27, 11, 10, 35, 512384), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2021, 4, 27, 11, 10, 35, 512384),
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='listing',
-            name='start_price',
+            model_name="listing",
+            name="start_price",
             field=models.FloatField(default=0.99),
         ),
     ]

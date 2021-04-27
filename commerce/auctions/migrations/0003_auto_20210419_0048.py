@@ -7,31 +7,35 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0002_auto_20210418_0021'),
+        ("auctions", "0002_auto_20210418_0021"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='Transaction',
+            name="Transaction",
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='bid_amount',
-            field=models.FloatField(blank=True, null=True, verbose_name='Your Bid'),
+            model_name="bid",
+            name="bid_amount",
+            field=models.FloatField(blank=True, null=True, verbose_name="Your Bid"),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='current_bid',
+            model_name="bid",
+            name="current_bid",
             field=models.BooleanField(default=False, null=True),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='winning_bid',
+            model_name="bid",
+            name="winning_bid",
             field=models.BooleanField(default=False, null=True),
         ),
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2021, 4, 26, 0, 48, 36, 677827), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2021, 4, 26, 0, 48, 36, 677827),
+                null=True,
+            ),
         ),
     ]

@@ -7,18 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0006_auto_20210422_2301'),
+        ("auctions", "0006_auto_20210422_2301"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2021, 4, 29, 23, 19, 23, 8182), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2021, 4, 29, 23, 19, 23, 8182),
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='watchlist',
-            name='active',
-            field=models.BooleanField(default=False, verbose_name='Watchlist'),
+            model_name="watchlist",
+            name="active",
+            field=models.BooleanField(default=False, verbose_name="Watchlist"),
         ),
     ]

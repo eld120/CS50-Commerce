@@ -9,19 +9,27 @@ class ListingCreateForm(ModelForm):
         model = Listing
         fields = ["title", "image", "description", "active", "start_price"]
 
-    
 
 class BidForm(ModelForm):
     class Meta:
         model = Bid
-        fields = ['bid_max']
+        fields = ["bid_max"]
+
+    # def clean_bid_max(self):
+    #     pass
+
 
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = [ 'text']
+        fields = ["text"]
+
 
 class WatchlistForm(ModelForm):
     class Meta:
         model = Watchlist
         fields = ["active"]
+
+    # def clean_active(self):
+    #     value = self.cleaned_data.get('active')
+    #     act = Watchlist.objects.get()

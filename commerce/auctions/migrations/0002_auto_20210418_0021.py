@@ -7,21 +7,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0001_initial'),
+        ("auctions", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='bid',
-            name='slug',
+            model_name="bid",
+            name="slug",
         ),
         migrations.RemoveField(
-            model_name='comment',
-            name='slug',
+            model_name="comment",
+            name="slug",
         ),
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2021, 4, 25, 0, 21, 43, 941148), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2021, 4, 25, 0, 21, 43, 941148),
+                null=True,
+            ),
         ),
     ]
