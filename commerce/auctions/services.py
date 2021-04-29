@@ -20,9 +20,9 @@ def get_max_bid(bid_db, listing_instance):
 
 
     """
-    listng = models.Listing.objects.get(id=listing_instance)
+    listng = models.Listing.objects.get(id=listing_instance.id)
     bids = models.Bid.objects.filter(
-        listing_id=listing_instance
+        listing_id=listing_instance.id
     ) & models.Bid.objects.filter(active=True)
 
     bid_obj = []
@@ -30,7 +30,7 @@ def get_max_bid(bid_db, listing_instance):
 
     for bid in bid_db:
         if bid.bid_max >= listng.start_price:
-            bid_obj.append({"id": bid.id, "user": bid.user_id, "bid": bid.bid.max})
+            bid_obj.append({"id": bid.id, "user": bid.owner_id, "bid": bid.bid_max})
         if bid.bid_max >= current_bid:
             current_bid = bid.bid_max
 

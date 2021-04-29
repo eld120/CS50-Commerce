@@ -51,8 +51,10 @@ def Listing_detail(request, slug):
     f_bid = BidForm()
     f_watch = WatchlistForm()
     comment_db = Comment.objects.filter(listing__id=l_detail.id)
-    bid_db = Bid.objects.filter(listing__id=request.user.id)
-
+    bid_db = Bid.objects.filter(listing_id=l_detail.id)
+    max_bid = get_max_bid(bid_db, l_detail)
+    #NEED TO PASS a Watchlist.is_active flag to the view
+    print(max_bid)
     if request.method == "POST":
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
@@ -69,7 +71,8 @@ def Listing_detail(request, slug):
                 slug=slug,
             )
 
-        elif f_bid.is_valid():
+        elif f_bid > max_bid and f_bid.is_valid():
+        
 
             new_bid = f_bid.save(commit=False)
             new_bid.listing_id = l_detail.id
@@ -101,6 +104,7 @@ def Listing_detail(request, slug):
                 "listing": l_detail,
                 "bids": f_bid,
                 "comment_db": comment_db,
+                "max_bid" : max_bid
             },
         )
 

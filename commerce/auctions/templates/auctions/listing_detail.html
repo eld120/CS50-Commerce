@@ -16,7 +16,8 @@
       </form>
 
       <strong><p>Description:</p> </strong>{{ listing.description }}
-      <strong><p>Starting Price</p> </strong>${{listing.start_price}}
+      <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.max_bid }}{% endif %}
+      {% comment %} ${{listing.start_price}} {% endcomment %}
 {% comment %} bid form {% endcomment %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}"
         method="POST"
