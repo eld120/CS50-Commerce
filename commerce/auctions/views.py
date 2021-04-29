@@ -71,18 +71,18 @@ def Listing_detail(request, slug):
                 slug=slug,
             )
 
-        elif f_bid > max_bid and f_bid.is_valid():
-        
+        elif f_bid.is_valid():
+            if f_bid.cleaned_data['bid_max'] > max_bid['max_bid']:
 
-            new_bid = f_bid.save(commit=False)
-            new_bid.listing_id = l_detail.id
-            new_bid.owner_id = request.user.id
-            f_bid.save()
+                new_bid = f_bid.save(commit=False)
+                new_bid.listing_id = l_detail.id
+                new_bid.owner_id = request.user.id
+                f_bid.save()
 
             return redirect(
-                "auctions:listing_detail",
-                slug=slug,
-            )
+                    "auctions:listing_detail",
+                    slug=slug,
+                )
         elif f_watch.is_valid():
             new_watch = f_watch.save(commit=False)
 
