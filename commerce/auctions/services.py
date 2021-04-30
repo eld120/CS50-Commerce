@@ -2,23 +2,21 @@ from . import models
 from commerce import settings
 
 
-def bid_validate(bid, bid_db, listing):
+def bid_validate(bid_max, user):
     """validates whether a new bid is greater than the listing price
     and any other active bids
 
     float, queryset float -> Bool
     """
-    max_bid = bid_db
-    if bid > bid:
-        pass
-    return
-
+    if bid_max > user.cash:
+        raise PermissionError
+    else: 
+        user.cash = user.cash - bid_max
+        return True
 
 def get_max_bid(bid_db, listing_instance):
     """takes a query and a listing instance and returns the current
     max bid
-
-
     """
     listng = models.Listing.objects.get(id=listing_instance.id)
     bids = models.Bid.objects.filter(

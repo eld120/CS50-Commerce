@@ -13,7 +13,7 @@ from django.views.generic import (
 )
 from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm
 from .models import Listing, Comment, Bid, User
-from .services import get_max_bid
+from .services import get_max_bid, bid_validate
 
 U = get_user_model()
 
@@ -54,7 +54,7 @@ def Listing_detail(request, slug):
     bid_db = Bid.objects.filter(listing_id=l_detail.id)
     max_bid = get_max_bid(bid_db, l_detail)
     #NEED TO PASS a Watchlist.is_active flag to the view
-    print(max_bid)
+    
     if request.method == "POST":
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
@@ -73,11 +73,13 @@ def Listing_detail(request, slug):
 
         elif f_bid.is_valid():
             if f_bid.cleaned_data['bid_max'] > max_bid['max_bid']:
-
-                new_bid = f_bid.save(commit=False)
-                new_bid.listing_id = l_detail.id
-                new_bid.owner_id = request.user.id
-                f_bid.save()
+                if bid_validate(f_bid.cleaned_data['bid_max'], request.user):
+                    print(f_bid.cleaned_data['bid_max'])
+                    new_bid = f_bid.save(commit=False)
+                    new_bid.listing_id = l_detail.id
+                    new_bid.owner_id = request.user.id
+                    f_bid.save()
+                    request.user.save()
 
             return redirect(
                     "auctions:listing_detail",
