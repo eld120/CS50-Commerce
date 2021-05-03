@@ -13,7 +13,7 @@ from django.views.generic import (
 )
 from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm
 from .models import Listing, Comment, Bid, User
-from .services import get_max_bid, bid_validate
+from .services import get_max_bid, bid_validate, watch_validate
 
 U = get_user_model()
 
@@ -55,6 +55,7 @@ def Listing_detail(request, slug):
     max_bid = get_max_bid(bid_db, l_detail)
     #NEED TO PASS a Watchlist.is_active flag to the view
     
+    
     if request.method == "POST":
         f_comment = CommentForm(request.POST)
         f_bid = BidForm(request.POST)
@@ -72,25 +73,26 @@ def Listing_detail(request, slug):
             )
 
         elif f_bid.is_valid():
-            if f_bid.cleaned_data['bid_max'] > max_bid['max_bid']:
-                if bid_validate(f_bid.cleaned_data['bid_max'], request.user):
-                    print(f_bid.cleaned_data['bid_max'])
-                    new_bid = f_bid.save(commit=False)
-                    new_bid.listing_id = l_detail.id
-                    new_bid.owner_id = request.user.id
-                    f_bid.save()
-                    request.user.save()
-
+            if f_bid.cleaned_data['bid_max'] > max_bid['max_bid'] and bid_validate(f_bid.cleaned_data['bid_max'], request.user):
+                print(f_bid.cleaned_data['bid_max'])
+                new_bid = f_bid.save(commit=False)
+                new_bid.listing_id = l_detail.id
+                new_bid.owner_id = request.user.id
+                f_bid.save()
+                request.user.save()
+            else:
+                pass
+                #TODO
             return redirect(
                     "auctions:listing_detail",
                     slug=slug,
                 )
         elif f_watch.is_valid():
-            new_watch = f_watch.save(commit=False)
-
-            new_watch.user = request.user
-            new_watch.listing = l_detail
-            new_watch.save()
+            if watch_validate(l_detail, request.user):
+                new_watch = f_watch.save(commit=False)
+                new_watch.user = request.user
+                new_watch.listing = l_detail
+                new_watch.save()
 
             return redirect(
                 "auctions:listing_detail",
@@ -129,7 +131,7 @@ class ListingDelete(DeleteView):
     # need a listing delete form and relevant deletion "are you sure" content
     form_class = ListingCreateForm
 
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("auctions:index")
 
 
 class ListingUpdate(UpdateView):
@@ -149,7 +151,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("auctions:index"))
         else:
             return render(
                 request,
@@ -162,7 +164,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("auctions:index"))
 
 
 def register(request):
@@ -189,6 +191,6 @@ def register(request):
                 {"message": "Username already taken."},
             )
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")

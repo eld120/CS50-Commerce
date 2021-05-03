@@ -8,24 +8,26 @@
     <div class="main__detail-wrapper">
     
       <h2>{{ listing.title }}</h2>
+      {% if user.is_authenticated %}
 {% comment %} watchlist form {% endcomment %}
-      <form action="{% url 'auctions:listing_detail' listing.slug %}"
-        method="POST" >{% csrf_token %}
-        {{ watchlist | crispy }}
-        <button type="submit" id="watchSubmit" >sub</button>
-      </form>
-
+        <form action="{% url 'auctions:listing_detail' listing.slug %}"
+          method="POST" >{% csrf_token %}
+          {{ watchlist | crispy }}
+          <button type="submit" id="watchSubmit" >sub</button>
+        </form>
+      {% endif %}
       <strong><p>Description:</p> </strong>{{ listing.description }}
       <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.max_bid }}{% endif %}
       {% comment %} ${{listing.start_price}} {% endcomment %}
 {% comment %} bid form {% endcomment %}
-      <form action="{% url 'auctions:listing_detail' listing.slug %}"
-        method="POST"
-      >
-        {% csrf_token %}{{bids | crispy}}
-        <button type="submit">Place Bid</button>
-      </form>
-
+      {% if user.is_authenticated %}
+            <form action="{% url 'auctions:listing_detail' listing.slug %}"
+              method="POST"
+            >
+              {% csrf_token %}{{bids | crispy}}
+              <button type="submit">Place Bid</button>
+            </form>
+        {% endif %}
       <strong>
         <p>End date:</p>
       </strong>

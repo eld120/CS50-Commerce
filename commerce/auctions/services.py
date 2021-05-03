@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from . import models
 from commerce import settings
 
@@ -9,10 +10,11 @@ def bid_validate(bid_max, user):
     float, queryset float -> Bool
     """
     if bid_max > user.cash:
-        raise PermissionError
+        return False
     else: 
         user.cash = user.cash - bid_max
         return True
+
 
 def get_max_bid(bid_db, listing_instance):
     """takes a query and a listing instance and returns the current
@@ -36,9 +38,14 @@ def get_max_bid(bid_db, listing_instance):
 
 
 def watch_validate(listing, user):
-    """returns true if the current user has an active bid for the given listing in the database"""
+    """returns true if the current user has an active bid for the given listing 
+    in the database
+    """
     db = (
         models.Watchlist.objects.filter(listing_id=listing)
         & models.Watchlist.objects.filter(user=user)
         & models.Watchlist.objects.filter(active=True)
     )
+    
+    if listing.id in db:
+        return True
