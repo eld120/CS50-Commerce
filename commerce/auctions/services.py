@@ -49,3 +49,5 @@ def watch_validate(listing, user):
     
     if listing.id in db:
         return True
+
+

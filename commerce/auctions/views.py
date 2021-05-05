@@ -45,6 +45,8 @@ def watchlistview(request):
 def Listing_detail(request, slug):
     # the specific listing requested
     l_detail = Listing.objects.get(slug=slug)
+    if l_detail.end_listing() == True:
+        l_detail.save()
     # the watchlist queryset associated with the logged in user
     watchlst = Watchlist.objects.filter(user_id=request.user.id)
     f_comment = CommentForm()

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
+from django.db.models.aggregates import Max
 from django.urls import reverse
 from django.db.models.fields import DateTimeField, IntegerField, SlugField
 from django.utils import text, timezone
@@ -35,10 +36,14 @@ class Listing(models.Model):
 
     # ends auction, flags winning bid
     def auction_winner(self):
-        if datetime.datetime.now() >= self.auction_end:
-            self.active = False
+        
 
-        winner = Bid.objects.get(pk=self.id)
+        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max('bid_max'))
+
+    def end_listing(self):
+        if timezone.now() >= self.auction_end:
+            self.active = False 
+            return True
 
     def __str__(self):
         return "Listing title: " + self.title
