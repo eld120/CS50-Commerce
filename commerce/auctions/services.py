@@ -3,6 +3,23 @@ from . import models
 from commerce import settings
 
 
+def user_end_listing(listing, user_object):
+    '''allows the owner of a listing to prematurely end the listing
+    triggering a winning bid
+    '''
+    if user_object.id == listing.owner_id:
+        listing.active = False
+        listing.save()
+        return True
+    return False
+
+def get_listing(slug):
+    '''returns a listing object from a given slug
+    '''
+    l_detail = models.Listing.objects.get(slug=slug)
+    return l_detail
+
+
 def bid_validate(bid_max, user):
     """validates whether a new bid is greater than the listing price
     and any other active bids
@@ -17,7 +34,7 @@ def bid_validate(bid_max, user):
 
 
 def get_max_bid(bid_db, listing_instance):
-    """takes a query and a listing instance and returns the current
+    """takes a Bid query and a listing instance and returns the current
     max bid
     """
     listng = models.Listing.objects.get(id=listing_instance.id)

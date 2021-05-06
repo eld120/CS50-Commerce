@@ -37,11 +37,15 @@
     {% comment %} Needs to check if user is owner of listing for deletion
     priviliges {% endcomment %}
     <div>
-      {% if user.is_authenticated %} {% comment %}
+      {% if user.is_authenticated %} 
       <a class="delete" href="{% url 'auctions:listing_delete' listing.slug %}"
-        >Delete this listing</a
-      >
-      {% endcomment %} {% else %} Not signed in. {%endif%}
+        >Delete this listing</a>
+        <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
+        {% csrf_token %} {{ end_list | crispy}}
+        <button type="submit">End Listing</button>
+        </form>
+        
+       {% else %} Not signed in. {%endif%}
     </div>
   </div>
   <div class="comments">
@@ -49,11 +53,13 @@
 
     <!-- <h5 class="title">Comments</h5> -->
     <p><strong>{% if success %} {{ success }} {% endif %}</strong></p>
-    <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
-      {% csrf_token %} {{comments | crispy}}
-      <button type="submit">Send</button>
-    </form>
-
+    <h6><strong> Comments</strong></h6>
+    {% if user.is_authenticated %}
+      <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
+        {% csrf_token %} {{comments | crispy}}
+        <button type="submit">Send</button>
+      </form>
+    {% endif %}
     {% for comm in comment_db %}
     <p class="comments__owner">
       <strong>{{comm.owner}} :</strong> {{ comm.text }}

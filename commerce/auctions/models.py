@@ -34,12 +34,6 @@ class Listing(models.Model):
         settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
 
-    # ends auction, flags winning bid
-    def auction_winner(self):
-        
-
-        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max('bid_max'))
-
     def end_listing(self):
         if timezone.now() >= self.auction_end:
             self.active = False 
@@ -77,6 +71,9 @@ class Bid(models.Model):
     )
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
+
+    def auction_winner(self):
+        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max('bid_max'))
 
     def __str__(self):
         return (

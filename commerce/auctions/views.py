@@ -11,9 +11,10 @@ from django.views.generic import (
     UpdateView,
     DetailView,
 )
-from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm
+from .forms import ListingCreateForm, BidForm, CommentForm, WatchlistForm, ListingEndForm
 from .models import Listing, Comment, Bid, User
-from .services import get_max_bid, bid_validate, watch_validate
+from .services import get_max_bid, bid_validate, user_end_listing, watch_validate, get_listing
+
 
 U = get_user_model()
 
@@ -44,25 +45,24 @@ def watchlistview(request):
 
 def Listing_detail(request, slug):
     # the specific listing requested
-    l_detail = Listing.objects.get(slug=slug)
-    if l_detail.end_listing() == True:
+    l_detail = get_listing(slug)
+    if l_detail.end_listing():
         l_detail.save()
-    # the watchlist queryset associated with the logged in user
-    watchlst = Watchlist.objects.filter(user_id=request.user.id)
-    f_comment = CommentForm()
-    f_bid = BidForm()
-    f_watch = WatchlistForm()
+    
+    #watchlst = Watchlist.objects.filter(user_id=request.user.id)
+    f_comment = CommentForm(request.POST or None)
+    f_bid = BidForm(request.POST or None)
+    f_watch = WatchlistForm(request.POST or None)
     comment_db = Comment.objects.filter(listing__id=l_detail.id)
     bid_db = Bid.objects.filter(listing_id=l_detail.id)
     max_bid = get_max_bid(bid_db, l_detail)
+    if user_end_listing(l_detail, request.user):
+        end_list = ListingEndForm(request.POST or None)
+    end_list = None
     #NEED TO PASS a Watchlist.is_active flag to the view
     
     
     if request.method == "POST":
-        f_comment = CommentForm(request.POST)
-        f_bid = BidForm(request.POST)
-        f_watch = WatchlistForm(request.POST)
-
         if f_comment.is_valid():
             new_form = f_comment.save(commit=False)
             new_form.owner = request.user
@@ -76,12 +76,13 @@ def Listing_detail(request, slug):
 
         elif f_bid.is_valid():
             if f_bid.cleaned_data['bid_max'] > max_bid['max_bid'] and bid_validate(f_bid.cleaned_data['bid_max'], request.user):
-                print(f_bid.cleaned_data['bid_max'])
+                
                 new_bid = f_bid.save(commit=False)
                 new_bid.listing_id = l_detail.id
                 new_bid.owner_id = request.user.id
-                f_bid.save()
-                request.user.save()
+                new_bid.save()
+                # f_bid.save()
+                # request.user.save()
             else:
                 pass
                 #TODO
@@ -110,10 +111,17 @@ def Listing_detail(request, slug):
                 "listing": l_detail,
                 "bids": f_bid,
                 "comment_db": comment_db,
-                "max_bid" : max_bid
+                "max_bid" : max_bid,
+                "end_list": end_list
             },
         )
 
+# def end_listing(request, slug):
+#     l_detail = get_listing(slug)
+
+#     return render(request, 'auctions/end_listing.html', {
+
+#     })
 
 class ListingCreate(CreateView):
     model = Listing

@@ -17,7 +17,8 @@ class BidForm(ModelForm):
 
     # def clean_bid_max(self):
     #     pass
-
+class ListingEndForm(forms.Form):
+    end = forms.BooleanField( required=False)
 
 class CommentForm(ModelForm):
     class Meta:
