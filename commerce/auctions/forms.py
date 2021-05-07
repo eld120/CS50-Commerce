@@ -7,7 +7,7 @@ from .models import Listing, Bid, Comment, Watchlist
 class ListingCreateForm(ModelForm):
     class Meta:
         model = Listing
-        fields = ["title", "image", "description", "active", "start_price"]
+        fields = ["title", "image", "description", "start_price"]
 
 
 class BidForm(ModelForm):
@@ -17,8 +17,11 @@ class BidForm(ModelForm):
 
     # def clean_bid_max(self):
     #     pass
+
+
 class ListingEndForm(forms.Form):
-    end = forms.BooleanField( required=False)
+    end = forms.BooleanField(required=False)
+
 
 class CommentForm(ModelForm):
     class Meta:

@@ -36,7 +36,7 @@ class Listing(models.Model):
 
     def end_listing(self):
         if timezone.now() >= self.auction_end:
-            self.active = False 
+            self.active = False
             return True
 
     def __str__(self):
@@ -73,14 +73,11 @@ class Bid(models.Model):
     active = models.BooleanField(default=True)
 
     def auction_winner(self):
-        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max('bid_max'))
+        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max("bid_max"))
 
     def __str__(self):
         return (
-            "Contact ID: "
-            + str(self.owner_id)
-            + "Listing ID: "
-            + str(self.listing_id)
+            "Contact ID: " + str(self.owner_id) + "Listing ID: " + str(self.listing_id)
         )
 
     def get_absolute_url(self):
