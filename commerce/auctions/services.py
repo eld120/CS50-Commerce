@@ -4,18 +4,9 @@ from commerce import settings
 
 
 def user_end_listing(listing, user_object):
-    """allows the owner of a listing to prematurely end the listing
-    triggering a winning bid
-    """
+    """returns true if a user is the owner of a given listing"""
     if user_object.id == listing.owner_id:
-        listing.active = False
-        listing.save()
-        if not validate_single_winner(listing):
-            raise MultipleObjectsReturned("More than one winning bid found")
-
-        else:
-            determine_bid_winner(listing)
-        return True
+        return True        
     return False
 
 

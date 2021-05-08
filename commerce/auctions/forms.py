@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models.fields import BooleanField
 from django.forms.models import ModelForm
 from django.views.generic.edit import CreateView
 from .models import Listing, Bid, Comment, Watchlist
@@ -19,8 +20,10 @@ class BidForm(ModelForm):
     #     pass
 
 
-class ListingEndForm(forms.Form):
-    end = forms.BooleanField(required=False)
+class EndForm(forms.Form):
+    
+    active = forms.BooleanField( required=False)
+    #end = forms.BooleanField(required=False)
 
 
 class CommentForm(ModelForm):
