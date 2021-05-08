@@ -53,17 +53,14 @@ def get_max_bid(bid_db, listing_instance):
 
 
 def watch_validate(listing, user):
-    """returns true if the current user has an active bid for the given listing
-    in the database
-    """
+    """returns true if the current user has the given listing on their watchlist"""
     db = (
-        models.Watchlist.objects.filter(listing_id=listing)
-        & models.Watchlist.objects.filter(user=user)
-        & models.Watchlist.objects.filter(active=True)
+        models.Watchlist.objects.get(listing_id=listing.id, user_id=user.id)
     )
-
-    if listing.id in db:
+    if listing.id == db.listing_id:
         return True
+    # else:
+    #     raise MultipleObjectsReturned('Duplicates in the watchlist table')
 
 
 def get_winning_bid(listing):

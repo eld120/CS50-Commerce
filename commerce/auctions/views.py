@@ -61,8 +61,7 @@ def watchlistview(request):
 def Listing_detail(request, slug):
     # the specific listing requested
     list_detail = get_listing(slug)
-
-    # watchlst = Watchlist.objects.filter(user_id=request.user.id)
+    watchlst = Watchlist.objects.filter(user_id=request.user.id, listing_id=list_detail)
     comment_form = CommentForm(request.POST or None)
     bid_form = BidForm(request.POST or None)
     watchlist_form = WatchlistForm(request.POST or None)
@@ -84,26 +83,30 @@ def Listing_detail(request, slug):
         list_detail.save()
 
     if request.method == "POST":
-        print(end_list.errors)
         if comment_form.is_valid():
             new_form = comment_form.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = list_detail.id
             new_form.save()
+            return redirect(
+                "auctions:listing_detail",
+                slug=slug,
+            )
+        elif watchlist_form.is_valid():
+            if watch_validate(list_detail, request.user) and len(watchlst) == 1:
+                watchlst[0].active = watchlist_form.cleaned_data['active']
+                watchlst[0].save()
+            else:
+                new_watch = Watchlist.objects.create(listing_id=list_detail.id, user_id=request.user.id, active=True)
+                new_watch.save()
 
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
             )
         elif end_list.is_valid():
-            
             list_detail.active = end_list.cleaned_data['active']
             list_detail.save()
-            # end = end_list.save(commit=False)
-            # print(end_list)
-            # end.active = False
-            # end.save()
-            
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
@@ -116,24 +119,12 @@ def Listing_detail(request, slug):
                 new_bid.listing_id = list_detail.id
                 new_bid.owner_id = request.user.id
                 new_bid.save()
-                # bid_form.save()
-                # request.user.save()
-            
+                           
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
             )
-        elif watchlist_form.is_valid():
-            if watch_validate(list_detail, request.user):
-                new_watch = watchlist_form.save(commit=False)
-                new_watch.user = request.user
-                new_watch.listing = list_detail
-                new_watch.save()
-
-            return redirect(
-                "auctions:listing_detail",
-                slug=slug,
-            )
+        
         
     else:
         return render(
@@ -149,14 +140,6 @@ def Listing_detail(request, slug):
                 "end_list": end_list,
             },
         )
-
-
-# def end_listing(request, slug):
-#     list_detail = get_listing(slug)
-
-#     return render(request, 'auctions/end_listing.html', {
-
-#     })
 
 
 class ListingCreate(CreateView):

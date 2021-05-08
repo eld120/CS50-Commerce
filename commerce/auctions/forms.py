@@ -16,15 +16,10 @@ class BidForm(ModelForm):
         model = Bid
         fields = ["bid_max"]
 
-    # def clean_bid_max(self):
-    #     pass
-
 
 class EndForm(forms.Form):
+    active = forms.BooleanField(required=False)
     
-    active = forms.BooleanField( required=False)
-    #end = forms.BooleanField(required=False)
-
 
 class CommentForm(ModelForm):
     class Meta:
@@ -32,11 +27,7 @@ class CommentForm(ModelForm):
         fields = ["text"]
 
 
-class WatchlistForm(ModelForm):
-    class Meta:
-        model = Watchlist
-        fields = ["active"]
+class WatchlistForm(forms.Form):
+    active = forms.BooleanField(required=False)
 
-    # def clean_active(self):
-    #     value = self.cleaned_data.get('active')
-    #     act = Watchlist.objects.get()
+    
