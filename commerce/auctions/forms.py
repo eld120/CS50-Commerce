@@ -19,7 +19,7 @@ class BidForm(ModelForm):
 
 class EndForm(forms.Form):
     active = forms.BooleanField(required=False)
-    
+
 
 class CommentForm(ModelForm):
     class Meta:
@@ -28,6 +28,4 @@ class CommentForm(ModelForm):
 
 
 class WatchlistForm(forms.Form):
-    active = forms.BooleanField(required=False)
-
-    
+    active = forms.BooleanField(required=False, label='Watchlist')

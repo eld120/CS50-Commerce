@@ -6,7 +6,7 @@ from commerce import settings
 def user_end_listing(listing, user_object):
     """returns true if a user is the owner of a given listing"""
     if user_object.id == listing.owner_id:
-        return True        
+        return True
     return False
 
 
@@ -48,15 +48,13 @@ def get_max_bid(bid_db, listing_instance):
         #     bid_obj.append({"id": bid.id, "user": bid.owner_id, "bid": bid.bid_max})
         if bid.bid_max >= current_bid:
             current_bid = bid.bid_max
-    
+
     return {"bids": bid_obj, "max_bid": current_bid}
 
 
 def watch_validate(listing, user):
     """returns true if the current user has the given listing on their watchlist"""
-    db = (
-        models.Watchlist.objects.get(listing_id=listing.id, user_id=user.id)
-    )
+    db = models.Watchlist.objects.get(listing_id=listing.id, user_id=user.id)
     if listing.id == db.listing_id:
         return True
     # else:

@@ -27,7 +27,7 @@ from .services import (
     watch_validate,
     get_listing,
     validate_single_winner,
-    determine_bid_winner
+    determine_bid_winner,
 )
 
 
@@ -72,8 +72,8 @@ def Listing_detail(request, slug):
         end_list = EndForm(request.POST or None)
     else:
         end_list = None
-    # NEED TO PASS a Watchlist.is_active flag to the view
     
+
     if list_detail.end_listing():
         if not validate_single_winner(list_detail):
             raise MultipleObjectsReturned("More than one winning bid found")
@@ -83,7 +83,7 @@ def Listing_detail(request, slug):
         list_detail.save()
 
     if request.method == "POST":
-        if comment_form.is_valid():
+        if comment_form.is_valid() and 'comments' in request.POST:
             new_form = comment_form.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = list_detail.id
@@ -92,40 +92,43 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        elif watchlist_form.is_valid():
+        if watchlist_form.is_valid() and 'watchlist' in request.POST:
             if watch_validate(list_detail, request.user) and len(watchlst) == 1:
-                watchlst[0].active = watchlist_form.cleaned_data['active']
+                watchlst[0].active = watchlist_form.cleaned_data["active"]
                 watchlst[0].save()
             else:
-                new_watch = Watchlist.objects.create(listing_id=list_detail.id, user_id=request.user.id, active=True)
+                new_watch = Watchlist.objects.create(
+                    listing_id=list_detail.id, user_id=request.user.id, active=True
+                )
                 new_watch.save()
 
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
             )
-        elif end_list.is_valid():
-            list_detail.active = end_list.cleaned_data['active']
+        if end_list.is_valid() and 'end_list' in request.POST:
+            print("maybe")
+            list_detail.active = end_list.cleaned_data["active"]
             list_detail.save()
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
             )
-        elif bid_form.is_valid():
+        if bid_form.is_valid() and 'bids' in request.POST:
+
             if bid_form.cleaned_data["bid_max"] > max_bid["max_bid"] and bid_validate(
                 bid_form.cleaned_data["bid_max"], request.user
             ):
-                new_bid = bid_form.save(commit=False)   
+                new_bid = bid_form.save(commit=False)
                 new_bid.listing_id = list_detail.id
                 new_bid.owner_id = request.user.id
                 new_bid.save()
-                           
+
             return redirect(
                 "auctions:listing_detail",
                 slug=slug,
             )
-        
-        
+
     else:
         return render(
             request,

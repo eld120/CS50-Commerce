@@ -12,8 +12,9 @@
 {% comment %} watchlist form {% endcomment %}
         <form action="{% url 'auctions:listing_detail' listing.slug %}"
           method="POST" >{% csrf_token %}
+          {{watchlist.label_tag}}
           {{ watchlist | crispy }}
-          <button type="submit" id="watchSubmit" >sub</button>
+          <input type="submit" name="watchlist" value="sub" >
         </form>
       {% endif %}
       <strong><p>Description:</p> </strong>{{ listing.description }}
@@ -25,7 +26,7 @@
               method="POST"
             >
               {% csrf_token %}{{bids | crispy}}
-              <button type="submit">Place Bid</button>
+              <input type="submit" name="bids" value="sub">
             </form>
         {% endif %}
       <strong>
@@ -42,7 +43,7 @@
         >Delete this listing</a>
         <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
         {% csrf_token %} {{ end_list | crispy}}
-        <button type="submit">End Listing</button>
+        <input type="submit" name="end_list" value="sub">
         </form>
         
        {% else %} Not signed in. {%endif%}
@@ -57,7 +58,7 @@
     {% if user.is_authenticated %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
         {% csrf_token %} {{comments | crispy}}
-        <button type="submit">Send</button>
+        <input type="submit" name="comments" value="sub">
       </form>
     {% endif %}
     {% for comm in comment_db %}
