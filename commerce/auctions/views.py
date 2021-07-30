@@ -83,7 +83,7 @@ def Listing_detail(request, slug):
         list_detail.save()
 
     if request.method == "POST":
-        if comment_form.is_valid() and 'comments' in request.POST:
+        if 'comments' in request.POST and watchlist_form.is_valid():
             new_form = comment_form.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = list_detail.id
@@ -92,10 +92,14 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if watchlist_form.is_valid() and 'watchlist' in request.POST:
+        if 'watchlist' in request.POST and watchlist_form.is_valid():
             if watch_validate(list_detail, request.user) and len(watchlst) == 1:
                 watchlst[0].active = watchlist_form.cleaned_data["active"]
                 watchlst[0].save()
+                
+                
+                # watchlist_form.save()
+                
             else:
                 new_watch = Watchlist.objects.create(
                     listing_id=list_detail.id, user_id=request.user.id, active=True
@@ -106,7 +110,7 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if end_list.is_valid() and 'end_list' in request.POST:
+        if  'end_list' in request.POST and end_list.is_valid():
             print("maybe")
             list_detail.active = end_list.cleaned_data["active"]
             list_detail.save()
@@ -114,7 +118,7 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if bid_form.is_valid() and 'bids' in request.POST:
+        if 'bids' in request.POST and bid_form.is_valid():
 
             if bid_form.cleaned_data["bid_max"] > max_bid["max_bid"] and bid_validate(
                 bid_form.cleaned_data["bid_max"], request.user

@@ -3,6 +3,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
     <title>{% block title %}Auctions{% endblock %}</title>
     <link
       rel="stylesheet"
@@ -13,54 +17,108 @@
     <link href="{% static 'auctions/styles.css' %}" rel="stylesheet" />
   </head>
   <body>
-    <main class="main">
-      <nav class="header">
-        <div class="header__navcontainer">
-          <h1>Auctions</h1>
-          <div>
-            {% if user.is_authenticated %} Signed in as
-            <strong>{{ user.username }}</strong>. {% else %} Not signed in.
-            {%endif%}
-          </div>
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:index' %}"
-                >Active Listings</a
-              >
-            </li>
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:listing_create' %}"
-                >List Item</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:watchlist' %}"
-                >Watchlist</a
-              >
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:login' %}">Log In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'auctions:register' %}"
-                >Register</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-          <!-- <hr> -->
+    <div class="header">
+      <div class="header__navcontainer">
+        <div class="header__logo-container">
+          <img
+            src="{% static 'auctions/images/abey.png' %}"
+            alt="abey logo"
+            id="logo"
+            class="header__logo"
+          />
         </div>
-      </nav>
-      
-      {% block body %} {% endblock %}
-    </main>
-  </body>
-  <footer class="footer">
+        <div class="header__navtop">
+          <div class="header__nav-user">
+            <!-- {% if user.is_authenticated %}
+            <p class="header__greeting">
+              Hi <strong> {{ user.username }}</strong>.
+            </p>
+            {%endif%} -->
+          </div> 
+          {% if user.is_authenticated %}
+            <ul class="header__nav-ul">
+              <li class="header__nav-item">
+                <a
+                  class="header__nav-link"
+                  id="login"
+                  href="{% url 'auctions:logout' %}"
+                  >Log Out</a
+                >
+              </li>
+              <li class="header__nav-item">
+                <a class="header__nav-link" href="{% url 'auctions:index' %}"
+                  >Active Listings</a
+                >
+              </li>
+              <li class="header__nav-item">
+                <a
+                  class="header__nav-link"
+                  href="{% url 'auctions:listing_create' %}"
+                  >List Item</a
+                >
+              </li>
+
+              <li class="header__nav-item">
+                <a
+                  class="header__nav-link"
+                  href="{% url 'auctions:watchlist' %}"
+                  >Watchlist</a
+                >
+              </li>
+            </ul>
+            {% else %}
+            <ul class="header__nav-ul">
+              <li class="header__nav-item">
+                <a class="header__nav-link" href="{% url 'auctions:index' %}"
+                  >Active Listings</a
+                >
+              </li>
+              <li class="header__nav-item">
+                <a
+                  class="header__nav-link"
+                  id="login"
+                  href="{% url 'auctions:login' %}"
+                  >Log In</a
+                >
+              </li>
+              <li class="header__nav-item">
+                <a
+                  class="header__nav-link"
+                  id="register"
+                  href="{% url 'auctions:register' %}"
+                  >Register</a
+                >
+              </li>
+            </ul>
+            {%endif%}
+          
+        </div>
+        <div class="header__toggle">
+          <a href="#" aria-expanded="false" aria-controls="menu" id="menu" class="header__hamburger hide-desktop">
+            <span></span>
+            <span></span>
+            <span></span>
+          </a>
+        </div>
+        <nav class="header__navbottom" role="navigation" >
+          
+          <ul >
+            <li><a href="">Home</a></li>
+            <li><a href="">Saved</a></li>
+            <li><a href="">Cars</a></li>
+            <li><a href="">Clothing</a></li>
+            <li><a href="">Electronics</a></li>
+          </ul>
+        </nav>
+        <hr />
+      </div>
+    </div>
+    <main class="main">{% block body %} {% endblock %}</main>
+     <footer class="footer">
     <h6 class="footer__logo">GBAY is a fake trademark of Hub Corporation</h6>
   </footer>
+  <script src="{% static 'auctions/js/main.js' %}"></script>
+  </body>
+ 
+  
 </html>

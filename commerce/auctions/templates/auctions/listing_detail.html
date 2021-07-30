@@ -39,13 +39,15 @@
     priviliges {% endcomment %}
     <div>
       {% if user.is_authenticated %} 
+      
       <a class="delete" href="{% url 'auctions:listing_delete' listing.slug %}"
         >Delete this listing</a>
-        <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
-        {% csrf_token %} {{ end_list | crispy}}
-        <input type="submit" name="end_list" value="sub">
-        </form>
-        
+        {% if not end_list == None %}
+          <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
+          {% csrf_token %} {{ end_list | crispy}}
+          <input type="submit" name="end_list" value="sub">
+          </form>
+        {% endif %}
        {% else %} Not signed in. {%endif%}
     </div>
   </div>
@@ -54,7 +56,9 @@
 
     <!-- <h5 class="title">Comments</h5> -->
     <p><strong>{% if success %} {{ success }} {% endif %}</strong></p>
+    {% if not user.is_authenticated %}
     <h6><strong> Comments</strong></h6>
+    {% endif %}
     {% if user.is_authenticated %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
         {% csrf_token %} {{comments | crispy}}

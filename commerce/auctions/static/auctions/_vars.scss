@@ -1,0 +1,20 @@
+$hero-blue: #4574BA;
+$advertisement-blue: #71D6ED;
+$text-color: #404040;
+$background: #fff;
+
+
+@mixin padit {
+    padding: .5rem 1rem;
+}
+
+
+$media-breakpoints: ("tablet": 40em, "desktop": 64em, "huge":87.5em);
+
+@mixin media-q($size){
+    @media (min-width: map-get($media-breakpoints, $size )){
+        @content
+    }
+}
+
+

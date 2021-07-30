@@ -1,0 +1,84 @@
+@use 'vars';
+
+
+.header{
+    position: relative;
+
+    &__logo{
+        @include vars.padit();
+        width: 8rem;
+    }
+    &__nav-ul{
+        padding: 0;
+        display: flex;
+        justify-content: space-evenly;
+        & li a{
+            color: vars.$text-color;
+        }
+    }
+    &__toggle{
+        position: absolute;
+        width: 60px;
+        top: 0;
+        right: 0;
+        padding: 1rem;
+        
+        & span{
+           display: block;
+            width: 30px;
+            height: 3px;
+            background-color: vars.$text-color;
+        &:not(:last-child){
+            margin-bottom: 5px;
+            
+        }
+        
+        }
+        
+        
+        & a:after{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            content: " ";
+            z-index: 100;
+        }
+    }
+    &__hamburger{
+        &.open{
+            span:first-child{
+                transform: rotate(45deg);
+            }
+            span:nth-child(2){
+                opacity: 0;
+            }
+            span:last-child{
+                transform: rotate(-45deg);
+            }
+        }
+    }
+    
+    
+    & nav{
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 100vw;
+        height: 100vw;
+        width: 100%;
+        text-align: center;
+        padding: 3rem 0rem;
+        background-color: vars.$background;
+        & li{
+            margin-bottom: 1rem;
+        }
+        & ul{
+            padding: 0;
+        }
+       
+    }
+    
+    
+}

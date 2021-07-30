@@ -1,0 +1,1435 @@
+<div class="nav">
+  <input type="checkbox" id="nav-check" />
+  <div class="nav-header">
+    <div class="nav-title">JoGeek</div>
+  </div>
+  <div class="nav-btn">
+    <label for="nav-check">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+  </div>
+
+  <div class="nav-links">
+    <a href="//github.io/jo_geek" target="_blank">Github</a>
+    <a href="http://stackoverflow.com/users/4084003/" target="_blank"
+      >Stackoverflow</a
+    >
+    <a href="https://in.linkedin.com/in/jonesvinothjoseph" target="_blank"
+      >LinkedIn</a
+    >
+    <a href="https://codepen.io/jo_Geek/" target="_blank">Codepen</a>
+    <a href="https://jsfiddle.net/user/jo_Geek/" target="_blank">JsFiddle</a>
+  </div>
+</div>
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" itemscope 
+itemtype="http://schema.org/Website"><![endif]-->
+<html class="no-js" itemscope="" itemtype="http://schema.org/Website" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="ie=edge,chrome=1" http-equiv="x-ua-compatible" />
+    <meta
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>
+      Lift Interactive | Digital Marketing | Web &amp; App Development
+    </title>
+    <meta
+      content="Strategy, design, branding and development services. Lift Interactive creates value 
+    through thoughtful process and meticulously crafted digital experiences."
+      name="description"
+    />
+    <meta
+      content="Lift Interactive | Digital Marketing | Web &amp; App Development"
+      property="og:title"
+    />
+    <meta content="website" property="og:type" />
+    <meta content="//liftinteractive.com/" property="og:url" />
+    <meta
+      content="https://liftinteractive.com/static/images/default-meta-image.72dcf8c5b33b.jpg"
+      property="og:image"
+    />
+    <meta
+      content="Strategy, design, branding and development services. 
+    Lift Interactive creates value through thoughtful process and meticulously crafted digital experiences."
+      property="og:description"
+    />
+    <meta content="Lift Interactive" property="og:site_name" />
+    <meta
+      content="Lift Interactive | Digital Marketing | Web &amp; App Development"
+      itemprop="name"
+    />
+    <meta
+      content="Strategy, design, branding and development services. Lift Interactive creates value 
+    through thoughtful process and meticulously crafted digital experiences."
+      itemprop="description"
+    />
+    <meta
+      content="https://liftinteractive.com/static/images/default-meta-image.72dcf8c5b33b.jpg"
+      itemprop="image"
+    />
+    <meta content="#1C50E7" name="theme-color" />
+    <link
+      href="/static/images/2020/favicon-light.1a9e7cb63ee9.png"
+      media="(prefers-color-scheme:light)"
+      rel="icon"
+      type="image/png"
+    />
+    <script>
+      window.city = "";
+      function applyIcon(type) {
+        var link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement("link");
+        link.type = "image/x-icon";
+        link.rel = "shortcut icon";
+
+        if (type === "dark") {
+          link.href = "/static/images/2020/favicon-dark.a13492636b1e.png";
+        } else {
+          link.href = "/static/images/2020/favicon-light.1a9e7cb63ee9.png";
+        }
+
+        document.getElementsByTagName("head")[0].appendChild(link);
+      }
+
+      var dmQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      var lmQuery = window.matchMedia("(prefers-color-scheme: light)");
+
+      // Check on initial load if dark mode is already there. Apply the dark
+      // mode favicon if true.
+      if (dmQuery.matches) {
+        applyIcon("dark");
+      }
+
+      dmQuery.addListener(function () {
+        applyIcon("dark");
+      });
+
+      lmQuery.addListener(function () {
+        applyIcon("light");
+      });
+    </script>
+    <link href="/static/css/main.f756985089d3.css" rel="stylesheet" />
+    <link
+      href="https://unpkg.com/splitting/dist/splitting.css"
+      rel="stylesheet"
+    />
+    <style>
+      .lf-intro {
+        background: #1c50e7;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        opacity: 0;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+        pointer-events: none;
+      }
+      .lf-intro-blip {
+        background: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 60px;
+        height: 60px;
+      }
+      .lf-intro-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .lf-intro-cover svg {
+        width: 100%;
+        height: 100%;
+      }
+      body.is-intro {
+        overflow: hidden;
+      }
+      body.is-intro .lf-intro {
+        pointer-events: all;
+        opacity: 1;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "http://www.schema.org",
+        "@type": "LocalBusiness",
+        "name": "Lift Interactive",
+        "url": "https://liftinteractive.com/",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "10139 81 Ave NW",
+          "addressLocality": "Edmonton",
+          "addressRegion": "Alberta",
+          "postalCode": "T6E 1W9",
+          "addressCountry": "Canada"
+        },
+        "openingHours": "Mo, Tu, We, Th, Fr 09:00-17:00",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "(780) 426-1176"
+        }
+      }
+    </script>
+    <!--[if IE
+      ]><link
+        rel="shortcut icon"
+        href="/static/images/favicon.d41d8cd98f00.ico"
+    /><![endif]-->
+    <script defer="" src="//twemoji.maxcdn.com/2/twemoji.min.js?2.3.1"></script>
+  </head>
+  <body class="is-intro">
+    <noscript>
+      <iframe
+        height="0"
+        src="//www.googletagmanager.com/ns.html?id=GTM-537HK7"
+        style="display: none; visibility: hidden"
+        width="0"
+      >
+      </iframe>
+    </noscript>
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "//www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-537HK7");
+    </script>
+    <div class="lf-intro">
+      <div class="lf-intro-blip">
+        <div class="lf-intro-cover">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fill-rule="evenodd">
+              <path
+                d="M80 0v80H0V0h80zM38.31 5L9 12.77V74.9h62.1V42.05l-26.22 6.96-6.57 16.45V5z"
+                fill="#1C50E7"
+              ></path>
+              <circle
+                cx="56.89"
+                cy="26.54"
+                fill="#F15F63"
+                fill-rule="nonzero"
+                r="15.06"
+              ></circle>
+            </g>
+          </svg>
+        </div>
+        <canvas class="lf-intro-canvas" id="canvas"></canvas>
+      </div>
+    </div>
+    <div class="lf-loading">
+      <div class="lf-loading-background"></div>
+      <div class="lf-loading-brand">
+        <svg viewBox="0 0 410.3 66.15" xmlns="http://www.w3.org/2000/svg">
+          <defs></defs>
+          <g data-name="Layer 2" id="Layer_2">
+            <g data-name="Layer 1" id="Layer_1-2">
+              <path
+                class="cls-1"
+                d="M77.09 29.86l7.5-2v37.69h-7.5zM95.47 36.07a4.33 4.33 0 114.58-4.32 4.39 4.39 0 01-4.58 4.32zM91.7 40.15h7.51v25.4H91.7zM151.36 36.07a4.33 4.33 0 114.58-4.32 4.39 4.39 0 01-4.58 4.32zM147.58 40.15h7.51v25.4h-7.51zM169.55 48.6v16.95H162v-24.8l7.35-1v4.87c2.74-3.58 5.37-5.12 8.85-5.12 5 0 8.55 3.53 8.55 9.79v16.26h-7.5V50.89c0-2.94-1.5-4.73-4.28-4.73-1.79 0-3.23.6-5.42 2.44zM203.55 66.1c-5.37 0-8.65-3-8.65-9.65V46H191v-5.85h3.88v-5.42l7.4-1.84v7.26h8.8V46h-8.8v9.8c0 2.73 1.4 3.92 3.83 3.92a8.18 8.18 0 005-2l.15.09-1.14 6.57a12.76 12.76 0 01-6.57 1.72zM227.8 66.1c-8.3 0-13.57-5.32-13.57-13.33 0-7.1 5.12-13.32 12.87-13.32 8.21 0 12.08 6.22 12.08 13.27 0 .55-.1 1.64-.15 2.14h-17.54c.79 3.53 3.73 5.32 7.65 5.32a20.17 20.17 0 009.3-2.48l.15.09-2 6.32a18.55 18.55 0 01-8.79 1.99zm-6.36-15.51h10.73c-.29-3.48-2.23-5.72-5.21-5.72s-5.12 2.29-5.52 5.72zM251.75 50.69v14.86h-7.55v-24.8l7.36-1v6.61c3.38-4.82 5.51-6.66 8.35-6.66a6.71 6.71 0 011.64.2l.44 7.8a9.21 9.21 0 00-1.79-.14c-3.08.05-5.66 1.24-8.45 3.13zM280.09 62.07C277 64.6 274 66 270.84 66c-4.37 0-7.41-2.64-7.41-6.86 0-4.78 3.93-8.25 16.46-8.45-.2-3.28-1.94-4.92-5.17-4.92-2.54 0-5.47 1-8.65 3.23l-.15-.1 1.14-6.81a17.48 17.48 0 019.25-2.44c7.11 0 11 3.78 11 11.28V65l-7.25 1zm-.2-3.33v-4.52c-8.4.59-9.6 2.53-9.6 4.17s1.15 2.44 3 2.44c1.63 0 3.71-.6 6.6-2.09zM304.78 66.15c-7.4 0-13-5.07-13-13.33 0-7.5 5.47-13.27 13.57-13.27a13.81 13.81 0 018.35 2.59v7.5h-.15c-2.28-1.94-4.92-3.43-7.7-3.43a6.34 6.34 0 00-6.61 6.61 6.2 6.2 0 006.41 6.57A14.53 14.53 0 00314 56.3l.15.1-.9 7.31a16.19 16.19 0 01-8.47 2.44zM330.08 66.1c-5.37 0-8.65-3-8.65-9.65V46h-3.88v-5.85h3.88v-5.42l7.41-1.84v7.26h8.8V46h-8.8v9.8c0 2.73 1.39 3.92 3.83 3.92a8.18 8.18 0 005-2l.15.09-1.15 6.57a12.74 12.74 0 01-6.59 1.72zM346.88 36.07a4.33 4.33 0 114.57-4.32 4.38 4.38 0 01-4.57 4.32zM343.1 40.15h7.51v25.4h-7.51zM354.78 40.15H363l6.36 15.66 6.71-15.66h8l-12.43 26h-5zM398.91 66.1c-8.3 0-13.57-5.32-13.57-13.33 0-7.1 5.12-13.32 12.88-13.32 8.2 0 12.08 6.22 12.08 13.27 0 .55-.1 1.64-.15 2.14H392.6c.8 3.53 3.73 5.32 7.66 5.32a20.1 20.1 0 009.29-2.48l.15.09-2 6.32a18.52 18.52 0 01-8.79 1.99zm-6.36-15.51h10.74c-.3-3.48-2.24-5.72-5.22-5.72s-5.07 2.29-5.52 5.72zM142.12 57.7a8.18 8.18 0 01-5 2c-2.44 0-3.83-1.19-3.83-3.92V46h8.8v-5.85h-8.8V34.2l-7.37 1.8v4.11h-10.27v-2.4c0-2.43 1.49-3.82 3.93-3.82a8.57 8.57 0 012.07.25l.15-.1-.8-5.85a16.32 16.32 0 00-3.1-.27c-5.87 0-9.54 3.53-9.54 9.74v2.49h-4.08V46h4.08v19.55h7.45V46h10.12v10.45c0 6.61 3.28 9.65 8.65 9.65a12.76 12.76 0 006.56-1.74l1.14-6.57zM33.65 41.28L27.49 56.7V0L0 7.29v58.26h58.24v-30.8l-24.59 6.53z"
+                fill="#ffffff"
+              ></path>
+              <circle cx="44.91" cy="20.2" fill="#f15f63" r="14.12"></circle>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div id="barba-wrapper">
+      <div class="barba-container uk-offcanvas-content" data-namespace="home">
+        <div class="lf-topbar lf-topbar--home" uk-sticky="top: 100;">
+          <div class="uk-container uk-container-large">
+            <a class="lf-logo uk-logo" href="/"
+              ><img
+                alt="Lift Interactive"
+                src="/static/images/2020/brand-liftinteractive--icon-dark.e8be1cc0ae97.svg"
+            /></a>
+          </div>
+        </div>
+        <a
+          class="lf-nav-trigger"
+          href="#"
+          uk-toggle="target: .lf-nav-trigger; cls: is-open"
+          ><span class="lf-hamburger"
+            ><span><b class="uk-hidden">Menu</b></span></span
+          ></a
+        >
+        <div class="lf-menu">
+          <div
+            class="
+              lf-menu-content
+              uk-width-1-1 uk-height-1-1 uk-flex uk-flex-middle
+            "
+          >
+            <div
+              class="
+                lf-menu-left
+                uk-width-1-3@s uk-width-1-2@m uk-height-1-1 uk-visible@s
+              "
+              uk-toggle="target: .lf-nav-trigger; cls: is-open"
+            ></div>
+            <div
+              class="
+                lf-menu-right
+                uk-width-1-1
+                uk-width-2-3@s
+                uk-width-1-2@m
+                uk-flex
+                uk-flex-center
+                uk-flex-middle
+              "
+            >
+              <div>
+                <ul
+                  class="lf-menu-ul uk-nav-primary uk-margin-medium-bottom"
+                  uk-nav=""
+                >
+                  <li><a class="uk-nav-header" href="/work/">Work</a></li>
+                  <li>
+                    <a class="uk-nav-header" href="/services/">Services</a>
+                  </li>
+                  <li><a class="uk-nav-header" href="/studio/">Studio</a></li>
+                  <li><a class="uk-nav-header" href="/blog/">Blog</a></li>
+                  <li><a class="uk-nav-header" href="/contact/">Contact</a></li>
+                </ul>
+                <p class="lf-menu-text">
+                  10139 - 81 Ave <br />Edmonton Alberta Canada <br />T6E 1W9
+                </p>
+                <ul class="lf-menu-icons uk-iconnav uk-light">
+                  <li>
+                    <a
+                      href="http://twitter.com/liftinteractive"
+                      rel="nofollow"
+                      uk-icon="icon: twitter"
+                      ><span class="uk-hidden">Twitter</span></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="http://facebook.com/liftinteractive"
+                      rel="nofollow"
+                      uk-icon="icon: facebook"
+                      ><span class="uk-hidden">Facebook</span></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="http://instagram.com/liftogram"
+                      rel="nofollow"
+                      uk-icon="icon: instagram"
+                      ><span class="uk-hidden">Instagram</span></a
+                    >
+                  </li>
+                </ul>
+                <div class="lf-menu-lucille">
+                  <img
+                    alt="Lift Interactive"
+                    src="/static/images/2020/brand-liftinteractive--icon-white.svg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lf-menu-pattern"></div>
+          <div class="lf-menu-background"></div>
+        </div>
+        <div class="lf-content">
+          <div
+            class="
+              lf-hero lf-hero--home
+              uk-light uk-section uk-cover-container uk-margin-large-bottom
+            "
+          >
+            <div class="lf-hero-cover uk-position-cover uk-flex uk-flex-middle">
+              <div class="uk-container">
+                <div class="uk-grid uk-flex">
+                  <div class="uk-width-1-1 uk-width-4-5@m">
+                    <div class="lf-hero-brand uk-margin-medium-bottom">
+                      <img
+                        alt="Lift Interactive"
+                        src="/static/images/2020/brand-liftinteractive--full.3973d439fcf3.svg"
+                        uk-svg=""
+                      />
+                    </div>
+                    <h1
+                      class="lf-hero-heading uk-heading-hero"
+                      data-wordlist="opportunity,a big idea,story,ventures,disruption,experience"
+                      id="js-heroWord"
+                    >
+                      <span class="lf-hero-text">Discover &amp; unleash</span>
+                      <span class="lf-hero-cursor"></span>
+                      <span class="lf-hero-word" id="js-wordContainer"></span>
+                    </h1>
+                  </div>
+                  <div class="uk-width-1-5@s uk-visible@m">
+                    <div class="lt-hero-nav">
+                      <ul class="uk-nav-primary uk-nav-parent-icon" uk-nav="">
+                        <li><a class="uk-nav-header" href="/work/">Work</a></li>
+                        <li>
+                          <a class="uk-nav-header" href="/services/"
+                            >Services</a
+                          >
+                        </li>
+                        <li>
+                          <a class="uk-nav-header" href="/studio/">Studio</a>
+                        </li>
+                        <li><a class="uk-nav-header" href="/blog/">Blog</a></li>
+                        <li>
+                          <a class="uk-nav-header" href="/contact/">Contact</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="lf-hero-media uk-width-1-1">
+              <div class="lf-hero-image lf-image-cover">
+                <img
+                  alt="Home"
+                  class="lazyload"
+                  src="/media/images/banner_background.2e16d0ba.fill-1200x800.jpg"
+                  srcset="
+                    /media/images/banner_background.2e16d0ba.fill-750x500.jpg   640w,
+                    /media/images/banner_background.2e16d0ba.fill-960x640.jpg   960w,
+                    /media/images/banner_background.2e16d0ba.fill-1200x800.jpg 1200w
+                  "
+                />
+              </div>
+              <video
+                autoplay=""
+                class="lf-image-cover lf-hero-video"
+                loop=""
+                muted=""
+                playsinline=""
+                preload="metadata"
+                uk-video=""
+              >
+                <source
+                  src="/static/video/banner.f3b02c2c7dce.mp4"
+                  type="video/mp4"
+                />
+                <source
+                  src="/static/video/banner.a0aaedfdc99f.ogv"
+                  type="video/ogg"
+                />
+                <source
+                  src="/static/video/banner.3b4d37a6ca54.webm"
+                  type="video/webm"
+                />
+              </video>
+            </div>
+            <div class="lf-scrolldown"></div>
+          </div>
+          <div class="uk-section js-introReveal">
+            <div class="uk-container">
+              <div class="uk-grid uk-flex uk-flex-left">
+                <div class="uk-width-2-3@s uk-width-3-5@m">
+                  <hr
+                    class="
+                      uk-divider-small uk-margin-medium-bottom
+                      js-introReveal-hr
+                    "
+                  />
+                  <div class="lf-lead uk-text-lead js-introReveal-content">
+                    <div class="rich-text">
+                      <p>
+                        We're an award-winning, forward-thinking, boutique
+                        digital &amp; creative agency located in Edmonton,
+                        Canada.
+                      </p>
+                      <p>
+                        Our strategists, designers and coders work with clients
+                        from all over the world to build successful digital
+                        experiences, brands, and campaigns. ❤️
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uk-section js-projectsReveal">
+            <div class="uk-container">
+              <div class="uk-grid uk-flex">
+                <div class="uk-width-2-3@s uk-width-3-5@m">
+                  <hr class="js-projectsReveal-hr uk-divider-small" />
+                  <h5 class="lf-reveal js-projectsReveal-heading">
+                    Recent Work
+                  </h5>
+                  <div class="js-projectsReveal-content">
+                    <div class="rich-text">
+                      <p>
+                        We're really proud of the work we've done together.
+                        Whether it's a brand or a new online business, we jump
+                        in passionately with both feet.<br />
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="uk-margin-medium-top uk-container uk-container-large">
+              <div
+                class="
+                  lf-projects
+                  uk-grid
+                  uk-flex
+                  uk-child-width-1-1
+                  uk-child-width-1-2@s
+                  uk-child-width-1-4@m
+                "
+                uk-grid=""
+              >
+                <div>
+                  <a
+                    class="lf-work--card uk-transition-toggle"
+                    href="/work/tourism-jasper/"
+                    ><div class="lf-work-container uk-flex uk-flex-column">
+                      <div class="uk-width-1-4 uk-width-1-1@m">
+                        <div class="js-tilt">
+                          <img
+                            alt="Tourism Jasper"
+                            class="lf-work-image uk-card lazyload"
+                            data-src="/media/images/Tourism-Jasper-Case-Study-thumb.2e16d0ba.fill-650x920.jpg"
+                            data-srcset="/media/images/Tourism-Jasper-Case-Study-thumb.2e16d0ba.fill-325x460.jpg 640w,/media/images/Tourism-Jasper-Case-Study-thumb.2e16d0ba.fill-495x700.jpg 960w,/media/images/Tourism-Jasper-Case-Study-thumb.2e16d0ba.fill-650x920.jpg 1200w"
+                            height="920"
+                            src="/media/images/Tourism-Jasper-Case-Study-thumb.2e16d0ba.fill-70x100.jpg"
+                            width="650"
+                          />
+                        </div>
+                      </div>
+                      <div class="uk-width-3-4 uk-width-1-1@m">
+                        <div class="lf-word-header">
+                          <h1 class="lf-work-heading uk-margin-remove">
+                            Tourism Jasper
+                          </h1>
+                          <p
+                            class="uk-text-small uk-margin-remove uk-text-muted"
+                          >
+                            Over the years we've embarked on a creative
+                            partnership with Tourism Jasper. Together, we've
+                            found many different mediums to tell their story:
+                            one of authenticity, epic adventure, and cozy
+                            mountain comfort.
+                          </p>
+                        </div>
+                      </div>
+                    </div></a
+                  >
+                </div>
+                <div>
+                  <a
+                    class="lf-work--card uk-transition-toggle"
+                    href="/work/telus-world-science/"
+                    ><div class="lf-work-container uk-flex uk-flex-column">
+                      <div class="uk-width-1-4 uk-width-1-1@m">
+                        <div class="js-tilt">
+                          <img
+                            alt="Telus World of Science"
+                            class="lf-work-image uk-card lazyload"
+                            data-src="/media/images/thumbB.2e16d0ba.fill-650x920.jpg"
+                            data-srcset="/media/images/thumbB.2e16d0ba.fill-325x460.jpg 640w,/media/images/thumbB.2e16d0ba.fill-495x700.jpg 960w,/media/images/thumbB.2e16d0ba.fill-650x920.jpg 1200w"
+                            height="920"
+                            src="/media/images/thumbB.2e16d0ba.fill-70x100.jpg"
+                            width="650"
+                          />
+                        </div>
+                      </div>
+                      <div class="uk-width-3-4 uk-width-1-1@m">
+                        <div class="lf-word-header">
+                          <h1 class="lf-work-heading uk-margin-remove">
+                            Telus World of Science
+                          </h1>
+                          <p
+                            class="uk-text-small uk-margin-remove uk-text-muted"
+                          >
+                            The crucial elements of the new website design
+                            highlight storytelling, trip planning, managing
+                            various show times, events, exhibits, and
+                            activities.
+                          </p>
+                        </div>
+                      </div>
+                    </div></a
+                  >
+                </div>
+                <div>
+                  <a
+                    class="lf-work--card uk-transition-toggle"
+                    href="/work/usafacts/"
+                    ><div class="lf-work-container uk-flex uk-flex-column">
+                      <div class="uk-width-1-4 uk-width-1-1@m">
+                        <div class="js-tilt">
+                          <img
+                            alt="USAFacts"
+                            class="lf-work-image uk-card lazyload"
+                            data-src="/media/images/USA-Facts-Cover-Img.2e16d0ba.fill-650x920.jpg"
+                            data-srcset="/media/images/USA-Facts-Cover-Img.2e16d0ba.fill-325x460.jpg 640w,/media/images/USA-Facts-Cover-Img.2e16d0ba.fill-495x700.jpg 960w,/media/images/USA-Facts-Cover-Img.2e16d0ba.fill-650x920.jpg 1200w"
+                            height="920"
+                            src="/media/images/USA-Facts-Cover-Img.2e16d0ba.fill-70x100.jpg"
+                            width="650"
+                          />
+                        </div>
+                      </div>
+                      <div class="uk-width-3-4 uk-width-1-1@m">
+                        <div class="lf-word-header">
+                          <h1 class="lf-work-heading uk-margin-remove">
+                            USAFacts
+                          </h1>
+                          <p
+                            class="uk-text-small uk-margin-remove uk-text-muted"
+                          >
+                            When USAFacts began work with us, their vision was
+                            clear: help U.S. citizens make informed decisions
+                            and engage in fact-based discussions.
+                          </p>
+                        </div>
+                      </div>
+                    </div></a
+                  >
+                </div>
+                <div>
+                  <a
+                    class="lf-work--card uk-transition-toggle"
+                    href="/work/gfl-environmental-inc/"
+                    ><div class="lf-work-container uk-flex uk-flex-column">
+                      <div class="uk-width-1-4 uk-width-1-1@m">
+                        <div class="js-tilt">
+                          <img
+                            alt="GFL Environmental Inc."
+                            class="lf-work-image uk-card lazyload"
+                            data-src="/media/images/gfl-list-image.2e16d0ba.fill-650x920.jpg"
+                            data-srcset="/media/images/gfl-list-image.2e16d0ba.fill-325x460.jpg 640w,/media/images/gfl-list-image.2e16d0ba.fill-495x700.jpg 960w,/media/images/gfl-list-image.2e16d0ba.fill-650x920.jpg 1200w"
+                            height="920"
+                            src="/media/images/gfl-list-image.2e16d0ba.fill-70x100.jpg"
+                            width="650"
+                          />
+                        </div>
+                      </div>
+                      <div class="uk-width-3-4 uk-width-1-1@m">
+                        <div class="lf-word-header">
+                          <h1 class="lf-work-heading uk-margin-remove">
+                            GFL Environmental Inc.
+                          </h1>
+                          <p
+                            class="uk-text-small uk-margin-remove uk-text-muted"
+                          >
+                            We joined forces with GFL to build an internal
+                            marketing &amp; change management program to
+                            encourage GFL employees to "Get On It" and make
+                            their new HR software implementation a success.
+                          </p>
+                        </div>
+                      </div>
+                    </div></a
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="
+                uk-margin-large-top uk-flex uk-flex-center
+                js-projectsReveal-action
+              "
+            >
+              <a
+                class="uk-button uk-button-text"
+                data-text="View More Work"
+                href="/work/"
+                >View More Work</a
+              >
+            </div>
+          </div>
+          <div
+            class="
+              lf-logos lf-logos--003
+              uk-section uk-position-relative uk-overflow-hidden
+              js-clientsReveal
+            "
+          >
+            <div class="uk-container uk-container-expand">
+              <div class="uk-container uk-margin-medium-bottom">
+                <div class="uk-grid uk-flex">
+                  <div class="uk-width-2-3@s uk-width-3-5@m">
+                    <hr class="js-clientsReveal-hr uk-divider-small" />
+                    <h5 class="lf-reveal js-clientsReveal-heading">
+                      We work with amazing clients
+                    </h5>
+                    <div class="js-clientsReveal-content">
+                      <div class="rich-text">
+                        <p>
+                          We partner on big and small projects with all kinds of
+                          clients—from non-profits and community movements to
+                          fortune 500s and start-ups.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="lf-marquee">
+                <div class="lf-marquee-container js-clientsReveal-clients">
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/adobe.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/ge.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/NI.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/johnson.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/alberta.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/lulu.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/pattison.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/jasper.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class="uk-height-1-1"
+                        src="/media/images/atb.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/adobe.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/ge.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/NI.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/johnson.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/alberta.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/lulu.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/pattison.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/jasper.original.max-300x200.png"
+                    /></a>
+                  </div>
+                  <div
+                    class="
+                      lf-client lf-marquee-item
+                      uk-margin-small
+                      uk-padding-small
+                      uk-width-medium
+                      uk-height-small
+                    "
+                  >
+                    <a
+                      class="
+                        uk-width-1-1
+                        uk-height-1-1
+                        uk-flex
+                        uk-flex-center
+                        uk-flex-middle
+                        uk-background-muted
+                      "
+                      href="#"
+                      ><img
+                        alt=""
+                        class=""
+                        src="/media/images/atb.original.max-300x200.png"
+                    /></a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="
+                  uk-margin-large-top uk-flex uk-flex-center
+                  js-clientsReveal-action
+                "
+              >
+                <div class="uk-text-center">
+                  <p>Find out more about what we do</p>
+                  <a
+                    class="uk-button uk-button-text"
+                    data-text="View Our Services"
+                    href="/services/"
+                    >View Our Services</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lf-footer">
+          <div class="uk-section">
+            <div class="uk-container uk-margin-medium-top">
+              <div class="uk-grid uk-flex" uk-grid="">
+                <div class="uk-width-1-2@m uk-text-center uk-text-left@m">
+                  <div class="uk-grid" uk-grid="">
+                    <div class="uk-width-auto uk-visible@m">
+                      <img
+                        alt=""
+                        class="lf-footer-avatar uk-border-circle lazyload"
+                        src="/media/images/Staff_2017-068.981d46fa.fill-300x300.jpg"
+                      />
+                    </div>
+                    <div class="uk-width-1-1 uk-width-expand@s uk-light">
+                      <h1 class="lf-footer-heading">Let's Talk</h1>
+                      <p class="lf-footer-intro uk-visible@m">
+                        Contact us. We'll make time.
+                      </p>
+                      <h3 class="lf-footer-number uk-margin-top">
+                        1.780.426.1176
+                      </h3>
+                      <a
+                        class="lf-footer-link"
+                        href="mailto:hello@liftinteractive.com"
+                        >hello@liftinteractive.com</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="uk-width-1-2@m">
+                  <form
+                    action="/forms/1/"
+                    class="lf-footer-form uk-form-stacked js-formajax"
+                    data-form-success-msg="Success! Your message has been sent. We will be in touch soon!"
+                    method="POST"
+                  >
+                    <input
+                      name="csrfmiddlewaretoken"
+                      type="hidden"
+                      value="2Gc0QW8xuBP5adE5NAAePlcMwCtIBgIQJQX3SThFpBBTBQfzttIshc72UziD7xoW"
+                    />
+                    <div class="lf-form-message js-form-message"></div>
+                    <div class="uk-grid uk-child-width-1-2@s">
+                      <div>
+                        <div class="lf-footer-formfield uk-light js-field">
+                          <input
+                            class="lf-footer-forminput uk-input"
+                            id="id_name"
+                            maxlength="255"
+                            name="name"
+                            required=""
+                            type="text"
+                          /><label
+                            class="lf-footer-formlabel uk-form-label"
+                            for="id_name"
+                            >Name</label
+                          >
+                        </div>
+                      </div>
+                      <div>
+                        <div class="lf-footer-formfield uk-light js-field">
+                          <input
+                            class="lf-footer-forminput uk-input"
+                            id="id_email"
+                            name="email"
+                            required=""
+                            type="email"
+                          /><label
+                            class="lf-footer-formlabel uk-form-label"
+                            for="id_email"
+                            >Email</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="lf-footer-formfield uk-light js-field">
+                      <textarea
+                        class="lf-footer-forminput uk-input"
+                        cols="40"
+                        id="id_details"
+                        name="details"
+                        required=""
+                        rows="10"
+                      ></textarea
+                      ><label
+                        class="lf-footer-formlabel uk-form-label"
+                        for="id_details"
+                        >Describe your project</label
+                      >
+                    </div>
+                    <script src="https://www.google.com/recaptcha/api.js?render=6LeF_48aAAAAABwmSzbGE2EThlU4WLr5GmXCCO7G"></script>
+                    <script type="text/javascript">
+                      grecaptcha.ready(function () {
+                        grecaptcha
+                          .execute("6LeF_48aAAAAABwmSzbGE2EThlU4WLr5GmXCCO7G", {
+                            action: "form",
+                          })
+                          .then(function (token) {
+                            console.log(
+                              "reCAPTCHA validated for 'data-widget-uuid=\"9635a96305994d668af3474b5ec980c1\"'. Setting input value..."
+                            );
+                            var element = document.querySelector(
+                              '.g-recaptcha[data-widget-uuid="9635a96305994d668af3474b5ec980c1"]'
+                            );
+                            element.value = token;
+                          });
+                      });
+                    </script>
+                    <input
+                      class="g-recaptcha"
+                      data-callback="onSubmit_9635a96305994d668af3474b5ec980c1"
+                      data-sitekey="6LeF_48aAAAAABwmSzbGE2EThlU4WLr5GmXCCO7G"
+                      data-size="normal"
+                      data-widget-uuid="9635a96305994d668af3474b5ec980c1"
+                      id="id_wagtailcaptcha"
+                      name="wagtailcaptcha"
+                      required=""
+                      required_score="0.85"
+                      type="hidden"
+                    />
+                    <div class="uk-text-right">
+                      <input
+                        class="lf-button uk-button uk-button-primary"
+                        type="submit"
+                        value="Lets do this"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uk-section uk-section-small">
+            <div class="uk-container uk-text-center">
+              <div class="lf-footer-lucille uk-margin-medium-bottom">
+                <img
+                  alt="Lift Interactive"
+                  src="/static/images/2020/brand-liftinteractive--icon-white.svg"
+                />
+              </div>
+              <div class="lf-footer-bottom uk-flex uk-flex-center uk-light">
+                <p class="lf-footer-text">
+                  10139 - 81 Ave Edmonton Alberta Canada T6E 1W9
+                </p>
+                <ul class="lf-footer-icons uk-iconnav uk-flex-center">
+                  <li>
+                    <a
+                      href="http://twitter.com/liftinteractive"
+                      rel="nofollow"
+                      uk-icon="icon: twitter"
+                      ><span class="uk-hidden">Twitter</span></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="http://facebook.com/liftinteractive"
+                      rel="nofollow"
+                      uk-icon="icon: facebook"
+                      ><span class="uk-hidden">Facebook</span></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="http://instagram.com/liftogram"
+                      rel="nofollow"
+                      uk-icon="icon: instagram"
+                      ><span class="uk-hidden">Instagram</span></a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <p class="uk-text-small">© Copyright 2021 Lift Interactive</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script defer="" src="/static/js/app.1e1abcf16dbd.js"></script>
+    <script>
+      function Particles() {
+        (this.colors = [
+          "241, 95, 99",
+          "255, 255, 255",
+          "82, 195, 182",
+          "235, 231, 216",
+        ]),
+          (this.blurry = !1),
+          (this.border = !1),
+          (this.minRadius = 15),
+          (this.maxRadius = 35),
+          (this.minOpacity = 1),
+          (this.maxOpacity = 1),
+          (this.minSpeed = 0.5),
+          (this.maxSpeed = 1),
+          (this.fps = 60),
+          (this.numParticles = 50),
+          (this.canvas = document.getElementById("canvas")),
+          (this.ctx = this.canvas.getContext("2d"));
+      }
+      (Particles.prototype.init = function () {
+        this.render(), this.createCircle();
+      }),
+        (Particles.prototype._rand = function (t, a) {
+          return Math.random() * (a - t) + t;
+        }),
+        (Particles.prototype.render = function () {
+          (this.canvas.width = 60), (this.canvas.height = 60);
+        }),
+        (Particles.prototype.createCircle = function () {
+          for (var t = [], a = 0; a < this.numParticles; a++) {
+            var i = this,
+              r = i.colors[~~i._rand(0, i.colors.length)];
+            (t[a] = {
+              radius: i._rand(i.minRadius, i.maxRadius),
+              xPos: i._rand(0, canvas.width),
+              yPos: i._rand(0, canvas.height),
+              xVelocity: i._rand(i.minSpeed, i.maxSpeed),
+              yVelocity: i._rand(i.minSpeed, i.maxSpeed),
+              color:
+                "rgba(" + r + "," + i._rand(i.minOpacity, i.maxOpacity) + ")",
+            }),
+              i.draw(t, a);
+          }
+          i.animate(t);
+        }),
+        (Particles.prototype.draw = function (t, a) {
+          var i = this,
+            r = i.ctx;
+          if (!0 === i.blurry) {
+            var s = r.createRadialGradient(
+              t[a].xPos,
+              t[a].yPos,
+              t[a].radius,
+              t[a].xPos,
+              t[a].yPos,
+              t[a].radius / 1.25
+            );
+            s.addColorStop(1, t[a].color),
+              s.addColorStop(0, "rgba(34, 34, 34, 0)"),
+              (r.fillStyle = s);
+          } else r.fillStyle = t[a].color;
+          !0 === i.border && ((r.strokeStyle = "#fff"), r.stroke()),
+            r.beginPath(),
+            r.arc(t[a].xPos, t[a].yPos, t[a].radius, 0, 2 * Math.PI, !1),
+            r.fill();
+        }),
+        (Particles.prototype.animate = function (a) {
+          var i = this;
+          i.ctx;
+          setInterval(function () {
+            i.clearCanvas();
+            for (var t = 0; t < i.numParticles; t++)
+              (a[t].xPos += a[t].xVelocity),
+                (a[t].yPos -= a[t].yVelocity),
+                a[t].xPos > i.canvas.width + a[t].radius ||
+                a[t].yPos > i.canvas.height + a[t].radius
+                  ? i.resetParticle(a, t)
+                  : i.draw(a, t);
+          }, 1e3 / i.fps);
+        }),
+        (Particles.prototype.resetParticle = function (t, a) {
+          var i = this;
+          0.5 < i._rand(0, 1)
+            ? ((t[a].xPos = -t[a].radius),
+              (t[a].yPos = i._rand(0, canvas.height)))
+            : ((t[a].xPos = i._rand(0, canvas.width)),
+              (t[a].yPos = canvas.height + t[a].radius)),
+            i.draw(t, a);
+        }),
+        (Particles.prototype.clearCanvas = function () {
+          this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+      var particle = new Particles().init();
+    </script>
+  </body>
+</html>
