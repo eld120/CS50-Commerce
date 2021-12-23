@@ -16,7 +16,7 @@ class ListingCreateForm(ModelForm):
 class BidForm(ModelForm):
     class Meta:
         model = Bid
-        fields = ["bid_max"]
+        fields = ["bid"]
 
 
 class EndForm(forms.Form):
@@ -29,10 +29,7 @@ class CommentForm(ModelForm):
         fields = ["text"]
 
 
-class WatchlistForm(forms.Form):
-    active = forms.BooleanField(required=False, label='Watchlist')
-
-# class WatchlistForm(ModelForm):
-#     class Meta:
-#         model =  Watchlist
-#         fields = ["active"] 
+class WatchlistForm(ModelForm):
+    class Meta:
+        model = Watchlist
+        fields = ["active"]

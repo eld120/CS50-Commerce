@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path
 from .views import (
     IndexView,
@@ -7,6 +8,7 @@ from .views import (
     Listing_detail,
 )
 from . import views
+
 
 app_name = "auctions"
 
@@ -23,3 +25,4 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
 ]
+

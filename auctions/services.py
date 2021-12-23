@@ -1,26 +1,17 @@
 from django.core.exceptions import MultipleObjectsReturned
+from django.db.models.query import QuerySet
 from . import models
 from commerce import settings
 
 
-def user_end_listing(listing, user_object):
+def is_listing_owner(listing, user_object):
     """returns true if a user is the owner of a given listing"""
-    if user_object.id == listing.owner_id:
-        return True
-    return False
+    return user_object.id == listing.owner_id
 
 
-def get_listing(slug):
-    """returns a listing object from a given slug"""
-    list_detail = models.Listing.objects.get(slug=slug)
-    return list_detail
-
-
-def bid_validate(bid_max, user):
+def bid_validate(bid_max: float, user: QuerySet) -> bool:
     """validates whether a new bid is greater than the listing price
     and any other active bids
-
-    float, queryset float -> Bool
     """
     if bid_max > user.cash:
         return False
@@ -34,10 +25,6 @@ def get_max_bid(bid_db, listing_instance):
     max bid
     """
     listng = models.Listing.objects.get(id=listing_instance.id)
-    # redundant code that isn't used should be removed??
-    bids = models.Bid.objects.filter(
-        listing_id=listing_instance.id
-    ) & models.Bid.objects.filter(active=True)
 
     bid_obj = []
     current_bid = listng.start_price
@@ -61,7 +48,7 @@ def watch_validate(listing, user):
     if listing.id == db.listing_id:
         return True
     else:
-        #I should add logic to catch the possibility of dubplicates in the db
+        # I should add logic to catch the possibility of dubplicates in the db
         return False
 
 

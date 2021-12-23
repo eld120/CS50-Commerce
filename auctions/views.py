@@ -1,8 +1,8 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.db import IntegrityError, models
+from django.http import HttpResponseRedirect
 from django.core.exceptions import MultipleObjectsReturned
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.urls import reverse, reverse_lazy
 from .models import Comment, Bid, Watchlist
 from django.views.generic import (
@@ -10,7 +10,6 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     UpdateView,
-    DetailView,
 )
 from .forms import (
     ListingCreateForm,
@@ -21,11 +20,9 @@ from .forms import (
 )
 from .models import Listing, Comment, Bid, User
 from .services import (
-    get_max_bid,
     bid_validate,
-    user_end_listing,
+    is_listing_owner,
     watch_validate,
-    get_listing,
     validate_single_winner,
     determine_bid_winner,
 )
@@ -42,17 +39,17 @@ class IndexView(ListView):
 
 def watchlistview(request):
 
-    l_watch = Watchlist.objects.filter(user_id=request.user)
-    l_listing = Listing.objects.all()
+    watchlist = Watchlist.objects.filter(user_id=request.user)
+    listing = Listing.objects.all()
     user_lists = []
     watch_lists = []
 
-    for obj in l_watch:
+    for obj in watchlist:
         if obj.user_id == request.user.id:
             watch_lists.append(obj)
 
     for obj in watch_lists:
-        if obj.listing in l_listing:
+        if obj.listing in listing:
             user_lists.append(obj.listing)
 
     return render(request, "auctions/watchlist.html", {"listing": user_lists})
@@ -60,19 +57,19 @@ def watchlistview(request):
 
 def Listing_detail(request, slug):
     # the specific listing requested
-    list_detail = get_listing(slug)
-    watchlst = Watchlist.objects.filter(user_id=request.user.id, listing_id=list_detail)
+    list_detail = get_object_or_404(Listing, slug=slug)
+    watchlst = Watchlist.objects.filter(user_id=request.user.id) or None
+    comment_db = Comment.objects.filter(listing_id=list_detail.id)
+    max_bid = Bid.objects.filter(listing_id=list_detail.id) or None
+
     comment_form = CommentForm(request.POST or None)
     bid_form = BidForm(request.POST or None)
     watchlist_form = WatchlistForm(request.POST or None)
-    comment_db = Comment.objects.filter(listing__id=list_detail.id)
-    bid_db = Bid.objects.filter(listing_id=list_detail.id)
-    max_bid = get_max_bid(bid_db, list_detail)
-    if user_end_listing(list_detail, request.user):
+
+    if is_listing_owner(list_detail, request.user):
         end_list = EndForm(request.POST or None)
     else:
         end_list = None
-    
 
     if list_detail.end_listing():
         if not validate_single_winner(list_detail):
@@ -83,7 +80,7 @@ def Listing_detail(request, slug):
         list_detail.save()
 
     if request.method == "POST":
-        if 'comments' in request.POST and watchlist_form.is_valid():
+        if "comments" in request.POST and comment_form.is_valid():
             new_form = comment_form.save(commit=False)
             new_form.owner = request.user
             new_form.listing_id = list_detail.id
@@ -92,14 +89,13 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if 'watchlist' in request.POST and watchlist_form.is_valid():
+        if "watchlist" in request.POST and watchlist_form.is_valid():
             if watch_validate(list_detail, request.user) and len(watchlst) == 1:
                 watchlst[0].active = watchlist_form.cleaned_data["active"]
                 watchlst[0].save()
-                
-                
+
                 # watchlist_form.save()
-                
+
             else:
                 new_watch = Watchlist.objects.create(
                     listing_id=list_detail.id, user_id=request.user.id, active=True
@@ -110,7 +106,7 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if  'end_list' in request.POST and end_list.is_valid():
+        if "end_list" in request.POST and end_list.is_valid():
             print("maybe")
             list_detail.active = end_list.cleaned_data["active"]
             list_detail.save()
@@ -118,10 +114,10 @@ def Listing_detail(request, slug):
                 "auctions:listing_detail",
                 slug=slug,
             )
-        if 'bids' in request.POST and bid_form.is_valid():
+        if "bids" in request.POST and bid_form.is_valid():
 
-            if bid_form.cleaned_data["bid_max"] > max_bid["max_bid"] and bid_validate(
-                bid_form.cleaned_data["bid_max"], request.user
+            if bid_form.cleaned_data["bid"] > max_bid["max_bid"] and bid_validate(
+                bid_form.cleaned_data["bid"], request.user
             ):
                 new_bid = bid_form.save(commit=False)
                 new_bid.listing_id = list_detail.id

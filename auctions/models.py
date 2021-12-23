@@ -5,7 +5,7 @@ from django.db.models.aggregates import Max
 from django.urls import reverse
 from django.db.models.fields import DateTimeField, IntegerField, SlugField
 from django.utils import text, timezone
-
+from commerce import settings
 import datetime
 
 
@@ -31,7 +31,7 @@ class Listing(models.Model):
         blank=True,
     )
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
+        settings.AUTH_USER_MODEL, verbose_name="Seller", on_delete=models.DO_NOTHING
     )
 
     def end_listing(self):
@@ -62,8 +62,10 @@ class Watchlist(models.Model):
 
 
 class Bid(models.Model):
-    bid_current = models.FloatField(default=0.00)
-    bid_max = models.FloatField(default=0.00, verbose_name="Place Bid")
+    bid = models.FloatField(
+        default=0.00,
+        verbose_name="Place Bid",
+    )
     date = models.DateTimeField(auto_now=True, null=True)
     winning_bid = models.BooleanField(default=False)
     owner = models.ForeignKey(
@@ -73,7 +75,7 @@ class Bid(models.Model):
     active = models.BooleanField(default=True)
 
     def auction_winner(self):
-        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max("bid_max"))
+        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max("bid"))
 
     def __str__(self):
         return (
