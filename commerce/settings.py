@@ -12,10 +12,13 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import environ
-import os
+import os, socket
 
 
-env = environ.Env()
+env = environ.Env(
+    ALLOWED_HOSTS=(list, []),
+    INTERNAL_IPS =(list, []),
+)
 
 
 
@@ -61,6 +64,8 @@ INSTALLED_APPS = [
 #DEBUG TOOLBAR 
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar",]
+    
+    
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -149,3 +154,11 @@ STATIC_URL = "/static/"
 STATIC_ROOT = str(BASE_DIR.joinpath("static"))
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
+
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    "localhost"
+    # ...
+]
