@@ -5,7 +5,7 @@
         <img class="main__image image" src="{{ obj.image.url  }}" alt="{{ obj.title }}"/>
         <div class="main__listdetail">
           <h3>
-            <a class="main__link" href=" {% url 'auctions:listing_detail' obj.slug %}">{{ obj.title }}</a>
+            <a class="main__link" href=" {% url 'auctions:new_listing_detail' obj.slug %}">{{ obj.title }}</a>
           </h3>
 
           <span>Starting Bid: </span>${{ obj.start_price }}

@@ -3,6 +3,7 @@
 {% block body %}
 {% load crispy_forms_tags %}
     <table>
+        
         <div class="main__watchlist">
             <img src="{{  listing.image.url }}" alt="{{listing.title}}">
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST"> 
@@ -24,16 +25,12 @@
         </div>
 
         <div class="main__bid-form">
-            {% if current_bid %}
-                <h6>Starting Bid: </h6> <span> ${{ current_bid.bid__max }}</span>
-                {% else %}
-                <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max }}</span>
-            {% endif %}
-
+            <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max }}</span> 
+            <h6>Available Cash: </h6> <span> ${{ user_cash }}</span> 
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% for field in bid_form %}
                     {{ field.errors }}
-                    {{ field.label_tag }} {{field}}
+                     {{field}}
                 {% if field.help_text %}
                     {{ field.help_text }}
                 {% endif %}

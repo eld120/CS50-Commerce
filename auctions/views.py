@@ -232,6 +232,10 @@ def new_listing_detail(request, slug):
     #can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)
     current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max('bid'))
+    if current_bid['bid__max'] == None:
+        current_bid = {'bid__max': listing.start_price}
+        
+        
     comment_list = Comment.objects.filter(listing_id=listing.id)
     try:
         watchlist = Watchlist.objects.get(listing_id=listing.id, user_id=request.user)
@@ -243,7 +247,7 @@ def new_listing_detail(request, slug):
         'active' : watchlist.active
     }) 
     
-    print(watchlist.active)
+    
     if request.method == "POST":
         context = {
             'bid_form' : bid_form,
@@ -255,16 +259,16 @@ def new_listing_detail(request, slug):
             'listing': listing
         }
         if 'watchlist' in request.POST and watchlist_form.is_valid():
-            print(watchlist_form.cleaned_data)
-            
             if watchlist.user == request.user:
-                watchlist_form.cleaned_data['active']
-                watchlist_form.save()
+                watchlist.active = watchlist_form.cleaned_data['active']
+                watchlist.save()
                 return redirect('auctions:new_listing_detail', slug=slug)
             return render(request, 'auctions/listing_deets.html', context)
         
-        if 'bid' in request.POST:
-            pass
+        if 'bid' in request.POST and bid_form.is_valid():
+            if request.user.cash > bid_form.cleaned_data['bid']:
+                bid_form.save()
+                request.user.cash = request.user.cash - bid_form.cleaned_data['bid']
         
         if 'comment' in request.POST:
             pass
@@ -277,5 +281,6 @@ def new_listing_detail(request, slug):
         'current_bid': current_bid,
         'comment_list': comment_list,
         'watchlist' :  watchlist,
-        'listing': listing
+        'listing': listing,
+        'user_cash': request.user.cash
     })
