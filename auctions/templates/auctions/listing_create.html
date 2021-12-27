@@ -1,6 +1,6 @@
 
 {% extends "auctions/layout.html" %}
-
+{% load crispy_forms_tags %}
 
 
 {% block body %}
@@ -10,8 +10,23 @@
         <form class="main__form" method="POST" enctype="multipart/form-data">
 
         {% csrf_token %}
-
-        {{ form }}
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field.errors }}
+            {{ hidden_field }}
+        {% endfor %}
+        <table border="1">
+            {% for field in form.visible_fields %}
+              <tr>
+                <th>{{ field.label_tag }}</th>
+                <td>
+                  {{ field.errors }}
+                  {{ field }}
+                  {{ field.help_text }}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        
             <button class="main__submit" type="submit">SUBMIT</button>
         </form>
     </div>

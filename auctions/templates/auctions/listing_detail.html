@@ -14,11 +14,11 @@
           method="POST" >{% csrf_token %}
           {{watchlist.label_tag}}
           {{ watchlist | crispy }}
-          <input type="submit" name="watchlist" value="sub" >
+          <input type="submit" name="watchlist" value="Add to Watchlist" >
         </form>
       {% endif %}
       <strong><p>Description:</p> </strong>{{ listing.description }}
-      <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.max_bid }}{% endif %}
+      <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.bid__max }}{% endif %} 
       {% comment %} ${{listing.start_price}} {% endcomment %}
 {% comment %} bid form {% endcomment %}
       {% if user.is_authenticated %}
@@ -26,7 +26,7 @@
               method="POST"
             >
               {% csrf_token %}{{bids | crispy}}
-              <input type="submit" name="bids" value="sub">
+              <input type="submit" name="bids" value="Bid">
             </form>
         {% endif %}
       <strong>
@@ -40,12 +40,21 @@
     <div>
       {% if user.is_authenticated %} 
       
-      <a class="delete" href="{% url 'auctions:listing_delete' listing.slug %}"
-        >Delete this listing</a>
-        {% if not end_list == None %}
+      {% if not end_list == None %}
           <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
-          {% csrf_token %} {{ end_list | crispy}}
-          <input type="submit" name="end_list" value="sub">
+          {% csrf_token %}
+          {% for field in end_list  %}
+          <tr>
+            <th>{{ field.label_tag }}</th>
+            <td>
+              {{ field.errors  }}
+              {{ field  }}
+              {{ field.help_text  }}
+            </td>
+          </tr>
+          {% endfor %}
+          
+          <input type="submit" name="end_list" value="Delete">
           </form>
         {% endif %}
        {% else %} Not signed in. {%endif%}
@@ -62,7 +71,7 @@
     {% if user.is_authenticated %}
       <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
         {% csrf_token %} {{comments | crispy}}
-        <input type="submit" name="comments" value="sub">
+        <input type="submit" name="comments" value="Comment">
       </form>
     {% endif %}
     {% for comm in comment_db %}

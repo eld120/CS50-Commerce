@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.db import IntegrityError, models
+from django.db import IntegrityError, models 
 from django.http import HttpResponseRedirect
 from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
@@ -21,8 +21,7 @@ from .forms import (
 from .models import Listing, Comment, Bid, User
 from .services import (
     bid_validate,
-    is_listing_owner,
-    watch_validate,
+     watch_validate,
     validate_single_winner,
     determine_bid_winner,
 )
@@ -60,13 +59,13 @@ def Listing_detail(request, slug):
     list_detail = get_object_or_404(Listing, slug=slug)
     watchlst = Watchlist.objects.filter(user_id=request.user.id) or None
     comment_db = Comment.objects.filter(listing_id=list_detail.id)
-    max_bid = Bid.objects.filter(listing_id=list_detail.id) or None
+    max_bid = Bid.objects.filter(listing_id=list_detail.id).aggregate(models.Max('bid'))
 
     comment_form = CommentForm(request.POST or None)
     bid_form = BidForm(request.POST or None)
     watchlist_form = WatchlistForm(request.POST or None)
 
-    if is_listing_owner(list_detail, request.user):
+    if list_detail.owner_id == request.user.id:
         end_list = EndForm(request.POST or None)
     else:
         end_list = None
@@ -116,7 +115,7 @@ def Listing_detail(request, slug):
             )
         if "bids" in request.POST and bid_form.is_valid():
 
-            if bid_form.cleaned_data["bid"] > max_bid["max_bid"] and bid_validate(
+            if bid_form.cleaned_data["bid"] > max_bid.bid and bid_validate(
                 bid_form.cleaned_data["bid"], request.user
             ):
                 new_bid = bid_form.save(commit=False)
@@ -226,3 +225,57 @@ def register(request):
         return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")
+
+
+
+def new_listing_detail(request, slug):
+    #can we reduce the number of DB queries here?
+    listing = get_object_or_404(Listing, slug=slug)
+    current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max('bid'))
+    comment_list = Comment.objects.filter(listing_id=listing.id)
+    try:
+        watchlist = Watchlist.objects.get(listing_id=listing.id, user_id=request.user)
+    except models.ObjectDoesNotExist:
+        watchlist = {'active' : False, 'user_id' : request.user, 'listing_id': listing.id }
+    bid_form = BidForm(request.POST or None)
+    comment_form = CommentForm(request.POST or None)
+    watchlist_form = WatchlistForm(request.POST or None, initial={
+        'active' : watchlist.active
+    }) 
+    
+    print(watchlist.active)
+    if request.method == "POST":
+        context = {
+            'bid_form' : bid_form,
+            'comment_form' : comment_form,
+            'watchlist_form': watchlist_form,
+            'current_bid': current_bid,
+            'comment_list': comment_list,
+            'watchlist' :  watchlist,
+            'listing': listing
+        }
+        if 'watchlist' in request.POST and watchlist_form.is_valid():
+            print(watchlist_form.cleaned_data)
+            
+            if watchlist.user == request.user:
+                watchlist_form.cleaned_data['active']
+                watchlist_form.save()
+                return redirect('auctions:new_listing_detail', slug=slug)
+            return render(request, 'auctions/listing_deets.html', context)
+        
+        if 'bid' in request.POST:
+            pass
+        
+        if 'comment' in request.POST:
+            pass
+        
+    
+    return render(request, 'auctions/listing_deets.html', {
+        'bid_form' : bid_form,
+        'comment_form' : comment_form,
+        'watchlist_form': watchlist_form,
+        'current_bid': current_bid,
+        'comment_list': comment_list,
+        'watchlist' :  watchlist,
+        'listing': listing
+    })
