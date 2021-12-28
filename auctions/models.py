@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models.aggregates import Max
 from django.urls import reverse
 from django.db.models.fields import DateTimeField, IntegerField, SlugField
-from django.utils import text, timezone
+from django.utils import text, timezone, functional
 from commerce import settings
 import datetime
 
@@ -12,6 +12,11 @@ import datetime
 class User(AbstractUser):
     cash = models.IntegerField(default=1000, null=True)
 
+    @functional.cached_property
+    def withdraw_cash(self, cash):
+        self.cash = self.cash - cash
+        return self.cash
+        
     def __str__(self):
         return self.first_name + self.last_name
 
@@ -62,20 +67,16 @@ class Watchlist(models.Model):
 
 
 class Bid(models.Model):
-    bid = models.FloatField(
-        default=0.00,
-        verbose_name="Place Bid",
-    )
-    date = models.DateTimeField(auto_now=True, null=True)
+    bid = models.FloatField(verbose_name="Place Bid")
+    date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
-    )
-    listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
-    def auction_winner(self):
-        listing_bids = Bid.objects.filter(listing_id=self.id).aggregate(Max("bid"))
+    def auction_winner(self, Listing):
+        self.listing = Listing.id
 
     def __str__(self):
         return (

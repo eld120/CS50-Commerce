@@ -247,17 +247,21 @@ def new_listing_detail(request, slug):
         'active' : watchlist.active
     }) 
     
-    
-    if request.method == "POST":
-        context = {
+    context = {
             'bid_form' : bid_form,
             'comment_form' : comment_form,
             'watchlist_form': watchlist_form,
             'current_bid': current_bid,
             'comment_list': comment_list,
             'watchlist' :  watchlist,
-            'listing': listing
+            'listing': listing,
+            'user_cash': request.user.cash
         }
+    
+    if request.method == "POST":
+        print(bid_form.errors)
+        print(bid_form)
+       
         if 'watchlist' in request.POST and watchlist_form.is_valid():
             if watchlist.user == request.user:
                 watchlist.active = watchlist_form.cleaned_data['active']
@@ -265,22 +269,23 @@ def new_listing_detail(request, slug):
                 return redirect('auctions:new_listing_detail', slug=slug)
             return render(request, 'auctions/listing_deets.html', context)
         
-        if 'bid' in request.POST and bid_form.is_valid():
+        if 'bids' in request.POST and bid_form.is_valid():
+            
             if request.user.cash > bid_form.cleaned_data['bid']:
-                bid_form.save()
+                b = bid_form.save(commit=False)
+                b.owner_id = request.user.id
+                b.listing_id = listing.id 
+                b.save()
+                
                 request.user.cash = request.user.cash - bid_form.cleaned_data['bid']
+                return redirect('auctions:new_listing_detail', slug=slug)
+            
+            
+            return render(request, 'auctions/listing_deets.html', context)
         
-        if 'comment' in request.POST:
+        if 'comment' in request.POST and comment_form.is_valid():
+            c
             pass
         
     
-    return render(request, 'auctions/listing_deets.html', {
-        'bid_form' : bid_form,
-        'comment_form' : comment_form,
-        'watchlist_form': watchlist_form,
-        'current_bid': current_bid,
-        'comment_list': comment_list,
-        'watchlist' :  watchlist,
-        'listing': listing,
-        'user_cash': request.user.cash
-    })
+    return render(request, 'auctions/listing_deets.html', context)

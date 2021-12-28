@@ -22,9 +22,7 @@
       {% comment %} ${{listing.start_price}} {% endcomment %}
 {% comment %} bid form {% endcomment %}
       {% if user.is_authenticated %}
-            <form action="{% url 'auctions:listing_detail' listing.slug %}"
-              method="POST"
-            >
+            <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
               {% csrf_token %}{{bids | crispy}}
               <input type="submit" name="bids" value="Bid">
             </form>
