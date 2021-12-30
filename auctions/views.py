@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib import messages
 from django.db import IntegrityError, models 
 from django.http import HttpResponseRedirect
 from django.core.exceptions import MultipleObjectsReturned
@@ -259,9 +260,7 @@ def new_listing_detail(request, slug):
         }
     
     if request.method == "POST":
-        print(bid_form.errors)
-        print(bid_form)
-       
+            
         if 'watchlist' in request.POST and watchlist_form.is_valid():
             if watchlist.user == request.user:
                 watchlist.active = watchlist_form.cleaned_data['active']
@@ -275,16 +274,17 @@ def new_listing_detail(request, slug):
                 b = bid_form.save(commit=False)
                 b.owner_id = request.user.id
                 b.listing_id = listing.id 
+                user = request.user
+                user.cash = user.cash - b.bid
+                user.save()
                 b.save()
-                
-                request.user.cash = request.user.cash - bid_form.cleaned_data['bid']
                 return redirect('auctions:new_listing_detail', slug=slug)
             
-            
+            messages.error(request, 'You do not have sufficient funds')
             return render(request, 'auctions/listing_deets.html', context)
         
         if 'comment' in request.POST and comment_form.is_valid():
-            c
+            
             pass
         
     

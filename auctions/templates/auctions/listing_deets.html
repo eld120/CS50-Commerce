@@ -11,7 +11,7 @@
                 {% for field in watchlist_form %}
 
                     {{ field.errors }}
-                    {{ field.label }} {{field}}
+                    {{ field.label_tag }} {{field}}
                 {% if field.help_text %}
                     {{ field.help_text }}
                 {% endif %}
@@ -25,13 +25,20 @@
         </div>
 
         <div class="main__bid-form">
-            <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max }}</span> 
-            <h6>Available Cash: </h6> <span> ${{ user_cash }}</span> 
+            <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max |floatformat:2}}</span> 
+            <h6>Available Cash: </h6> <span> ${{ user_cash |floatformat:2}}</span> 
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% csrf_token %}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
                 {% for field in bid_form %}
                     {{ field.errors }}
-                    {{ field.label }} {{field}}
+                    {{ field.label_tag }} {{field }}
                 {% if field.help_text %}
                     {{ field.help_text }}
                 {% endif %}
@@ -47,9 +54,10 @@
     <div class="main__comments">
         <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
             {% csrf_token %}
+            
             {% for field in comment_form %}
                 {{ field.errors }}
-                {{ field.label }} {{field}}
+                {{ field.label_tag }} {{field}}
             {% if field.help_text %}
                 {{ field.help_text }}
             {% endif %}
