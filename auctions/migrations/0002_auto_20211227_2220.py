@@ -8,38 +8,46 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auctions', '0001_initial'),
+        ("auctions", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bid',
-            name='bid',
-            field=models.FloatField(verbose_name='Place Bid'),
+            model_name="bid",
+            name="bid",
+            field=models.FloatField(verbose_name="Place Bid"),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='date',
+            model_name="bid",
+            name="date",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='listing',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.listing'),
+            model_name="bid",
+            name="listing",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to="auctions.listing"
+            ),
         ),
         migrations.AlterField(
-            model_name='bid',
-            name='owner',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.user'),
+            model_name="bid",
+            name="owner",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to="auctions.user"
+            ),
         ),
         migrations.AlterField(
-            model_name='listing',
-            name='auction_end',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2022, 1, 3, 22, 20, 29, 490986), null=True),
+            model_name="listing",
+            name="auction_end",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2022, 1, 3, 22, 20, 29, 490986),
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='watchlist',
-            name='active',
-            field=models.BooleanField(default=False, verbose_name='Watchlist'),
+            model_name="watchlist",
+            name="active",
+            field=models.BooleanField(default=False, verbose_name="Watchlist"),
         ),
     ]

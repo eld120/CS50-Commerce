@@ -16,7 +16,7 @@ class User(AbstractUser):
     def withdraw_cash(self, cash):
         self.cash = self.cash - cash
         return self.cash
-        
+
     def __str__(self):
         return self.first_name + self.last_name
 
@@ -65,13 +65,16 @@ class Watchlist(models.Model):
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 
+    def save(self, *args, **kwargs):
+        # TODO
+        super(Watchlist, self).save(*args, **kwargs)
+
 
 class Bid(models.Model):
     bid = models.FloatField(verbose_name="Place Bid")
     date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 

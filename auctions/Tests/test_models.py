@@ -20,7 +20,7 @@ class BidTests(TestCase):
             
         )
         self.listing = Listing.objects.create(
-            id=1,
+            id=6,
             slug='test-listing-1',
             title='Test Listing 1',
             description= 'This is a test',
@@ -33,7 +33,7 @@ class BidTests(TestCase):
             owner=self.user,
         )
         self.bid = Bid.objects.create(
-            id=1,
+            id=9,
             bid=5.00,
             date=datetime.datetime.now(),
             winning_bid=False,
@@ -41,6 +41,18 @@ class BidTests(TestCase):
             listing=self.listing,
             active=True,
             )
+        
+        self.comment = Comment.objects.create(
+            text='this is a comment about a listing or a bid',
+            comment_date=datetime.datetime.now(),
+            owner=self.user,
+            listing=self.listing,
+        )
+        self.watchlist = Watchlist.objects.create(
+            user=self.user,
+            listing=self.listing,
+            active=False,
+        )
         
         
     def tearDown(self):
@@ -50,4 +62,25 @@ class BidTests(TestCase):
         
     
     def test_bid(self):
-        self.assertEqual(self.bid.owner, self.user)
+        bid_one = Bid.objects.get(id=9)
+        bid_two = Bid.objects.get()
+        user = User.objects.get(id=)
+        
+        self.assertEqual(bid_one.owner, user)
+        self.assertEqual(self.bid.owner.id, 3)
+        
+        
+    def test_user(self):
+        pass
+    
+    
+    def test_comment(self):
+        pass
+    
+    
+    def test_listing(self):
+        pass
+    
+    
+    def test_watchlist(self):
+        pass

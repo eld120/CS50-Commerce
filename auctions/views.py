@@ -1,6 +1,6 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user_model, decorators
 from django.contrib import messages
-from django.db import IntegrityError, models 
+from django.db import IntegrityError, models
 from django.http import HttpResponseRedirect
 from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
@@ -22,7 +22,7 @@ from .forms import (
 from .models import Listing, Comment, Bid, User
 from .services import (
     bid_validate,
-     watch_validate,
+    watch_validate,
     validate_single_winner,
     determine_bid_winner,
 )
@@ -60,7 +60,7 @@ def Listing_detail(request, slug):
     list_detail = get_object_or_404(Listing, slug=slug)
     watchlst = Watchlist.objects.filter(user_id=request.user.id) or None
     comment_db = Comment.objects.filter(listing_id=list_detail.id)
-    max_bid = Bid.objects.filter(listing_id=list_detail.id).aggregate(models.Max('bid'))
+    max_bid = Bid.objects.filter(listing_id=list_detail.id).aggregate(models.Max("bid"))
 
     comment_form = CommentForm(request.POST or None)
     bid_form = BidForm(request.POST or None)
@@ -228,64 +228,105 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-
 def new_listing_detail(request, slug):
-    #can we reduce the number of DB queries here?
+    # can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)
-    current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max('bid'))
-    if current_bid['bid__max'] == None:
-        current_bid = {'bid__max': listing.start_price}
-        
-        
-    comment_list = Comment.objects.filter(listing_id=listing.id)
-    try:
-        watchlist = Watchlist.objects.get(listing_id=listing.id, user_id=request.user)
-    except models.ObjectDoesNotExist:
-        watchlist = {'active' : False, 'user_id' : request.user, 'listing_id': listing.id }
+    current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max("bid"))
+    if current_bid["bid__max"] == None:
+        current_bid = {"bid__max": listing.start_price}
+    comment_list = Comment.objects.filter(listing_id=listing.id).values('text')
+    # handle watchlist/user cash for anonymous user or logged in user
+    watchlist = False
+    user_cash = 0
+    if request.user.is_authenticated:
+        try:
+            watchlist = Watchlist.objects.get(
+                listing_id=listing.id, user_id=request.user
+            )
+            user_cash = request.user.cash
+        except models.ObjectDoesNotExist:
+            pass
+            
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
-    watchlist_form = WatchlistForm(request.POST or None, initial={
-        'active' : watchlist.active
-    }) 
-    
-    context = {
-            'bid_form' : bid_form,
-            'comment_form' : comment_form,
-            'watchlist_form': watchlist_form,
-            'current_bid': current_bid,
-            'comment_list': comment_list,
-            'watchlist' :  watchlist,
-            'listing': listing,
-            'user_cash': request.user.cash
-        }
-    
+
+    if watchlist:
+        watchlist_active = watchlist.active
+    else:
+        watchlist_active = False
+    watchlist_form = WatchlistForm(
+        request.POST or None, initial={"active": watchlist_active}
+    )
+
     if request.method == "POST":
-            
-        if 'watchlist' in request.POST and watchlist_form.is_valid():
+
+        if "watchlist" in request.POST and watchlist_form.is_valid():
             if watchlist.user == request.user:
-                watchlist.active = watchlist_form.cleaned_data['active']
+                watchlist.active = watchlist_form.cleaned_data["active"]
                 watchlist.save()
-                return redirect('auctions:new_listing_detail', slug=slug)
-            return render(request, 'auctions/listing_deets.html', context)
-        
-        if 'bids' in request.POST and bid_form.is_valid():
-            
-            if request.user.cash > bid_form.cleaned_data['bid']:
+                return redirect("auctions:new_listing_detail", slug=slug)
+            return render(
+                request,
+                "auctions/listing_deets.html",
+                {
+                    "bid_form": bid_form,
+                    "comment_form": comment_form,
+                    "watchlist_form": watchlist_form,
+                    "current_bid": current_bid,
+                    "comment_list": comment_list,
+                    "watchlist": watchlist_active,
+                    "listing": listing,
+                    "user_cash": user_cash,
+                },
+            )
+
+        if "bids" in request.POST and bid_form.is_valid():
+
+            if request.user.cash > bid_form.cleaned_data["bid"]:
                 b = bid_form.save(commit=False)
                 b.owner_id = request.user.id
-                b.listing_id = listing.id 
+                b.listing_id = listing.id
                 user = request.user
                 user.cash = user.cash - b.bid
                 user.save()
                 b.save()
-                return redirect('auctions:new_listing_detail', slug=slug)
+                return redirect("auctions:new_listing_detail", slug=slug)
+
+            messages.error(request, "You do not have sufficient funds")
+            return render(
+                request,
+                "auctions/listing_deets.html",
+                {
+                    "bid_form": bid_form,
+                    "comment_form": comment_form,
+                    "watchlist_form": watchlist_form,
+                    "current_bid": current_bid,
+                    "comment_list": comment_list,
+                    "watchlist": watchlist,
+                    "listing": listing,
+                    "user_cash": user_cash,
+                },
+            )
+
+        if "comment" in request.POST and comment_form.is_valid():
+            c = comment_form.save(commit=False)
+            c.owner = request.user
+            c.listing = listing
+            c.save()
+            return redirect("auctions:new_listing_detail", slug=slug)
             
-            messages.error(request, 'You do not have sufficient funds')
-            return render(request, 'auctions/listing_deets.html', context)
-        
-        if 'comment' in request.POST and comment_form.is_valid():
-            
-            pass
-        
-    
-    return render(request, 'auctions/listing_deets.html', context)
+
+    return render(
+        request,
+        "auctions/listing_deets.html",
+        {
+            "bid_form": bid_form,
+            "comment_form": comment_form,
+            "watchlist_form": watchlist_form,
+            "current_bid": current_bid,
+            "comment_list": comment_list,
+            "watchlist": watchlist,
+            "listing": listing,
+            "user_cash": user_cash,
+        },
+    )

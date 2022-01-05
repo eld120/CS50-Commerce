@@ -6,6 +6,7 @@
         
         <div class="main__watchlist">
             <img src="{{  listing.image.url }}" alt="{{listing.title}}">
+            {% if user.is_authenticated %}
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST"> 
                 {% csrf_token %}
                 {% for field in watchlist_form %}
@@ -23,10 +24,13 @@
                 {% endif %}
             </form>
         </div>
+        {% endif %}
 
         <div class="main__bid-form">
             <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max |floatformat:2}}</span> 
-            <h6>Available Cash: </h6> <span> ${{ user_cash |floatformat:2}}</span> 
+            {% if user.is_authenticated %}
+                <h6>Available Cash: </h6> <span> ${{ user_cash |floatformat:2}}</span> 
+            
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% csrf_token %}
                 {% if messages %}
@@ -48,24 +52,35 @@
                     <input type="submit" name="bids" value="Bid">
                 </form>
             </div>
+            {% endif %}
     </table>
 
 
     <div class="main__comments">
-        <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
-            {% csrf_token %}
-            
-            {% for field in comment_form %}
-                {{ field.errors }}
-                {{ field.label_tag }} {{field}}
-            {% if field.help_text %}
-                {{ field.help_text }}
-            {% endif %}
-            {% endfor%}
-            <input type="submit" name="comment" value="Add Comment">
-        </form>
-
-
+        {% if user.is_authenticated %}
+        
+        <table>
+            <tr>
+                <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
+                    {% csrf_token %}
+                    
+                    {% for field in comment_form %}
+                        {{ field.errors }}
+                        {{ field.label_tag }} {{field}}
+                    {% if field.help_text %}
+                        {{ field.help_text }}
+                    {% endif %}
+                    {% endfor%}
+                    <input type="submit" name="comment" value="Add Comment">
+                </form>
+            </tr>
+        {% endif %}
+            {% for comment in comment_list  %}
+            <tr>
+                {{comment.text}}
+            </tr>
+            {% endfor %}
+        
     </div>
 
 
