@@ -27,9 +27,9 @@
         {% endif %}
 
         <div class="main__bid-form">
-            <h6>Current Bid: </h6> <span> ${{ current_bid.bid__max |floatformat:2}}</span> 
+            <h6>Current Bid:  <span> ${{ current_bid.bid__max |floatformat:2}}</span> </h6>
             {% if user.is_authenticated %}
-                <h6>Available Cash: </h6> <span> ${{ user_cash |floatformat:2}}</span> 
+                <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
             
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% csrf_token %}
@@ -75,14 +75,16 @@
                 </form>
             </tr>
         {% endif %}
-            {% for comment in comment_list  %}
-            <tr>
-                {{comment.text}}
-            </tr>
-            {% endfor %}
-        
+           
     </div>
-
+    <table class="main__comment-list">
+        {% for comment in comment_list  %}
+        <tr>
+            <td>{{comment.text}}</td>
+        </tr>
+        {% endfor %}
+    
+    </table>
 
 
 {% endblock body %}

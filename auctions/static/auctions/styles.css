@@ -146,12 +146,28 @@ select {
 }
 
 .main {
-  padding: 2em;
+  padding: 3rem 2rem;
+  overflow-y: scroll;
 }
 .main__image {
   width: 50vw;
   margin: 0;
   display: inline-block;
+}
+.main__comments {
+  margin: 0;
+}
+.main__comment-list tr {
+  margin: 2.5rem;
+}
+.main__comment-list td {
+  display: inline-block;
+  border-style: none;
+  padding: 1rem 2.5rem;
+  background-color: #E8E8E8;
+  border-radius: 0.65rem;
+  width: 100%;
+  margin: 0.35rem 0;
 }
 
 /* iPads (landscape) ----------- */
