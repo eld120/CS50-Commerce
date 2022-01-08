@@ -145,9 +145,28 @@ select {
   padding: 0;
 }
 
+.button {
+  background-color: white;
+  border-radius: 0.8rem;
+  border: solid #404040 1px;
+  margin: 0.5rem;
+  padding: 0.35rem;
+}
+
+.button:hover {
+  background-color: #404040;
+  color: white;
+}
+
 .main {
   padding: 3rem 2rem;
   overflow-y: scroll;
+}
+.main__image-container {
+  background-color: #E8E8E8;
+  padding: 0.5rem 1rem;
+  margin: 0 auto;
+  width: 100%;
 }
 .main__image {
   width: 50vw;
@@ -162,12 +181,12 @@ select {
 }
 .main__comment-list td {
   display: inline-block;
-  border-style: none;
+  border: solid #E8E8E8 3px;
   padding: 1rem 2.5rem;
-  background-color: #E8E8E8;
   border-radius: 0.65rem;
   width: 100%;
   margin: 0.35rem 0;
+  color: #404040;
 }
 
 /* iPads (landscape) ----------- */
@@ -175,6 +194,9 @@ select {
   /* Styles */
   .main__image {
     width: 35vw;
+  }
+  .main__comment-list {
+    max-width: 40rem;
   }
 }
 /* Desktops and laptops ----------- */

@@ -1,9 +1,27 @@
 @use 'vars';
 
+.button{
+    background-color: white;
+    border-radius: .8rem;
+    border: solid vars.$text-color 1px;
+    margin: .5rem;
+    padding: .35rem;
+}
+.button:hover{
+    background-color: vars.$text-color;
+    color: white;
+}
+
 .main{
     
     padding: 3rem 2rem;
     overflow-y:scroll;
+    &__image-container{
+        background-color: vars.$background-light;
+        padding: .5rem 1rem;
+        margin: 0 auto;
+        width: 100%;
+    }
     &__image{
         width: 50vw;
         margin: 0;
@@ -20,12 +38,12 @@
     }
     td{
         display: inline-block;
-        border-style: none;
+        border: solid vars.$background-light 3px;
         padding: 1rem 2.5rem;   
-        background-color: vars.$background-light;
         border-radius: .65rem;
         width: 100%;
         margin: .35rem 0;
+        color: vars.$text-color
         
         }
     }
@@ -43,7 +61,11 @@
         &__image{
             width: 35vw;
         }
+        &__comment-list{
+            max-width: 40rem;
+        }
     }
+
 }
 
 

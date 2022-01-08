@@ -2,10 +2,11 @@
 
 {% block body %}
 {% load crispy_forms_tags %}
-    <table>
-        
+    <div class="main__image-container">
+        <img class="main__image"src="{{  listing.image.url }}" alt="{{listing.title}}">
+    </div>
         <div class="main__watchlist">
-            <img src="{{  listing.image.url }}" alt="{{listing.title}}">
+            
             {% if user.is_authenticated %}
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST"> 
                 {% csrf_token %}
@@ -18,9 +19,9 @@
                 {% endif %}
                 {% endfor%}
                 {%if watchlist %}
-                    <input type="submit" name="watchlist" value="Add">
+                    <input type="submit" name="watchlist" class="button" value="Add">
                 {% else %}
-                    <input type="submit" name="watchlist" value="Remove">
+                    <input type="submit" name="watchlist" class="button" value="Remove">
                 {% endif %}
             </form>
         </div>
@@ -49,11 +50,11 @@
                 {% endfor%}
 
             
-                    <input type="submit" name="bids" value="Bid">
+                    <input type="submit" name="bids" class="button" value="Bid">
                 </form>
             </div>
             {% endif %}
-    </table>
+    
 
 
     <div class="main__comments">
@@ -71,7 +72,7 @@
                         {{ field.help_text }}
                     {% endif %}
                     {% endfor%}
-                    <input type="submit" name="comment" value="Add Comment">
+                    <input type="submit" name="comment" class="button" value="Add Comment">
                 </form>
             </tr>
         {% endif %}
