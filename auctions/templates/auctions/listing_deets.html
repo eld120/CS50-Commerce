@@ -18,9 +18,11 @@
                     {{ field.help_text }}
                 {% endif %}
                 {% endfor%}
-                {%if watchlist %}
+                {%if watchlist_active %}
+                    <input type="hidden" name="active" id="id_active">
                     <input type="submit" name="watchlist" class="button" value="Add">
                 {% else %}
+                    
                     <input type="submit" name="watchlist" class="button" value="Remove">
                 {% endif %}
             </form>

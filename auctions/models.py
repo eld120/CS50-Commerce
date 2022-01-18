@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
@@ -16,7 +17,7 @@ class User(AbstractUser):
     def withdraw_cash(self, cash):
         self.cash = self.cash - cash
         return self.cash
-
+        
     def __str__(self):
         return self.first_name + self.last_name
 
@@ -64,9 +65,9 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
-
+    
     def save(self, *args, **kwargs):
-        # TODO
+        #TODO
         super(Watchlist, self).save(*args, **kwargs)
 
 
@@ -74,7 +75,8 @@ class Bid(models.Model):
     bid = models.FloatField(verbose_name="Place Bid")
     date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
@@ -88,6 +90,18 @@ class Bid(models.Model):
 
     def get_absolute_url(self):
         return reverse("Bid", kwargs={"slug": self.slug})
+
+    def clean(self, *args, **kwargs):
+        if not self.bid > 0:
+            raise ValidationError({'bid': 'Your bid must be a positive value'})
+        
+        super().clean(*args, **kwargs)
+        
+        
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Bid, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):

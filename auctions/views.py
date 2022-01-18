@@ -235,6 +235,7 @@ def new_listing_detail(request, slug):
     if current_bid["bid__max"] == None:
         current_bid = {"bid__max": listing.start_price}
     comment_list = Comment.objects.filter(listing_id=listing.id).values('text')
+    
     # handle watchlist/user cash for anonymous user or logged in user
     watchlist = False
     user_cash = 0

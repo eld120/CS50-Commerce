@@ -1,5 +1,6 @@
-from django.test import TestCase, Client
 
+from django.test import TestCase, Client
+from django.core.exceptions import ValidationError
 from auctions.models import Bid, Listing, Comment, Watchlist, User
 
 import datetime
@@ -63,12 +64,24 @@ class BidTests(TestCase):
     
     def test_bid(self):
         bid_one = Bid.objects.get(id=9)
-        bid_two = Bid.objects.get()
-        user = User.objects.get(id=)
+        
+        user = User.objects.get(id=3)
         
         self.assertEqual(bid_one.owner, user)
         self.assertEqual(self.bid.owner.id, 3)
+        self.assertNotEqual(bid_one.bid, 50.00 )
         
+    def test_negative_bid(self):
+        with self.assertRaises(ValidationError):
+            Bid.objects.create(
+            id=50,
+            bid=-1.00,
+            date=datetime.datetime.now(),
+            winning_bid=False,
+            owner=self.user,
+            listing=self.listing,
+            active=True,
+            )
         
     def test_user(self):
         pass
