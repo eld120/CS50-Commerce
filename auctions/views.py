@@ -288,7 +288,7 @@ def new_listing_detail(request, slug):
                 b.owner_id = request.user.id
                 b.listing_id = listing.id
                 user = request.user
-                user.cash = user.cash - b.bid
+                user.withdraw_cash(b.bid) 
                 user.save()
                 b.save()
                 return redirect("auctions:new_listing_detail", slug=slug)

@@ -11,12 +11,17 @@ import datetime
 
 
 class User(AbstractUser):
-    cash = models.IntegerField(default=1000, null=True)
+    cash = models.IntegerField(default=1000)
+    credit = models.IntegerField(default=0,)
 
-    @functional.cached_property
+    # @functional.cached_property
     def withdraw_cash(self, cash):
-        self.cash = self.cash - cash
-        return self.cash
+        return self.cash - cash
+    
+    # @functional.cached_property
+    def calculate_credit(self, bid, credit):
+        self.credit = bid + credit
+        return self.credit
         
     def __str__(self):
         return self.first_name + self.last_name
@@ -91,9 +96,22 @@ class Bid(models.Model):
     def get_absolute_url(self):
         return reverse("Bid", kwargs={"slug": self.slug})
 
-    def clean(self, *args, **kwargs):
+    def validate_bid(self):
+        #bids must be greater than $0
         if not self.bid > 0:
             raise ValidationError({'bid': 'Your bid must be a positive value'})
+        #bids must be greater than previous bids on the same listing
+        try:
+            highest_bid = Bid.objects.filter(listing_id=self.listing).aggregate(models.Max("bid"))
+            
+            #if not self.bid > highest_bid['bid__max'] + 1:
+             #   raise ValidationError({'bid': f'The current minimum bid is {highest_bid}'})
+        except Bid.DoesNotExist:
+            pass
+        
+        
+    def clean(self, *args, **kwargs):
+        self.validate_bid()
         
         super().clean(*args, **kwargs)
         
