@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.db.models.fields import DateTimeField, IntegerField, SlugField
 from django.utils import text, timezone, functional
 from commerce import settings
-import datetime
+import datetime, pytz
 
 
 class User(AbstractUser):
@@ -36,7 +36,7 @@ class Listing(models.Model):
     start_price = models.FloatField(default=0.99)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=datetime.datetime.now()
+        default=timezone.now()
         + datetime.timedelta(days=7),  # not timezone aware? needs testing
         null=True,
         blank=True,
@@ -100,14 +100,13 @@ class Bid(models.Model):
         #bids must be greater than $0
         if not self.bid > 0:
             raise ValidationError({'bid': 'Your bid must be a positive value'})
+        
         #bids must be greater than previous bids on the same listing
-        try:
-            highest_bid = Bid.objects.filter(listing_id=self.listing).aggregate(models.Max("bid"))
-            
-            #if not self.bid > highest_bid['bid__max'] + 1:
-             #   raise ValidationError({'bid': f'The current minimum bid is {highest_bid}'})
-        except Bid.DoesNotExist:
-            pass
+        highest_bid = Bid.objects.filter(listing_id=self.listing).aggregate(models.Max("bid"))
+        if highest_bid['bid__max'] is None:
+            highest_bid['bid__max'] = 0
+        if not self.bid >= highest_bid['bid__max'] + 1:
+            raise ValidationError({'bid': f'The current minimum bid is {highest_bid["bid__max"]}'})
         
         
     def clean(self, *args, **kwargs):

@@ -1,9 +1,10 @@
 
+from django.utils import timezone
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from auctions.models import Bid, Listing, Comment, Watchlist, User
 
-import datetime
+import datetime, pytz
 
 # Create your tests here.
 class BidTests(TestCase):
@@ -18,7 +19,6 @@ class BidTests(TestCase):
             email="test@origma.io",
             is_active=True,
             cash=100
-            
         )
         self.listing = Listing.objects.create(
             id=6,
@@ -28,15 +28,15 @@ class BidTests(TestCase):
             image='images/origma.png',
             active=True,
             start_price=0.99,
-            auction_start=datetime.datetime.now(),
-            auction_end=datetime.datetime.now()
+            auction_start=timezone.now(),
+            auction_end=timezone.now()
         + datetime.timedelta(days=7),
             owner=self.user,
         )
         self.bid = Bid.objects.create(
             id=9,
             bid=5.00,
-            date=datetime.datetime.now(),
+            date=timezone.now(),
             winning_bid=False,
             owner=self.user,
             listing=self.listing,
@@ -45,7 +45,7 @@ class BidTests(TestCase):
         
         self.comment = Comment.objects.create(
             text='this is a comment about a listing or a bid',
-            comment_date=datetime.datetime.now(),
+            comment_date=timezone.now(),
             owner=self.user,
             listing=self.listing,
         )
@@ -57,7 +57,7 @@ class BidTests(TestCase):
         Bid.objects.create(
             id=10,
             bid=5.50,
-            date=datetime.datetime.now(),
+            date=timezone.now(),
             winning_bid=False,
             owner=self.user,
             listing=self.listing,
@@ -87,34 +87,46 @@ class BidTests(TestCase):
             Bid.objects.create(
             id=50,
             bid=-1.00,
-            date=datetime.datetime.now(),
+            date=timezone.now(),
             winning_bid=False,
             owner=self.user,
             listing=self.listing,
             active=True,
             )
         
-    # def test_minimum_bid(self):
-    #     listing = Listing.objects.get(id=6)
-    #     Bid.objects.create(
-    #         id=49,
-    #         bid=4.50,
-    #         date=datetime.datetime.now(),
-    #         winning_bid=False,
-    #         owner=self.user,
-    #         listing=listing,
-    #         active=True,
-    #         )        
-    #     with self.assertRaises(ValidationError):
-    #         Bid.objects.create(
-    #         id=50,
-    #         bid=4.00,
-    #         date=datetime.datetime.now(),
-    #         winning_bid=False,
-    #         owner=self.user,
-    #         listing=listing,
-    #         active=True,
-    #         )        
+    def test_minimum_bid(self):
+        listing = Listing.objects.get(id=6)
+        Bid.objects.create(
+            id=48,
+            bid=4.50,
+            date=timezone.now(),
+            winning_bid=False,
+            owner=self.user,
+            listing=listing,
+            active=True,
+            )
+        
+        Bid.objects.create(
+            id=49,
+            bid=4.51,
+            date=timezone.now(),
+            winning_bid=False,
+            owner=self.user,
+            listing=listing,
+            active=True,
+            )    
+        
+        with self.assertRaises(ValidationError):
+            Bid.objects.create(
+            id=50,
+            bid=4.00,
+            date=timezone.now(),
+            winning_bid=False,
+            owner=self.user,
+            listing=listing,
+            active=True,
+            )       
+            
     
     
 class TestUser(TestCase):
@@ -139,15 +151,15 @@ class TestUser(TestCase):
             image='images/origma.png',
             active=True,
             start_price=0.99,
-            auction_start=datetime.datetime.now(),
-            auction_end=datetime.datetime.now()
+            auction_start=timezone.now(),
+            auction_end=timezone.now()
         + datetime.timedelta(days=7),
             owner=self.user,
         )
         self.bid = Bid.objects.create(
             id=9,
             bid=5.00,
-            date=datetime.datetime.now(),
+            date=timezone.now(),
             winning_bid=False,
             owner=self.user,
             listing=self.listing,
@@ -156,7 +168,7 @@ class TestUser(TestCase):
         
         self.comment = Comment.objects.create(
             text='this is a comment about a listing or a bid',
-            comment_date=datetime.datetime.now(),
+            comment_date=timezone.now(),
             owner=self.user,
             listing=self.listing,
         )
