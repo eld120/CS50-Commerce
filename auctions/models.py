@@ -12,17 +12,19 @@ import datetime, pytz
 
 class User(AbstractUser):
     cash = models.IntegerField(default=1000)
-    credit = models.IntegerField(default=0,)
+    credit = models.IntegerField(
+        default=0,
+    )
 
     # @functional.cached_property
     def withdraw_cash(self, cash):
         return self.cash - cash
-    
+
     # @functional.cached_property
     def calculate_credit(self, bid, credit):
         self.credit = bid + credit
         return self.credit
-        
+
     def __str__(self):
         return self.first_name + self.last_name
 
@@ -70,9 +72,9 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
-    
+
     def save(self, *args, **kwargs):
-        #TODO
+        # TODO
         super(Watchlist, self).save(*args, **kwargs)
 
 
@@ -80,8 +82,7 @@ class Bid(models.Model):
     bid = models.FloatField(verbose_name="Place Bid")
     date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
@@ -96,25 +97,29 @@ class Bid(models.Model):
     def get_absolute_url(self):
         return reverse("Bid", kwargs={"slug": self.slug})
 
-    def validate_bid(self):
-        #bids must be greater than $0
-        if not self.bid > 0:
-            raise ValidationError({'bid': 'Your bid must be a positive value'})
-        
-        #bids must be greater than previous bids on the same listing
-        highest_bid = Bid.objects.filter(listing_id=self.listing).aggregate(models.Max("bid"))
-        if highest_bid['bid__max'] is None:
-            highest_bid['bid__max'] = 0
-        if not self.bid >= highest_bid['bid__max'] + 1:
-            raise ValidationError({'bid': f'The current minimum bid is {highest_bid["bid__max"]}'})
-        
-        
+    def validate_negative_bid(self):
+        # bids must be greater than $0
+        if self.bid < 0:
+            raise ValidationError({"bid": "Your bid must be a positive value"})
+
+    def validate_minimum_bid(self):
+        # bids must be greater than previous bids on the same listing
+        min_bid = Bid.objects.filter(listing_id=self.listing).aggregate(
+            models.Max("bid")
+        )
+        if min_bid["bid__max"] is None:
+            min_bid["bid__max"] = self.listing.start_price
+        else:
+            min_bid["bid__max"] += 1
+        if not self.bid >= min_bid["bid__max"]:
+            raise ValidationError(
+                {"bid": f'The current minimum bid is {min_bid["bid__max"]}'}
+            )
+
     def clean(self, *args, **kwargs):
-        self.validate_bid()
-        
+        self.validate_negative_bid()
+        self.validate_minimum_bid()
         super().clean(*args, **kwargs)
-        
-        
 
     def save(self, *args, **kwargs):
         self.full_clean()
