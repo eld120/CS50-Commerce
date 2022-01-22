@@ -1,9 +1,11 @@
-from django.utils import timezone
-from django.test import TestCase, Client
-from django.core.exceptions import ValidationError
-from auctions.models import Bid, Listing, Comment, Watchlist, User
+import datetime
 
-import datetime, pytz
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+from django.utils import timezone
+
+from auctions.models import Bid, Comment, Listing, User, Watchlist
+
 
 # Create your tests here.
 class BidTests(TestCase):
@@ -51,7 +53,7 @@ class BidTests(TestCase):
             listing=self.listing,
             active=False,
         )
-        
+
     def tearDown(self):
         del self.user
         del self.listing
@@ -65,15 +67,12 @@ class BidTests(TestCase):
         self.assertNotEqual(self.bid.bid, 50.00)
 
     def test_negative_bid(self):
-        #self.assertRaises(ValidationError, Bid, bid=-1 )
         with self.assertRaises(ValidationError):
             Bid.objects.create(bid=-1)
-        
 
     def test_minimum_bid(self):
         with self.assertRaises(ValidationError):
             Bid.objects.create(bid=1, listing=self.listing)
-            
 
 
 class TestUser(TestCase):
@@ -136,6 +135,6 @@ class TestUser(TestCase):
         self.assertNotEqual(user.withdraw_cash(50), 50.01)
         self.assertEqual(user.cash, 100)
 
-    def test_calculate_credit(self):
-        user = User.objects.get(id=3)
-        listing = Listing.objects.get()
+    # def test_calculate_credit(self):
+    #     user = User.objects.get(id=3)
+    #     listing = Listing.objects.get()

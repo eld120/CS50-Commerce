@@ -6,9 +6,9 @@
         <img class="main__image"src="{{  listing.image.url }}" alt="{{listing.title}}">
     </div>
         <div class="main__watchlist">
-            
+
             {% if user.is_authenticated %}
-            <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST"> 
+            <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% csrf_token %}
                 {% for field in watchlist_form %}
 
@@ -22,7 +22,7 @@
                     <input type="hidden" name="active" id="id_active">
                     <input type="submit" name="watchlist" class="button" value="Add">
                 {% else %}
-                    
+
                     <input type="submit" name="watchlist" class="button" value="Remove">
                 {% endif %}
             </form>
@@ -33,7 +33,7 @@
             <h6>Current Bid:  <span> ${{ current_bid.bid__max |floatformat:2}}</span> </h6>
             {% if user.is_authenticated %}
                 <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
-            
+
             <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                 {% csrf_token %}
                 {% if messages %}
@@ -51,22 +51,22 @@
                 {% endif %}
                 {% endfor%}
 
-            
+
                     <input type="submit" name="bids" class="button" value="Bid">
                 </form>
             </div>
             {% endif %}
-    
+
 
 
     <div class="main__comments">
         {% if user.is_authenticated %}
-        
+
         <table>
             <tr>
                 <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
                     {% csrf_token %}
-                    
+
                     {% for field in comment_form %}
                         {{ field.errors }}
                         {{ field.label_tag }} {{field}}
@@ -78,7 +78,7 @@
                 </form>
             </tr>
         {% endif %}
-           
+
     </div>
     <table class="main__comment-list">
         {% for comment in comment_list  %}
@@ -86,12 +86,8 @@
             <td>{{comment.text}}</td>
         </tr>
         {% endfor %}
-    
+
     </table>
 
 
 {% endblock body %}
-
-
-
-

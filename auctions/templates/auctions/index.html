@@ -1,4 +1,4 @@
-{% extends "auctions/layout.html" %} {% block body %} 
+{% extends "auctions/layout.html" %} {% block body %}
   <div class="main__index">
     {% for obj in context%}
       <div class="main__wrapper wrapper">
@@ -11,6 +11,6 @@
           <span>Starting Bid: </span>${{ obj.start_price }}
         </div>
       </div>
-    {% endfor %} 
+    {% endfor %}
   </div>
 {% endblock %}

@@ -22,7 +22,7 @@
         top: 0;
         right: 0;
         padding: 1rem;
-        
+
         & span{
            display: block;
             width: 30px;
@@ -30,12 +30,12 @@
             background-color: vars.$text-color;
         &:not(:last-child){
             margin-bottom: 5px;
-            
+
         }
-        
+
         }
-        
-        
+
+
         & a:after{
             position: absolute;
             left: 0;
@@ -59,8 +59,8 @@
             }
         }
     }
-    
-    
+
+
     & nav{
         position: absolute;
         display: block;
@@ -77,8 +77,8 @@
         & ul{
             padding: 0;
         }
-       
+
     }
-    
-    
+
+
 }
