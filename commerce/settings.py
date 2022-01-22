@@ -10,23 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
-import environ
-import os, socket
 
+import environ
 
 env = environ.Env(
     ALLOWED_HOSTS=(list, []),
-    INTERNAL_IPS =(list, []),
+    INTERNAL_IPS=(list, []),
 )
-
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-    
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -42,9 +41,9 @@ if READ_DOT_ENV_FILE:
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition
@@ -58,14 +57,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "auctions",
     "crispy_forms",
-    
-    
 ]
-#DEBUG TOOLBAR 
+# DEBUG TOOLBAR
 if DEBUG:
-    INSTALLED_APPS += ["debug_toolbar",]
-    
-    
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -77,7 +75,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 if DEBUG:
-    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware",]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
 
 
 ROOT_URLCONF = "commerce.urls"

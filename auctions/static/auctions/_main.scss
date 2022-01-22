@@ -13,7 +13,7 @@
 }
 
 .main{
-    
+
     padding: 3rem 2rem;
     overflow-y:scroll;
     &__image-container{
@@ -24,7 +24,7 @@
         width: 100%;
     }
     &__image{
-        
+
         margin: 0 auto;
         min-height: 9rem;
         aspect-ratio: 1/0.579;
@@ -34,19 +34,19 @@
         margin: 0;
     }
    &__comment-list {
-        
+
     tr{
         margin: 2.5rem;
     }
     td{
         display: inline-block;
         border: solid vars.$background-light 3px;
-        padding: 1rem 2.5rem;   
+        padding: 1rem 2.5rem;
         border-radius: .65rem;
         width: 100%;
         margin: .35rem 0;
         color: vars.$text-color
-        
+
         }
     }
 }
@@ -73,7 +73,7 @@
 
 /* Desktops and laptops ----------- */
 @media only screen  and (min-width : 1224px) {
-    
+
 }
 
 /* Large screens ----------- */

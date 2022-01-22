@@ -3,10 +3,10 @@
 <div class="main__index">
   <div class="main__detail">
     {% load crispy_forms_tags %}
-    
+
     <img class="image" src="{{ listing.image.url}}" alt="{{listing.title}}" />
     <div class="main__detail-wrapper">
-    
+
       <h2>{{ listing.title }}</h2>
       {% if user.is_authenticated %}
 {% comment %} watchlist form {% endcomment %}
@@ -18,7 +18,7 @@
         </form>
       {% endif %}
       <strong><p>Description:</p> </strong>{{ listing.description }}
-      <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.bid__max }}{% endif %} 
+      <strong><p>Starting Price</p> </strong> {% if max_bid %}${{ max_bid.bid__max }}{% endif %}
       {% comment %} ${{listing.start_price}} {% endcomment %}
 {% comment %} bid form {% endcomment %}
       {% if user.is_authenticated %}
@@ -36,8 +36,8 @@
     {% comment %} Needs to check if user is owner of listing for deletion
     priviliges {% endcomment %}
     <div>
-      {% if user.is_authenticated %} 
-      
+      {% if user.is_authenticated %}
+
       {% if not end_list == None %}
           <form action="{% url 'auctions:listing_detail' listing.slug %}" method="POST">
           {% csrf_token %}
@@ -51,7 +51,7 @@
             </td>
           </tr>
           {% endfor %}
-          
+
           <input type="submit" name="end_list" value="Delete">
           </form>
         {% endif %}
@@ -84,7 +84,7 @@
 
   btn.onclick = function () {
       document.querySelector("#watchSubmit").requestSubmit()
-      
+
   }
 
  </script>
