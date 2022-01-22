@@ -65,7 +65,6 @@ class BidTests(TestCase):
         self.assertNotEqual(self.bid.bid, 50.00)
 
     def test_negative_bid(self):
-        #self.assertRaises(ValidationError, Bid, bid=-1 )
         with self.assertRaises(ValidationError):
             Bid.objects.create(bid=-1)
         

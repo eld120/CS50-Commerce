@@ -18,13 +18,16 @@ class BidForm(ModelForm):
     class Meta:
         model = Bid
         fields = ["bid"]
-    
+
     def clean(self):
         if self.bid < 0:
-            raise forms.ValidationError('Your bid must be a positive value', code="confirm_positive_bid")
-        
-        #TODO - validate that the bid is larger than any other previous bids
+            raise forms.ValidationError(
+                "Your bid must be a positive value", code="confirm_positive_bid"
+            )
+
+        # TODO - validate that the bid is larger than any other previous bids
         return self.cleaned_data
+
 
 class EndForm(forms.Form):
     active = forms.BooleanField(required=False)
@@ -35,7 +38,7 @@ class CommentForm(ModelForm):
         model = Comment
         fields = ["text"]
         widgets = {
-          'text': forms.Textarea(attrs={'rows':4, 'cols':30}),
+            "text": forms.Textarea(attrs={"rows": 4, "cols": 30}),
         }
 
 

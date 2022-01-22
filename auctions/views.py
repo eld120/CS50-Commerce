@@ -234,8 +234,8 @@ def new_listing_detail(request, slug):
     current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max("bid"))
     if current_bid["bid__max"] == None:
         current_bid = {"bid__max": listing.start_price}
-    comment_list = Comment.objects.filter(listing_id=listing.id).values('text')
-    
+    comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
+
     # handle watchlist/user cash for anonymous user or logged in user
     watchlist = False
     user_cash = 0
@@ -247,7 +247,7 @@ def new_listing_detail(request, slug):
             user_cash = request.user.cash
         except models.ObjectDoesNotExist:
             pass
-            
+
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
 
@@ -288,7 +288,7 @@ def new_listing_detail(request, slug):
                 b.owner_id = request.user.id
                 b.listing_id = listing.id
                 user = request.user
-                user.withdraw_cash(b.bid) 
+                user.withdraw_cash(b.bid)
                 user.save()
                 b.save()
                 return redirect("auctions:new_listing_detail", slug=slug)
@@ -315,7 +315,6 @@ def new_listing_detail(request, slug):
             c.listing = listing
             c.save()
             return redirect("auctions:new_listing_detail", slug=slug)
-            
 
     return render(
         request,
