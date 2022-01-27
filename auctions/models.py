@@ -1,13 +1,11 @@
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import AbstractUser
+import datetime
+
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.aggregates import Max
 from django.urls import reverse
-from django.db.models.fields import DateTimeField, IntegerField, SlugField
-from django.utils import text, timezone, functional
-from commerce import settings
-import datetime, pytz
+from django.utils import text, timezone  # ,functional
 
 
 class User(AbstractUser):
