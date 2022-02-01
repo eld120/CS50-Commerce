@@ -35,20 +35,9 @@ class IndexView(ListView):
 @decorators.login_required
 def watchlistview(request):
 
-    watchlist = Watchlist.objects.filter(user_id=request.user)
-    listing = Listing.objects.all()
-    user_lists = []
-    watch_lists = []
+    watchlist = Watchlist.objects.filter(user_id=request.user).select_related("listing")
 
-    for obj in watchlist:
-        if obj.user_id == request.user.id:
-            watch_lists.append(obj)
-
-    for obj in watch_lists:
-        if obj.listing in listing:
-            user_lists.append(obj.listing)
-
-    return render(request, "auctions/watchlist.html", {"listing": user_lists})
+    return render(request, "auctions/watchlist.html", {"listing": watchlist})
 
 
 def Listing_detail(request, slug):
