@@ -1,7 +1,6 @@
-from django.core.exceptions import MultipleObjectsReturned
 from django.db.models.query import QuerySet
+
 from . import models
-from commerce import settings
 
 
 def is_listing_owner(listing, user_object):
@@ -43,7 +42,7 @@ def watch_validate(listing, user):
     """returns true if the current user has the given listing on their watchlist"""
     try:
         db = models.Watchlist.objects.get(listing_id=listing.id, user_id=user.id)
-    except:
+    except models.Watchlist.DoesNotExist:
         return False
     if listing.id == db.listing_id:
         return True
@@ -74,7 +73,7 @@ def determine_bid_winner(listing):
     listng = models.Listing.objects.get(id=listing.id)
     current_bid = listng.start_price
     top_bid = {"current_bid": current_bid, "bid_id": None}
-    if listng.active == False:
+    if not listng.active:
         for bid in bid_db:
             if bid.bid_max >= current_bid:
                 top_bid["current_bid"] = bid.bid_max

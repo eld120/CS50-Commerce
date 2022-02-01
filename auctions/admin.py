@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
-from .models import Listing, User, Bid, Comment, Watchlist
+from .models import Bid, Comment, Listing, User, Watchlist
 
 
 class ListingAdmin(admin.ModelAdmin):

@@ -18,7 +18,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     username = factory.Sequence(lambda x: f"rando_user_{x}")
     password = factory.PostGenerationMethodCall("set_password", "password")
-    cash = factory.Faker("pyfloat", min_value=19.99, max_value=999.99)
+    cash = factory.Faker("pyint", min_value=1999, max_value=99999)
 
 
 class ListingFactory(factory.django.DjangoModelFactory):
@@ -64,6 +64,6 @@ class CommentFactory(factory.django.DjangoModelFactory):
         model = "auctions.Comment"
 
     text = factory.Faker("paragraph", nb_sentences=5)
-    comment_date = factory.LazyFunction(lambda: timezone.localdate())
+    comment_date = factory.LazyFunction(lambda: timezone.localdate)
     owner = factory.SubFactory(UserFactory)
     listing = factory.SubFactory(ListingFactory)

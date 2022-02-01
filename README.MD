@@ -19,14 +19,14 @@ Taking inspiration from the largest auction website that I know of, this assignm
 - learn Pytest best practices (in progress)
 
 ### Notable Technologies used with Django
-- django-debug-toolbar
-- django-environ
-- pylint
-- mypy
-- flake8
-- isort
-- pre-commit
-- black
-- factory-boy
-- faker
-- pytest
+    django-debug-toolbar
+    django-environ
+    pylint
+    mypy
+    flake8
+    isort
+    pre-commit
+    black
+    factory-boy
+    faker
+    pytes

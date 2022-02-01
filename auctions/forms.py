@@ -1,11 +1,7 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.db.models.base import Model
-from django.db.models.fields import BooleanField
 from django.forms.models import ModelForm
-from django.forms.widgets import CheckboxInput
-from django.views.generic.edit import CreateView
-from .models import Listing, Bid, Comment, Watchlist
+
+from .models import Bid, Comment, Listing, Watchlist
 
 
 class ListingCreateForm(ModelForm):
