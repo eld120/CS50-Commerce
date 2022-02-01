@@ -9,9 +9,9 @@ from django.utils import text, timezone  # ,functional
 
 
 class User(AbstractUser):
-    cash = models.IntegerField(default=1000)
-    credit = models.IntegerField(
-        default=0,
+    cash = models.FloatField(default=1000.00)
+    credit = models.FloatField(
+        default=0.0,
     )
 
     # @functional.cached_property
