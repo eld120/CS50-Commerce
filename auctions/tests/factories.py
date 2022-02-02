@@ -1,4 +1,5 @@
 import datetime
+import random
 
 import factory
 from django.utils import text, timezone
@@ -19,7 +20,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     username = factory.Sequence(lambda x: f"rando_user_{x}")
     password = factory.PostGenerationMethodCall("set_password", "password")
-    cash = factory.Faker("pyint", min_value=199999, max_value=999999) / 100
+    cash = factory.LazyFunction(lambda: (random.randint(100000, 200000) / 100))
 
 
 class ListingFactory(factory.django.DjangoModelFactory):
@@ -31,7 +32,7 @@ class ListingFactory(factory.django.DjangoModelFactory):
     description = factory.Faker("sentence", nb_words=30)
     image = factory.Faker("file_path", depth=3)
     active = True  # should change if we ever do something with the active flag
-    start_price = factory.Faker("pyint", min_value=25, max_value=119999) / 100
+    start_price = factory.LazyFunction(lambda: (random.randint(100, 119999) / 100))
     auction_start = factory.LazyFunction(lambda: timezone.localdate())
     auction_end = factory.LazyFunction(
         lambda: timezone.localdate() + datetime.timedelta(days=7)
@@ -52,7 +53,7 @@ class BidFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "auctions.Bid"
 
-    bid = factory.Faker("pyint", positive=True, max_value=1199.99) / 100
+    bid = factory.LazyFunction(lambda: (random.randint(99, 50000) / 100))
     date = factory.LazyFunction(lambda: timezone.localdate())
     winning_bid = False  # currently not implemented
     owner = factory.SubFactory(UserFactory)
