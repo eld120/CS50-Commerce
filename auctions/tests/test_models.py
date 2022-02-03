@@ -8,7 +8,7 @@ from auctions.models import Bid, Comment, Listing, User, Watchlist
 
 
 # Create your tests here.
-class BidTests(TestCase):
+class BidTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             id=3,

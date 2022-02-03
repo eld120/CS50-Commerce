@@ -1,4 +1,4 @@
-from .models import Listing, Comment, Bid, User
+from .models import Bid, Comment, Listing
 
 
 def context_processor(request):

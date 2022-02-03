@@ -1,14 +1,7 @@
-from django.conf.urls import url
 from django.urls import path
-from .views import (
-    IndexView,
-    ListingCreate,
-    ListingDelete,
-    ListingUpdate,
-    Listing_detail,
-)
-from . import views
 
+from . import views
+from .views import IndexView, ListingCreate, ListingDelete, ListingUpdate
 
 app_name = "auctions"
 

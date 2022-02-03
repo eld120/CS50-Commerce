@@ -1,32 +1,27 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model, decorators
 from django.contrib import messages
+from django.contrib.auth import (
+    authenticate,
+    decorators,
+    get_user_model,
+    login,
+    logout,
+    mixins,
+)
+from django.core.exceptions import MultipleObjectsReturned
 from django.db import IntegrityError, models
 from django.http import HttpResponseRedirect
-from django.core.exceptions import MultipleObjectsReturned
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from .models import Comment, Bid, Watchlist
-from django.views.generic import (
-    ListView,
-    CreateView,
-    DeleteView,
-    UpdateView,
-)
-from .forms import (
-    ListingCreateForm,
-    BidForm,
-    CommentForm,
-    WatchlistForm,
-    EndForm,
-)
-from .models import Listing, Comment, Bid, User
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
+from .forms import BidForm, CommentForm, EndForm, ListingCreateForm, WatchlistForm
+from .models import Bid, Comment, Listing, User, Watchlist
 from .services import (
     bid_validate,
-    watch_validate,
-    validate_single_winner,
     determine_bid_winner,
+    validate_single_winner,
+    watch_validate,
 )
-
 
 U = get_user_model()
 
@@ -37,22 +32,12 @@ class IndexView(ListView):
     context_object_name = "context"
 
 
+@decorators.login_required
 def watchlistview(request):
 
-    watchlist = Watchlist.objects.filter(user_id=request.user)
-    listing = Listing.objects.all()
-    user_lists = []
-    watch_lists = []
+    watchlist = Watchlist.objects.filter(user_id=request.user).select_related("listing")
 
-    for obj in watchlist:
-        if obj.user_id == request.user.id:
-            watch_lists.append(obj)
-
-    for obj in watch_lists:
-        if obj.listing in listing:
-            user_lists.append(obj.listing)
-
-    return render(request, "auctions/watchlist.html", {"listing": user_lists})
+    return render(request, "auctions/watchlist.html", {"listing": watchlist})
 
 
 def Listing_detail(request, slug):
@@ -145,7 +130,7 @@ def Listing_detail(request, slug):
         )
 
 
-class ListingCreate(CreateView):
+class ListingCreate(mixins.LoginRequiredMixin, CreateView):
     model = Listing
     template_name = "auctions/listing_create.html"
     form_class = ListingCreateForm
@@ -157,7 +142,7 @@ class ListingCreate(CreateView):
         return super().form_valid(form)
 
 
-class ListingDelete(DeleteView):
+class ListingDelete(mixins.LoginRequiredMixin, DeleteView):
     model = Listing
     template_name = "auctions/listing_create.html"
     # need a listing delete form and relevant deletion "are you sure" content
@@ -166,7 +151,7 @@ class ListingDelete(DeleteView):
     success_url = reverse_lazy("auctions:index")
 
 
-class ListingUpdate(UpdateView):
+class ListingUpdate(mixins.LoginRequiredMixin, UpdateView):
     template_name = "auctions/listing_create.html"
     queryset = Listing.objects.all()
     form_class = ListingCreateForm
@@ -194,6 +179,7 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
+@decorators.login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("auctions:index"))
@@ -228,11 +214,12 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@decorators.login_required
 def new_listing_detail(request, slug):
     # can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)
     current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max("bid"))
-    if current_bid["bid__max"] == None:
+    if current_bid["bid__max"] is None:
         current_bid = {"bid__max": listing.start_price}
     comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
 
