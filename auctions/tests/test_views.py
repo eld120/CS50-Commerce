@@ -2,6 +2,8 @@ import pytest
 from django.test import Client, TestCase
 from django.urls import reverse
 
+from auctions.models import Watchlist
+
 
 class TestIndexView(TestCase):
     def test_index(self):
@@ -18,5 +20,15 @@ def test_watchlist_owner(user_watchlist):
 
 
 @pytest.mark.django_db
-def test_watchlist_listing(user_watchlist):
+def test_watchlist_listing(user_watchlist, watchlist_two, watchlist_three):
     assert user_watchlist.listing.title == "puppies for sale"
+    assert watchlist_two.listing.title == "for the watchlist"
+    assert watchlist_three.listing.title == "3rd on the watchlist"
+
+    watchlist_query = Watchlist.objects.filter(
+        user_id=user_watchlist.user
+    ).select_related("listing")
+
+    assert watchlist_query[0].listing.title == "puppies for sale"
+    assert watchlist_query[1].listing.title == "for the watchlist"
+    assert watchlist_query[2].listing.title == "3rd on the watchlist"

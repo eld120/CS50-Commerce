@@ -19,9 +19,9 @@ class User(AbstractUser):
         return self.cash - cash
 
     # @functional.cached_property
-    def calculate_credit(self, bid, credit):
-        self.credit = bid + credit
-        return self.credit
+    def calculate_credit(self, bid):
+        self.credit = self.credit + bid
+        return self.credit + bid
 
     def __str__(self):
         return self.first_name + self.last_name
