@@ -14,14 +14,14 @@ class User(AbstractUser):
         default=0.0,
     )
 
-    # @functional.cached_property
     def withdraw_cash(self, cash):
-        return self.cash - cash
+        self.cash -= cash
 
-    # @functional.cached_property
+    def deposit_cash(self, cash):
+        self.cash += cash
+
     def calculate_credit(self, bid):
-        self.credit = self.credit + bid
-        return self.credit + bid
+        self.credit += bid
 
     def __str__(self):
         return self.first_name + self.last_name

@@ -130,17 +130,21 @@ class TestUser(TestCase):
 
     def test_withdraw_cash(self):
         user = User.objects.get(id=3)
-        bid = Bid.objects.get(id=9)
+        user.withdraw_cash(60.00)
+        self.assertEqual(user.cash, 40.0)
+        self.assertNotEqual(user.withdraw_cash(40), 0.01)
+        self.assertEqual(user.cash, 0.0)
 
-        self.assertEqual(user.withdraw_cash(60.00), 40.0)
-        self.assertNotEqual(user.withdraw_cash(50), 50.01)
-        self.assertEqual(user.cash, 100)
-        self.assertEqual(user.withdraw_cash(bid.bid), 95.0)
+    def test_deposit_cash(self):
+        user = User.objects.get(id=3)
+        user.deposit_cash(25)
+        self.assertEqual(user.cash, 125.0)
+        user.deposit_cash(100)
+        self.assertEqual(user.cash, 225.0)
 
     def test_calculate_credit(self):
         user = User.objects.get(id=3)
         bid = Bid.objects.get(id=9)
-
         user.calculate_credit(bid.bid)
         user.save()
 
