@@ -48,7 +48,6 @@ class Listing(models.Model):
     def end_listing(self):
         if timezone.now() >= self.auction_end:
             self.active = False
-            return True
 
     def __str__(self):
         return "Listing title: " + self.title
