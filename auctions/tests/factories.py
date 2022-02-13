@@ -2,9 +2,8 @@ import datetime
 import random
 
 import factory
+from django.contrib.auth import get_user_model
 from django.utils import text, timezone
-
-from commerce.settings import AUTH_USER_MODEL
 
 """
 Attributing inspiration/guidance for the organization of this pytest implementation to
@@ -16,9 +15,12 @@ https://github.com/mblayman/homeschool/blob/main/homeschool/users/tests/factorie
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = AUTH_USER_MODEL
+        model = get_user_model()
 
     username = factory.Sequence(lambda x: f"rando_user_{x}")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+    email = factory.Faker("email")
     password = factory.PostGenerationMethodCall("set_password", "password")
     cash = factory.LazyFunction(lambda: (random.randint(100000, 200000) / 100))
 

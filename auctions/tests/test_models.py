@@ -42,24 +42,10 @@ class BidTest(TestCase):
             active=True,
         )
 
-        self.comment = Comment.objects.create(
-            text="this is a comment about a listing or a bid",
-            comment_date=timezone.now(),
-            owner=self.user,
-            listing=self.listing,
-        )
-        self.watchlist = Watchlist.objects.create(
-            user=self.user,
-            listing=self.listing,
-            active=False,
-        )
-
     def tearDown(self):
         del self.user
         del self.listing
         del self.bid
-        del self.comment
-        del self.watchlist
 
     def test_bid(self):
         self.assertEqual(self.bid.owner, self.user)
@@ -76,6 +62,68 @@ class BidTest(TestCase):
 
 
 class TestUser(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            id=3,
+            password="dontuse",
+            username="everyman",
+            first_name="doug",
+            last_name="mann",
+            email="test@origma.io",
+            is_active=True,
+            cash=100,
+        )
+        self.listing = Listing.objects.create(
+            id=6,
+            slug="test-listing-1",
+            title="Test Listing 1",
+            description="This is a test",
+            image="images/origma.png",
+            active=True,
+            start_price=0.99,
+            auction_start=timezone.now(),
+            auction_end=timezone.now() + datetime.timedelta(days=7),
+            owner=self.user,
+        )
+        self.bid = Bid.objects.create(
+            id=9,
+            bid=5.00,
+            date=timezone.now(),
+            winning_bid=False,
+            owner=self.user,
+            listing=self.listing,
+            active=True,
+        )
+
+    def tearDown(self):
+        del self.user
+        del self.bid
+        del self.listing
+
+    def test_withdraw_cash(self):
+        user = User.objects.get(id=3)
+        user.withdraw_cash(60.00)
+        self.assertEqual(user.cash, 40.0)
+        self.assertNotEqual(user.withdraw_cash(40), 0.01)
+        self.assertEqual(user.cash, 0.0)
+
+    def test_deposit_cash(self):
+        user = User.objects.get(id=3)
+        user.deposit_cash(25)
+        self.assertEqual(user.cash, 125.0)
+        user.deposit_cash(100)
+        self.assertEqual(user.cash, 225.0)
+
+    def test_calculate_credit(self):
+        user = User.objects.get(id=3)
+        bid = Bid.objects.get(id=9)
+        user.calculate_credit(bid.bid)
+        user.save()
+
+        self.assertEqual(user.credit, 5.00)
+
+
+class TestListing(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             id=3,
@@ -128,13 +176,10 @@ class TestUser(TestCase):
         del self.comment
         del self.watchlist
 
-    def test_withdraw_cash(self):
-        user = User.objects.get(id=3)
-
-        self.assertEqual(user.withdraw_cash(60.00), 40.0)
-        self.assertNotEqual(user.withdraw_cash(50), 50.01)
-        self.assertEqual(user.cash, 100)
-
-    # def test_calculate_credit(self):
-    #     user = User.objects.get(id=3)
-    #     listing = Listing.objects.get()
+    def test_end_listing(self):
+        listing = Listing.objects.get(id=6)
+        self.assertEqual(listing.active, True)
+        listing.end_listing()
+        listing.auction_end = timezone.now()
+        listing.end_listing()
+        self.assertEqual(listing.active, False)

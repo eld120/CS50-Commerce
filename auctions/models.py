@@ -14,14 +14,14 @@ class User(AbstractUser):
         default=0.0,
     )
 
-    # @functional.cached_property
     def withdraw_cash(self, cash):
-        return self.cash - cash
+        self.cash -= cash
 
-    # @functional.cached_property
-    def calculate_credit(self, bid, credit):
-        self.credit = bid + credit
-        return self.credit
+    def deposit_cash(self, cash):
+        self.cash += cash
+
+    def calculate_credit(self, bid):
+        self.credit += bid
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -48,7 +48,6 @@ class Listing(models.Model):
     def end_listing(self):
         if timezone.now() >= self.auction_end:
             self.active = False
-            return True
 
     def __str__(self):
         return "Listing title: " + self.title
