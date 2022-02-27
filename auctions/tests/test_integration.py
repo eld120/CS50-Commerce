@@ -1,10 +1,15 @@
 import pytest
 
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
+
+driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
+
+
 
 @pytest.mark.django_db
-def test_login(selenium, chromedriver_fixture):
-
-    selenium.get("http://127.0.0.1:8000/deets/test-1")
-    import pdb
-
-    pdb.set_trace()
+def test_login():
+    driver.get("http://www.google.com")
+    assert 'Google' in driver.title
+    
