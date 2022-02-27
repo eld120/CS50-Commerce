@@ -66,8 +66,3 @@ def listing_without_bids(listing_fixture) -> Listing:
     return listing_fixture
 
 
-@pytest.fixture
-def chromedriver_fixture(chrome_options):
-    chrome_options.binary_location = "/usr/local/bin/chromedriver"
-    chrome_options.add_argument("--headless")
-    return chrome_options
