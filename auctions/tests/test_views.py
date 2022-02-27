@@ -46,7 +46,7 @@ def test_new_listing_detail(listing_fixture, user_fixture):
         reverse("auctions:new_listing_detail", kwargs={"slug": listing_fixture.slug})
     )
 
-    assert response.status_code == 302
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
