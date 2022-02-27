@@ -1,5 +1,5 @@
 import pytest
-
+from playwright.sync_api import sync_playwright
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
@@ -7,9 +7,17 @@ from webdriver_manager.firefox import GeckoDriverManager
 driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
 
 
+@pytest.mark.django_db
+def test_playwright_login():
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.goto("http://127.0.0.1:8000/deets/test-1")
+        browser.close()
+
 
 @pytest.mark.django_db
 def test_login():
     driver.get("http://www.google.com")
-    assert 'Google' in driver.title
-    
+    assert "Google" in driver.title

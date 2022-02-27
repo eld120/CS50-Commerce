@@ -214,7 +214,6 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-@decorators.login_required
 def new_listing_detail(request, slug):
     # can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)

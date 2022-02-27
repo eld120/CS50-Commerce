@@ -64,5 +64,3 @@ def bid_none(user_fixture) -> Bid:
 @pytest.fixture
 def listing_without_bids(listing_fixture) -> Listing:
     return listing_fixture
-
-
