@@ -52,3 +52,22 @@ def watchlist_three(user_fixture, listing_watchlist_two) -> Listing:
 @pytest.fixture
 def bid_fixture(user_fixture) -> Bid:
     return BidFactory(owner=user_fixture)
+
+
+@pytest.fixture
+def bid_none(user_fixture) -> Bid:
+    return BidFactory(
+        owner=user_fixture,
+    )
+
+
+@pytest.fixture
+def listing_without_bids(listing_fixture) -> Listing:
+    return listing_fixture
+
+
+@pytest.fixture
+def chromedriver_fixture(chrome_options):
+    chrome_options.binary_location = "/usr/local/bin/chromedriver"
+    chrome_options.add_argument("--headless")
+    return chrome_options
