@@ -1,7 +1,8 @@
 import pytest
-from django.test import Client, TestCase
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
+from auctions import views
 from auctions.models import Watchlist
 
 
@@ -32,3 +33,28 @@ def test_watchlist_listing(user_watchlist, watchlist_two, watchlist_three):
     assert watchlist_query[0].listing.title == "puppies for sale"
     assert watchlist_query[1].listing.title == "for the watchlist"
     assert watchlist_query[2].listing.title == "3rd on the watchlist"
+
+
+@pytest.mark.django_db
+def test_new_listing_detail(listing_fixture, user_fixture):
+
+    assert listing_fixture.owner == user_fixture
+
+    client = Client()
+
+    response = client.get(
+        reverse("auctions:new_listing_detail", kwargs={"slug": listing_fixture.slug})
+    )
+
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_listing_bids(listing_fixture, user_fixture):
+    factory = RequestFactory()
+    request = factory.get(f"deets/{listing_fixture.slug}")
+    request.user = user_fixture
+
+    response = views.new_listing_detail(request, listing_fixture.slug)
+    # breakpoint()
+    assert response.status_code == 200
