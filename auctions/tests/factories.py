@@ -37,7 +37,10 @@ class ListingFactory(factory.django.DjangoModelFactory):
     start_price = factory.LazyFunction(lambda: (random.randint(100, 119999) / 100))
     auction_start = factory.LazyFunction(lambda: timezone.localdate())
     auction_end = factory.LazyFunction(
-        lambda: timezone.localdate() + datetime.timedelta(days=7)
+        lambda: timezone.localtime()
+        + datetime.timedelta(
+            days=7,
+        )
     )
     owner = factory.SubFactory(UserFactory)
 

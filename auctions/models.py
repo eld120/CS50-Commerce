@@ -36,7 +36,7 @@ class Listing(models.Model):
     start_price = models.FloatField(default=0.99)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=timezone.now()
+        default=timezone.localtime()
         + datetime.timedelta(days=7),  # not timezone aware? needs testing
         null=True,
         blank=True,
