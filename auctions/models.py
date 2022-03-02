@@ -20,8 +20,11 @@ class User(AbstractUser):
     def deposit_cash(self, cash):
         self.cash += cash
 
-    def calculate_credit(self, bid):
+    def use_credit(self, bid):
         self.credit += bid
+
+    def pay_credit(self, bid):
+        self.credit -= bid
 
     def __str__(self):
         return self.first_name + self.last_name

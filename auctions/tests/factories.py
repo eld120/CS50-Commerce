@@ -35,7 +35,7 @@ class ListingFactory(factory.django.DjangoModelFactory):
     image = factory.Faker("file_path", depth=3)
     active = True  # should change if we ever do something with the active flag
     start_price = factory.LazyFunction(lambda: (random.randint(100, 119999) / 100))
-    auction_start = factory.LazyFunction(lambda: timezone.localdate())
+    auction_start = factory.LazyFunction(lambda: timezone.localtime())
     auction_end = factory.LazyFunction(
         lambda: timezone.localtime()
         + datetime.timedelta(
