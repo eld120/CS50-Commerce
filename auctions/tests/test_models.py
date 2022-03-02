@@ -114,13 +114,19 @@ class TestUser(TestCase):
         user.deposit_cash(100)
         self.assertEqual(user.cash, 225.0)
 
-    def test_calculate_credit(self):
+    def test_use_credit(self):
         user = User.objects.get(id=3)
         bid = Bid.objects.get(id=9)
-        user.calculate_credit(bid.bid)
+        user.use_credit(bid.bid)
         user.save()
 
         self.assertEqual(user.credit, 5.00)
+
+    def test_pay_credit(self):
+        user = User.objects.get(id=3)
+        bid = Bid.objects.get(id=9)
+        user.pay_credit(bid.bid)
+        assert user.credit == -5.0
 
 
 class TestListing(TestCase):
@@ -178,8 +184,8 @@ class TestListing(TestCase):
 
     def test_end_listing(self):
         listing = Listing.objects.get(id=6)
-        self.assertEqual(listing.active, True)
-        listing.end_listing()
+        assert listing.active is True
+        assert listing.auction_end >= timezone.now()
         listing.auction_end = timezone.now()
         listing.end_listing()
-        self.assertEqual(listing.active, False)
+        assert listing.active is False

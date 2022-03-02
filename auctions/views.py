@@ -40,6 +40,7 @@ def watchlistview(request):
     return render(request, "auctions/watchlist.html", {"listing": watchlist})
 
 
+# NOT CURRENTLY IN USE
 def Listing_detail(request, slug):
     # the specific listing requested
     list_detail = get_object_or_404(Listing, slug=slug)
