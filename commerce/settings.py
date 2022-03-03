@@ -66,6 +66,17 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
+    INSTALLED_APPS += [
+        "debug_toolbar",
+        "django_extensions",
+    ]
+
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
 
 ROOT_URLCONF = "commerce.urls"
 
@@ -135,10 +146,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = "/static/"
-STATIC_ROOT = str(BASE_DIR.joinpath("static"))
-STATICFILES_DIRS = [str(BASE_DIR / "static")]
+STATIC_ROOT = str(BASE_DIR / "static")
+# STATICFILES_DIRS = [str(BASE_DIR / "staticfiles")]
 MEDIA_URL = "/media/"
-MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
+MEDIA_ROOT = str(BASE_DIR / "media")
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

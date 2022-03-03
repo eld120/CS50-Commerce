@@ -9,16 +9,7 @@ INTERNAL_IPS = [
     "localhost"
     # ...
 ]
-if DEBUG:
-    INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
-    INSTALLED_APPS += [
-        "debug_toolbar",
-        "django_extensions",
-    ]
 
-    MIDDLEWARE += [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
 
 if env("USE_DOCKER") == "yes":
     import socket
