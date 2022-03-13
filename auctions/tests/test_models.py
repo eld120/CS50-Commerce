@@ -100,32 +100,32 @@ class TestUser(TestCase):
         del self.bid
         del self.listing
 
-    def test_withdraw_cash(self):
+    def test_subtract_cash(self):
         user = User.objects.get(id=3)
-        user.withdraw_cash(60.00)
+        user.subtract_cash(60.00)
         self.assertEqual(user.cash, 40.0)
-        self.assertNotEqual(user.withdraw_cash(40), 0.01)
+        self.assertNotEqual(user.subtract_cash(40), 0.01)
         self.assertEqual(user.cash, 0.0)
 
-    def test_deposit_cash(self):
+    def test_add_cash(self):
         user = User.objects.get(id=3)
-        user.deposit_cash(25)
+        user.add_cash(25)
         self.assertEqual(user.cash, 125.0)
-        user.deposit_cash(100)
+        user.add_cash(100)
         self.assertEqual(user.cash, 225.0)
 
-    def test_use_credit(self):
+    def test_add_credit(self):
         user = User.objects.get(id=3)
         bid = Bid.objects.get(id=9)
-        user.use_credit(bid.bid)
+        user.add_credit(bid.bid)
         user.save()
 
         self.assertEqual(user.credit, 5.00)
 
-    def test_pay_credit(self):
+    def test_subtract_credit(self):
         user = User.objects.get(id=3)
         bid = Bid.objects.get(id=9)
-        user.pay_credit(bid.bid)
+        user.subtract_credit(bid.bid)
         assert user.credit == -5.0
 
 

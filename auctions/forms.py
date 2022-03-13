@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms.models import ModelForm
 
 from .models import Bid, Comment, Listing, Watchlist
@@ -15,14 +16,16 @@ class BidForm(ModelForm):
         model = Bid
         fields = ["bid"]
 
-    def clean(self):
-        if self.bid < 0:
-            raise forms.ValidationError(
-                "Your bid must be a positive value", code="confirm_positive_bid"
-            )
+    # def clean(self):
+    #     cleaned_data = super(BidForm, self).clean()
+    #     if cleaned_data['bid'] < 0:
+    #         # raise forms.ValidationError(
+    #         #     "Your bid must be a positive value", code="confirm_positive_bid"
+    #         #     )
+    #         raise ValidationError(message="Your bid must be a positive value" )
 
-        # TODO - validate that the bid is larger than any other previous bids
-        return self.cleaned_data
+    #     # TODO - validate that the bid is larger than any other previous bids
+    #     return cleaned_data
 
 
 class EndForm(forms.Form):

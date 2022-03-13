@@ -66,17 +66,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
-    INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
-    INSTALLED_APPS += [
-        "debug_toolbar",
-        "django_extensions",
-    ]
-
-    MIDDLEWARE += [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
-
 
 ROOT_URLCONF = "commerce.urls"
 
@@ -206,3 +195,32 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 ADMIN_URL = env("DJANGO_ADMIN_URL")
+
+
+if DEBUG:
+    INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
+    INSTALLED_APPS += [
+        "debug_toolbar",
+        "django_extensions",
+    ]
+
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
+    DEBUG = True
+
+    INTERNAL_IPS = [
+        # ...
+        "127.0.0.1",
+        "localhost"
+        # ...
+    ]
+
+    if env("USE_DOCKER") == "yes":
+        import socket
+
+        hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+
+    CELERY_TASK_EAGER_PROPAGATES = True
