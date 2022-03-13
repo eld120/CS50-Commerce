@@ -218,21 +218,22 @@ def register(request):
 def new_listing_detail(request, slug):
     # can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)
-    current_bid = Bid.objects.filter(listing_id=listing.id).aggregate(models.Max("bid"))
-    if current_bid["bid__max"] is None:
-        current_bid = {"bid__max": listing.start_price}
+    current_bid = Bid(listing=listing).highest_current_bid()
+
     comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
 
     # handle watchlist/user cash for anonymous user or logged in user
     watchlist = False
-    user_cash = 0
+    user_cash = request.user.cash
+
     if request.user.is_authenticated:
         try:
             watchlist = Watchlist.objects.get(
-                listing_id=listing.id, user_id=request.user
+                user_id=request.user.id,
+                listing_id=listing.id,
             )
-            user_cash = request.user.cash
-        except models.ObjectDoesNotExist:
+
+        except Watchlist.DoesNotExist:
             pass
 
     bid_form = BidForm(request.POST or None)
@@ -270,17 +271,21 @@ def new_listing_detail(request, slug):
 
         if "bids" in request.POST and bid_form.is_valid():
 
-            if request.user.cash > bid_form.cleaned_data["bid"]:
+            if (
+                request.user.cash > bid_form.cleaned_data["bid"]
+                and bid_form.cleaned_data["bid"] > current_bid
+            ):
                 b = bid_form.save(commit=False)
                 b.owner_id = request.user.id
                 b.listing_id = listing.id
+                # cash withdrawal can happen if the bid
                 user = request.user
-                user.withdraw_cash(b.bid)
+                user.subtract_cash(b.bid)
                 user.save()
                 b.save()
                 return redirect("auctions:new_listing_detail", slug=slug)
 
-            messages.error(request, "You do not have sufficient funds")
+            messages.error(request, f"Your bid must be greater than ${current_bid}")
             return render(
                 request,
                 "auctions/listing_deets.html",

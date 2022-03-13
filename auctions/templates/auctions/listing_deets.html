@@ -30,7 +30,8 @@
         {% endif %}
 
         <div class="main__bid-form">
-            <h6>Current Bid:  <span> ${{ current_bid.bid__max |floatformat:2}}</span> </h6>
+
+            <h6>Current Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
             {% if user.is_authenticated %}
                 <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
 
