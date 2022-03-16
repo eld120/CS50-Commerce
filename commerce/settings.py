@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "compressor",
     "django_celery_beat",
+    "celery",
+    "tasks",
 ]
 
 

@@ -5,4 +5,4 @@ set -o nounset
 
 
 rm -f './celerybeat.pid'
-celery -A commerce.celery_app beat -l INFO
+celery -A tasks.celery_app beat -l INFO
