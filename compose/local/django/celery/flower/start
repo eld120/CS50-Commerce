@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 
 
+
 celery \
     -A tasks.celery_app \
     -b "${CELERY_BROKER_URL}" \

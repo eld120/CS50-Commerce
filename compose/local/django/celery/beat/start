@@ -4,5 +4,6 @@ set -o errexit
 set -o nounset
 
 
+
 rm -f './celerybeat.pid'
 celery -A tasks.celery_app beat -l INFO
