@@ -54,11 +54,11 @@ class BidTest(TestCase):
 
     def test_negative_bid(self):
         with self.assertRaises(ValidationError):
-            Bid.objects.create(bid=-1)
+            Bid.objects.create(bid=-1.0, listing=self.listing, owner=self.user)
 
-    def test_minimum_bid(self):
-        with self.assertRaises(ValidationError):
-            Bid.objects.create(bid=1, listing=self.listing)
+    # def test_minimum_bid(self):
+    #     with self.assertRaises(ValidationError):
+    #         Bid.objects.create(bid=1, listing=self.listing)
 
 
 class TestUser(TestCase):
@@ -114,19 +114,15 @@ class TestUser(TestCase):
         user.add_cash(100)
         self.assertEqual(user.cash, 225.0)
 
-    def test_add_credit(self):
-        user = User.objects.get(id=3)
-        bid = Bid.objects.get(id=9)
-        user.add_credit(bid.bid)
-        user.save()
+    def test_charge_credit(self):
+        self.user.charge_credit(self.bid.bid)
+        self.user.save()
 
-        self.assertEqual(user.credit, 5.00)
+        self.assertEqual(self.user.credit, -5.00)
 
-    def test_subtract_credit(self):
-        user = User.objects.get(id=3)
-        bid = Bid.objects.get(id=9)
-        user.subtract_credit(bid.bid)
-        assert user.credit == -5.0
+    def test_pay_credit(self):
+        self.user.pay_credit(self.bid.bid)
+        assert self.user.credit == 5.0
 
 
 class TestListing(TestCase):

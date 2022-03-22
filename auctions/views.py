@@ -222,19 +222,15 @@ def new_listing_detail(request, slug):
 
     comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
 
-    # handle watchlist/user cash for anonymous user or logged in user
-    watchlist = False
-    user_cash = request.user.cash
-
-    if request.user.is_authenticated:
-        try:
-            watchlist = Watchlist.objects.get(
-                user_id=request.user.id,
-                listing_id=listing.id,
-            )
-
-        except Watchlist.DoesNotExist:
-            pass
+    try:
+        watchlist = Watchlist.objects.get(
+            user_id=request.user.id,
+            listing_id=listing.id,
+        )
+        user_cash = request.user.cash
+    except Watchlist.DoesNotExist:
+        user_cash = 0
+        watchlist = False
 
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)

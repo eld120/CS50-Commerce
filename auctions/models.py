@@ -22,11 +22,12 @@ class User(AbstractUser):
     def add_cash(self, cash):
         self.cash += cash
 
-    def subtract_credit(self, bid):
-        self.credit += bid
-
-    def add_credit(self, bid):
+    # going to make credit a negative value when charged
+    def charge_credit(self, bid):
         self.credit -= bid
+
+    def pay_credit(self, bid):
+        self.credit += bid
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -104,6 +105,14 @@ class Bid(models.Model):
         if current_bid is None:
             current_bid = self.listing.start_price
         return current_bid
+
+    def save(self, *args, **kwargs):
+        # looking for a way to strictly enforce this via validator on the model field - doesn't always work
+        if self.bid < 0.01:
+            raise ValidationError(
+                "$%(bid).2f cannot be a negative value", params={"bid": self.bid}
+            )
+        super(Bid, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):
