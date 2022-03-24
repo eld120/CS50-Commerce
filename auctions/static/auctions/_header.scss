@@ -5,16 +5,40 @@
     position: relative;
 
     &__logo{
-        @include vars.padit();
-        width: 8rem;
+
+        max-width: 8rem;
+    }
+    &__logo-container{
+        display: flex;
+        @include vars.padit()
+
+    }
+    hr {
+        margin: 0;
     }
     &__nav-ul{
-        padding: 0;
+        margin: 0;
+        padding: 1em 0;
         display: flex;
         justify-content: space-evenly;
         & li a{
             color: vars.$text-color;
         }
+    }
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap; /* added line */
+        border: 0;
+    }
+
+    .nav-toggle{
+        margin: auto 1em auto auto;
     }
     &__toggle{
         position: absolute;
@@ -46,19 +70,7 @@
             z-index: 100;
         }
     }
-    &__hamburger{
-        &.open{
-            span:first-child{
-                transform: rotate(45deg);
-            }
-            span:nth-child(2){
-                opacity: 0;
-            }
-            span:last-child{
-                transform: rotate(-45deg);
-            }
-        }
-    }
+
 
 
     & nav{
@@ -79,6 +91,67 @@
         }
 
     }
+// Mobile
+@media only screen and (max-width: 34.938em){
+    #nav-menu{
+        position: fixed;
+        margin: 0;
+        padding: 6em 1.5em;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        z-index: 0;
+        gap: 1em;
+        min-height: 100%;
+        width: 100vw;
+        background-color: hsl(0, 0%, 85%);
+        a {
+            font-size: 1.5em;
+        font-weight: 400;
+        }
+    }
+    .mobile-menu-button {
+        position: relative;
+        display: block;
+        background: transparent;
+        background-image: url(./images/icon-hamburger.svg);
+        background-repeat: no-repeat;
+        border: 0;
+        margin: auto 2rem auto auto;
+        aspect-ratio: 1;
+        height: 1.5em;
+        width: 1.5em;
+        z-index: 150;
+    }
+    .mobile-menu-button:focus{
+        outline: none;
+    }
+    .menu-closed{
+        inset: 0 0 0 100%;
+        transition: transform, background-image, 250ms ease-out;
+        transform: translateX(100%);
+    }
+    .menu-open{
+        inset: 0 0 0 30%;
+        transition: transform, background-image, 250ms ease-out;
+        transform: translateX(-30%);
+    }
+    .hide-hamburger{
+        background-image: url(./images/icon-close.svg);
+        z-index: 150;
+        transition: transform, background-image, 250ms ease-out;
+    }
+}
+// Tablets
+@media only screen and (min-width: 35em){
 
+}
+// Laptops
+@media only screen and (min-width: 48em){
 
+}
+// Desktops
+@media only screen and (min-width: 64em){
+
+}
 }

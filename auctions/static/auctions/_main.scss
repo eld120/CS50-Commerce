@@ -26,8 +26,9 @@
     &__image{
 
         margin: 0 auto;
-        min-height: 9rem;
-        aspect-ratio: 1/0.579;
+
+        max-width: 20em;
+        // aspect-ratio: 1/0.579;
     }
 
     &__comments{
