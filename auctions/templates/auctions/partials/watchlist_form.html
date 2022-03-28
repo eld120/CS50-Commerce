@@ -1,0 +1,29 @@
+
+
+<div id="watchlist-form">
+    {% if watchlist %}
+        <form method="POST" hx-post="{% url 'auctions:watchlist_update' %}">
+    {% else %}
+        <form method="POST" hx-post="{% url 'auctions:watchlist_create' %}">
+    {% endif %}
+    {% csrf_token%}
+    {% for field in watchlist_form.visible_fields %}
+            {{ field.label_tag }}
+            {{ field.errors }}
+        {% if watchlist %}
+            <input type="submit" name="active" value="True"
+            hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
+            hx-post="{% url 'auctions:watchlist_update' %}">
+        {% else %}
+            <input type="submit" name="active" value="False"
+            hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
+            hx-post="{% url 'auctions:watchlist_create' %}">
+        {% endif %}
+            {{ field.help_text }}
+    {% endfor %}
+    <!-- for True value="&#10084;&#65039;"
+    for False &#129293 -->
+
+
+    </form>
+</div>

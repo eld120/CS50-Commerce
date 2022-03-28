@@ -5,6 +5,11 @@ from django.forms.models import ModelForm
 from .models import Bid, Comment, Listing, Watchlist
 
 
+class SubmitInput(forms.widgets.Input):
+    input_type = "submit"  # Subclasses must define this.
+    template_name = "django/forms/widgets/input.html"
+
+
 class ListingCreateForm(ModelForm):
     class Meta:
         model = Listing

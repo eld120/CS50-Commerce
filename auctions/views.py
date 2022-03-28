@@ -318,3 +318,17 @@ def new_listing_detail(request, slug):
             "user_cash": user_cash,
         },
     )
+
+
+class WatchlistCreateView(mixins.LoginRequiredMixin, CreateView):
+    model = Watchlist
+    template_name = "auctions/partials/watchlist_form.html"
+    form_class = WatchlistForm
+    # fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
+    success_url = reverse_lazy("auctions:index")
+
+
+class WatchlistUpdateView(mixins.LoginRequiredMixin, UpdateView):
+    template_name = "auctions/partials/watchlist_form.html"
+    queryset = Watchlist.objects.filter()
+    form_class = WatchlistForm
