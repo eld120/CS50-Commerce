@@ -19,9 +19,6 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
     path(
-        "watchlist-create", views.WatchlistCreateView.as_view(), name="watchlist_create"
-    ),
-    path(
-        "watchlist-update", views.WatchlistUpdateView.as_view(), name="watchlist_update"
+        "watchlist-update/<slug:slug>", views.watchlist_toggle, name="watchlist_update"
     ),
 ]

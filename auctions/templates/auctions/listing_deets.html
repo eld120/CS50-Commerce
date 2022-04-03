@@ -9,26 +9,9 @@
 
             {% if user.is_authenticated %}
             {% include 'auctions/partials/watchlist_form.html' %}
-            {% comment %} <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
-                {% csrf_token %}
-                {% for field in watchlist_form %}
-
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{field}}
-                {% if field.help_text %}
-                    {{ field.help_text }}
-                {% endif %}
-                {% endfor%}
-                {%if watchlist_active %}
-                    <input type="hidden" name="active" id="id_active">
-                    <input type="submit" name="watchlist" class="button" value="Add">
-                {% else %}
-
-                    <input type="submit" name="watchlist" class="button" value="Remove">
-                {% endif %}
-            </form> {% endcomment %}
+            {% endif %}
         </div>
-        {% endif %}
+
 
         <div class="main__bid-form">
 

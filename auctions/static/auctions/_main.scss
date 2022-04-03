@@ -30,7 +30,14 @@
         max-width: 20em;
         // aspect-ratio: 1/0.579;
     }
+    &__watchlist-toggle{
+        border: none;
+        background-color: white;
 
+    }
+    &__watchlist-toggle:focus{
+        outline: none;
+    }
     &__comments{
         margin: 0;
     }

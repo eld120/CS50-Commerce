@@ -320,15 +320,20 @@ def new_listing_detail(request, slug):
     )
 
 
-class WatchlistCreateView(mixins.LoginRequiredMixin, CreateView):
-    model = Watchlist
-    template_name = "auctions/partials/watchlist_form.html"
-    form_class = WatchlistForm
-    # fields = [ 'title', 'image', 'description', 'active', 'start_price', 'auction_length', 'slug']
-    success_url = reverse_lazy("auctions:index")
+@decorators.login_required
+def watchlist_toggle(request, slug):
 
+    listing = Listing.objects.get_or_create(slug=slug)
+    watchlist = Watchlist.objects.get_or_create(user=request.user, listing=listing[0])
 
-class WatchlistUpdateView(mixins.LoginRequiredMixin, UpdateView):
-    template_name = "auctions/partials/watchlist_form.html"
-    queryset = Watchlist.objects.filter()
-    form_class = WatchlistForm
+    if watchlist[0].active:
+        watchlist[0].active = False
+    else:
+        watchlist[0].active = True
+    watchlist[0].save()
+
+    return render(
+        request,
+        "auctions/partials/watchlist_form.html",
+        {"watchlist": watchlist[0], "listing": listing[0]},
+    )

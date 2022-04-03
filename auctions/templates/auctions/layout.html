@@ -98,21 +98,6 @@
         </div>
 
 
-
-        <!-- <div class="header__toggle">
-          <a
-            href="#"
-            aria-expanded="false"
-            aria-controls="menu"
-            id="menu"
-            class="header__hamburger hide-desktop"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </a>
-        </div> -->
-
         <nav class="header__navbottom" role="navigation" aria-label="Main Navigation" id="navigation">
           <ul id="nav-menu" class="menu-closed">
             <li><a href="">Home</a></li>
@@ -125,7 +110,10 @@
         <hr />
       </div>
     </header>
-    <main class="main">{% block body %} {% endblock %}</main>
+    <main class="main">
+      {% block body %}
+      {% endblock %}
+    </main>
     <footer class="footer">
       <h6 class="footer__logo">GBAY is a fake trademark of Hub Corporation</h6>
     </footer>

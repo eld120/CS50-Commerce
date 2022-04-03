@@ -73,6 +73,9 @@ class Watchlist(models.Model):
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
     active = models.BooleanField(verbose_name="Watchlist", default=False)
 
+    class Meta:
+        unique_together = ("user", "listing")
+
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 

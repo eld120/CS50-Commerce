@@ -1,29 +1,26 @@
 
 
 <div id="watchlist-form">
-    {% if watchlist %}
-        <form method="POST" hx-post="{% url 'auctions:watchlist_update' %}">
-    {% else %}
-        <form method="POST" hx-post="{% url 'auctions:watchlist_create' %}">
-    {% endif %}
-    {% csrf_token%}
-    {% for field in watchlist_form.visible_fields %}
-            {{ field.label_tag }}
-            {{ field.errors }}
-        {% if watchlist %}
-            <input type="submit" name="active" value="True"
-            hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
-            hx-post="{% url 'auctions:watchlist_update' %}">
+    {% if watchlist.active %}
+
+            <button class="main__watchlist-toggle"
+            name="watchlist remove"
+            hx-target="#watchlist-form" hx-swap="outerHTML"
+            hx-get="{% url 'auctions:watchlist_update' listing.slug %}"
+            ><span>&#10084;&#65039;</span> Remove from watchlist</button>
         {% else %}
-            <input type="submit" name="active" value="False"
+
+            <button class="main__watchlist-toggle"
+            name="watchlist remove"
             hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
-            hx-post="{% url 'auctions:watchlist_create' %}">
+            hx-get="{% url 'auctions:watchlist_update' listing.slug %}"
+            ><span>&#129293</span> Add to watchlist</button>
         {% endif %}
-            {{ field.help_text }}
-    {% endfor %}
+
+
     <!-- for True value="&#10084;&#65039;"
     for False &#129293 -->
 
 
-    </form>
+
 </div>

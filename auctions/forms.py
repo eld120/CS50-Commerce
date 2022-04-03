@@ -50,3 +50,10 @@ class WatchlistForm(ModelForm):
     class Meta:
         model = Watchlist
         fields = ["active"]
+        # widgets = {
+        #     'active' : SubmitInput(attrs={
+        #         'hx-target' : '#watchlist-form',
+        #         'hx-swap' : 'outerHTML',
+
+        #     })
+        # }

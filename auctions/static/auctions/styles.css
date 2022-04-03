@@ -233,6 +233,13 @@ select {
   margin: 0 auto;
   max-width: 20em;
 }
+.main__watchlist-toggle {
+  border: none;
+  background-color: white;
+}
+.main__watchlist-toggle:focus {
+  outline: none;
+}
 .main__comments {
   margin: 0;
 }
