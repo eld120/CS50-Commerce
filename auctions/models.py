@@ -12,9 +12,6 @@ from .validators import validate_negative_bid
 
 class User(AbstractUser):
     cash = models.FloatField(default=1000.00)
-    credit = models.FloatField(
-        default=0.0,
-    )
 
     def subtract_cash(self, cash):
         self.cash -= cash
@@ -23,11 +20,11 @@ class User(AbstractUser):
         self.cash += cash
 
     # going to make credit a negative value when charged
-    def charge_credit(self, bid):
-        self.credit -= bid
+    # def charge_credit(self, bid):
+    #     credit = Bid.objects.get
 
-    def pay_credit(self, bid):
-        self.credit += bid
+    # def pay_credit(self, bid):
+    #     credit = bid
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -47,7 +44,7 @@ class Listing(models.Model):
         null=True,
         blank=True,
     )
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Seller", on_delete=models.DO_NOTHING
     )
 
@@ -90,7 +87,7 @@ class Bid(models.Model):
     )
     date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
@@ -122,7 +119,7 @@ class Comment(models.Model):
 
     text = models.TextField(max_length=500, verbose_name="Comments")
     comment_date = models.DateTimeField(auto_now=True, null=True)
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
@@ -132,7 +129,7 @@ class Comment(models.Model):
     def __str__(self):
         return (
             "Contact ID: "
-            + str(self.owner)
+            + str(self.user)
             + "Listing ID: "
             + str(self.listing)
             + str(self.comment_date)
