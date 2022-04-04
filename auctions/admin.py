@@ -19,7 +19,7 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 class BidAdmin(admin.ModelAdmin):
-    list_display = ("bid", "date", "owner", "listing")
+    list_display = ("bid", "date", "user", "listing")
 
 
 class WatchlistAdmin(admin.ModelAdmin):
@@ -27,7 +27,7 @@ class WatchlistAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("text", "comment_date", "owner", "listing")
+    list_display = ("text", "comment_date", "user", "listing")
 
 
 admin.site.register(Listing, ListingAdmin)

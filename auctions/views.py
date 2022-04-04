@@ -68,7 +68,7 @@ def Listing_detail(request, slug):
     if request.method == "POST":
         if "comments" in request.POST and comment_form.is_valid():
             new_form = comment_form.save(commit=False)
-            new_form.owner = request.user
+            new_form.user = request.user
             new_form.listing_id = list_detail.id
             new_form.save()
             return redirect(
@@ -139,7 +139,7 @@ class ListingCreate(mixins.LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("auctions:index")
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
 
@@ -221,49 +221,50 @@ def new_listing_detail(request, slug):
     current_bid = Bid(listing=listing).highest_current_bid()
 
     comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
-
-    try:
-        watchlist = Watchlist.objects.get(
-            user_id=request.user.id,
-            listing_id=listing.id,
-        )
-        user_cash = request.user.cash
-    except Watchlist.DoesNotExist:
-        user_cash = 0
-        watchlist = False
+    watchlist = Watchlist.objects.get_or_create(
+        user_id=request.user.id,
+        listing_id=listing.id,
+    )
+    # try:
+    #     watchlist = Watchlist.objects.get(
+    #         user_id=request.user.id,
+    #         listing_id=listing.id,
+    #     )
+    #     user_cash = request.user.cash
+    # except Watchlist.DoesNotExist:
+    #     user_cash = 0
+    #     watchlist = False
 
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
 
-    if watchlist:
-        watchlist_active = watchlist.active
+    if watchlist[0]:
+        watchlist_active = watchlist[0].active
     else:
         watchlist_active = False
     watchlist_form = WatchlistForm(
         request.POST or None, initial={"active": watchlist_active}
     )
 
+    context = {
+        "bid_form": bid_form,
+        "comment_form": comment_form,
+        "watchlist_form": watchlist_form,
+        "current_bid": current_bid,
+        "comment_list": comment_list,
+        "watchlist": watchlist_active,
+        "listing": listing,
+        "user_cash": request.user.cash,
+    }
+
     if request.method == "POST":
 
         if "watchlist" in request.POST and watchlist_form.is_valid():
-            if watchlist.user == request.user:
-                watchlist.active = watchlist_form.cleaned_data["active"]
-                watchlist.save()
+            if watchlist[0].user == request.user:
+                watchlist[0].active = watchlist_form.cleaned_data["active"]
+                watchlist[0].save()
                 return redirect("auctions:new_listing_detail", slug=slug)
-            return render(
-                request,
-                "auctions/listing_deets.html",
-                {
-                    "bid_form": bid_form,
-                    "comment_form": comment_form,
-                    "watchlist_form": watchlist_form,
-                    "current_bid": current_bid,
-                    "comment_list": comment_list,
-                    "watchlist": watchlist_active,
-                    "listing": listing,
-                    "user_cash": user_cash,
-                },
-            )
+            return render(request, "auctions/listing_deets.html", context)
 
         if "bids" in request.POST and bid_form.is_valid():
 
@@ -282,42 +283,16 @@ def new_listing_detail(request, slug):
                 return redirect("auctions:new_listing_detail", slug=slug)
 
             messages.error(request, f"Your bid must be greater than ${current_bid}")
-            return render(
-                request,
-                "auctions/listing_deets.html",
-                {
-                    "bid_form": bid_form,
-                    "comment_form": comment_form,
-                    "watchlist_form": watchlist_form,
-                    "current_bid": current_bid,
-                    "comment_list": comment_list,
-                    "watchlist": watchlist,
-                    "listing": listing,
-                    "user_cash": user_cash,
-                },
-            )
+            return render(request, "auctions/listing_deets.html", context)
 
         if "comment" in request.POST and comment_form.is_valid():
             c = comment_form.save(commit=False)
-            c.owner = request.user
+            c.user = request.user
             c.listing = listing
             c.save()
             return redirect("auctions:new_listing_detail", slug=slug)
 
-    return render(
-        request,
-        "auctions/listing_deets.html",
-        {
-            "bid_form": bid_form,
-            "comment_form": comment_form,
-            "watchlist_form": watchlist_form,
-            "current_bid": current_bid,
-            "comment_list": comment_list,
-            "watchlist": watchlist,
-            "listing": listing,
-            "user_cash": user_cash,
-        },
-    )
+    return render(request, "auctions/listing_deets.html", context)
 
 
 @decorators.login_required
