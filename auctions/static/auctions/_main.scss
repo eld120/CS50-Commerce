@@ -16,20 +16,28 @@
 
     padding: 3rem 2rem;
     overflow-y:scroll;
-    &__image-container{
-        display: inline-block;
-        background-color: vars.$background-light;
-        padding: .5rem 1rem;
-        margin: 0 auto;
-        width: 100%;
-    }
+    // &__image-container{
+
+    //     background-color: vars.$background-light;
+    //     padding: .5rem 1rem;
+    //     margin: 0 auto;
+    //     width: 100%;
+    // }
     &__image{
-
+        display: inline-block;
         margin: 0 auto;
-        min-height: 9rem;
-        aspect-ratio: 1/0.579;
-    }
 
+        max-width: 20em;
+        // aspect-ratio: 1/0.579;
+    }
+    &__watchlist-toggle{
+        border: none;
+        background-color: white;
+
+    }
+    &__watchlist-toggle:focus{
+        outline: none;
+    }
     &__comments{
         margin: 0;
     }

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "compressor",
     "django_celery_beat",
+    "tasks",
+    "django_htmx",
 ]
 
 
@@ -64,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 

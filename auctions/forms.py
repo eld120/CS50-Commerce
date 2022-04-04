@@ -5,6 +5,11 @@ from django.forms.models import ModelForm
 from .models import Bid, Comment, Listing, Watchlist
 
 
+class SubmitInput(forms.widgets.Input):
+    input_type = "submit"  # Subclasses must define this.
+    template_name = "django/forms/widgets/input.html"
+
+
 class ListingCreateForm(ModelForm):
     class Meta:
         model = Listing
@@ -45,3 +50,10 @@ class WatchlistForm(ModelForm):
     class Meta:
         model = Watchlist
         fields = ["active"]
+        # widgets = {
+        #     'active' : SubmitInput(attrs={
+        #         'hx-target' : '#watchlist-form',
+        #         'hx-swap' : 'outerHTML',
+
+        #     })
+        # }

@@ -2,11 +2,12 @@
   <div class="main__index">
     {% for obj in context%}
       <div class="main__wrapper wrapper">
+        <a class="main__link" href=" {% url 'auctions:new_listing_detail' obj.slug %}">
         <img class="main__image image" src="{{ obj.image.url  }}" alt="{{ obj.title }}"/>
         <div class="main__listdetail">
           <h3>
-            <a class="main__link" href=" {% url 'auctions:new_listing_detail' obj.slug %}">{{ obj.title }}</a>
-          </h3>
+           {{ obj.title }}
+          </h3></a>
 
           <span>Starting Bid: </span>${{ obj.start_price }}
         </div>

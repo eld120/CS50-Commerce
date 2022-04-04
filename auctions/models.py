@@ -22,11 +22,12 @@ class User(AbstractUser):
     def add_cash(self, cash):
         self.cash += cash
 
-    def subtract_credit(self, bid):
-        self.credit += bid
-
-    def add_credit(self, bid):
+    # going to make credit a negative value when charged
+    def charge_credit(self, bid):
         self.credit -= bid
+
+    def pay_credit(self, bid):
+        self.credit += bid
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -72,6 +73,9 @@ class Watchlist(models.Model):
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
     active = models.BooleanField(verbose_name="Watchlist", default=False)
 
+    class Meta:
+        unique_together = ("user", "listing")
+
     def __str__(self):
         return "User key: " + str(self.user) + "Listing Key: " + str(self.listing)
 
@@ -90,9 +94,6 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
-    def auction_winner(self, Listing):
-        self.listing = Listing.id
-
     def __str__(self):
         return (
             "Contact ID: " + str(self.owner_id) + "Listing ID: " + str(self.listing_id)
@@ -108,28 +109,13 @@ class Bid(models.Model):
             current_bid = self.listing.start_price
         return current_bid
 
-    # def validate_minimum_bid(self):
-    # bids must be greater than previous bids on the same listing
-
-    # if current_highest_bid["bid__max"] is None:
-    #     current_highest_bid["bid__max"] = self.listing.start_price
-    # else:
-    #     current_highest_bid["bid__max"] += 1
-    # if not self.bid >= current_highest_bid["bid__max"]:
-    #     raise ValidationError(
-    #         {"bid": f'The current minimum bid is {current_highest_bid["bid__max"] + 1.0}'}
-    #    )
-
-    def clean(self, *args, **kwargs):
-        # self.validate_negative_bid()
-        # TODO validate min bid is happening when bid_form.is_valid() is called
-        # TODO bind listinb object to bid form before is_valid() is called
-        # self.validate_minimum_bid()
-        super().clean(*args, **kwargs)
-
     def save(self, *args, **kwargs):
-
-        return super(Bid, self).save(*args, **kwargs)
+        # looking for a way to strictly enforce this via validator on the model field - doesn't always work
+        if self.bid < 0.01:
+            raise ValidationError(
+                "$%(bid).2f cannot be a negative value", params={"bid": self.bid}
+            )
+        super(Bid, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):

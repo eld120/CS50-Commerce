@@ -222,19 +222,15 @@ def new_listing_detail(request, slug):
 
     comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
 
-    # handle watchlist/user cash for anonymous user or logged in user
-    watchlist = False
-    user_cash = request.user.cash
-
-    if request.user.is_authenticated:
-        try:
-            watchlist = Watchlist.objects.get(
-                user_id=request.user.id,
-                listing_id=listing.id,
-            )
-
-        except Watchlist.DoesNotExist:
-            pass
+    try:
+        watchlist = Watchlist.objects.get(
+            user_id=request.user.id,
+            listing_id=listing.id,
+        )
+        user_cash = request.user.cash
+    except Watchlist.DoesNotExist:
+        user_cash = 0
+        watchlist = False
 
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
@@ -321,4 +317,23 @@ def new_listing_detail(request, slug):
             "listing": listing,
             "user_cash": user_cash,
         },
+    )
+
+
+@decorators.login_required
+def watchlist_toggle(request, slug):
+
+    listing = Listing.objects.get_or_create(slug=slug)
+    watchlist = Watchlist.objects.get_or_create(user=request.user, listing=listing[0])
+
+    if watchlist[0].active:
+        watchlist[0].active = False
+    else:
+        watchlist[0].active = True
+    watchlist[0].save()
+
+    return render(
+        request,
+        "auctions/partials/watchlist_form.html",
+        {"watchlist": watchlist[0], "listing": listing[0]},
     )
