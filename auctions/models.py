@@ -93,7 +93,7 @@ class Bid(models.Model):
 
     def __str__(self):
         return (
-            "Contact ID: " + str(self.owner_id) + "Listing ID: " + str(self.listing_id)
+            "Contact ID: " + str(self.user_id) + "Listing ID: " + str(self.listing_id)
         )
 
     def get_absolute_url(self):
@@ -104,6 +104,15 @@ class Bid(models.Model):
         current_bid = bid["bid__max"]
         if current_bid is None:
             current_bid = self.listing.start_price
+        return current_bid
+
+    def highest_user_bid(self):
+        bid = Bid.objects.filter(listing_id=self.listing, user=self.user).aggregate(
+            models.Max("bid")
+        )
+        current_bid = bid["bid__max"]
+        if current_bid is None:
+            current_bid = 0.0
         return current_bid
 
     def save(self, *args, **kwargs):
