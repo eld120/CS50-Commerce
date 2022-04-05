@@ -1,12 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import (
-    authenticate,
-    decorators,
-    get_user_model,
-    login,
-    logout,
-    mixins,
-)
+from django.contrib.auth import authenticate, decorators, login, logout, mixins
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import IntegrityError, models
 from django.http import HttpResponseRedirect
@@ -22,8 +15,6 @@ from .services import (
     validate_single_winner,
     watch_validate,
 )
-
-U = get_user_model()
 
 
 class IndexView(ListView):
@@ -225,6 +216,8 @@ def new_listing_detail(request, slug):
         user_id=request.user.id,
         listing_id=listing.id,
     )
+    if watchlist[0].active:
+        pass
     # try:
     #     watchlist = Watchlist.objects.get(
     #         user_id=request.user.id,
@@ -238,33 +231,33 @@ def new_listing_detail(request, slug):
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
 
-    if watchlist[0]:
-        watchlist_active = watchlist[0].active
-    else:
-        watchlist_active = False
-    watchlist_form = WatchlistForm(
-        request.POST or None, initial={"active": watchlist_active}
-    )
+    # if watchlist[0]:
+    #     watchlist_active = watchlist[0].active
+    # else:
+    #     watchlist_active = False
+    # watchlist_form = WatchlistForm(
+    #     request.POST or None, initial={"active": watchlist_active}
+    # )
 
     context = {
         "bid_form": bid_form,
         "comment_form": comment_form,
-        "watchlist_form": watchlist_form,
+        # "watchlist_form": watchlist_form,
         "current_bid": current_bid,
         "comment_list": comment_list,
-        "watchlist": watchlist_active,
+        "watchlist": watchlist[0],
         "listing": listing,
         "user_cash": request.user.cash,
     }
 
     if request.method == "POST":
 
-        if "watchlist" in request.POST and watchlist_form.is_valid():
-            if watchlist[0].user == request.user:
-                watchlist[0].active = watchlist_form.cleaned_data["active"]
-                watchlist[0].save()
-                return redirect("auctions:new_listing_detail", slug=slug)
-            return render(request, "auctions/listing_deets.html", context)
+        # if "watchlist" in request.POST and watchlist_form.is_valid():
+        #     if watchlist[0].user == request.user:
+        #         watchlist[0].active = watchlist_form.cleaned_data["active"]
+        #         watchlist[0].save()
+        #         return redirect("auctions:new_listing_detail", slug=slug)
+        #     return render(request, "auctions/listing_deets.html", context)
 
         if "bids" in request.POST and bid_form.is_valid():
 
@@ -273,8 +266,8 @@ def new_listing_detail(request, slug):
                 and bid_form.cleaned_data["bid"] > current_bid
             ):
                 b = bid_form.save(commit=False)
-                b.owner_id = request.user.id
-                b.listing_id = listing.id
+                b.user = request.user
+                b.listing = listing
                 # cash withdrawal can happen if the bid
                 user = request.user
                 user.subtract_cash(b.bid)
@@ -300,15 +293,18 @@ def watchlist_toggle(request, slug):
 
     listing = Listing.objects.get_or_create(slug=slug)
     watchlist = Watchlist.objects.get_or_create(user=request.user, listing=listing[0])
-
     if watchlist[0].active:
-        watchlist[0].active = False
-    else:
-        watchlist[0].active = True
-    watchlist[0].save()
+        pass
+    if request.method == "PATCH":
+
+        if watchlist[0].active:
+            watchlist[0].active = False
+        else:
+            watchlist[0].active = True
+        watchlist[0].save()
 
     return render(
         request,
         "auctions/partials/watchlist_form.html",
-        {"watchlist": watchlist[0], "listing": listing[0]},
+        {"watchlist": watchlist[0].active, "listing": listing[0]},
     )
