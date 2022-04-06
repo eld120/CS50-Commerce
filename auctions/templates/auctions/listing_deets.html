@@ -2,18 +2,18 @@
 
 {% block body %}
 {% load crispy_forms_tags %}
-    <div class="main__image-container">
+    <div class="main__container">
         <img class="main__image"src="{{  listing.image.url }}" alt="{{listing.title}}">
-    </div>
-        <div class="main__watchlist">
 
+
+        <div class="main__forms">
             {% if user.is_authenticated %}
             {% include 'auctions/partials/watchlist_form.html' %}
             {% endif %}
-        </div>
 
 
-        <div class="main__bid-form">
+
+
 
             <h6>Current Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
             {% if user.is_authenticated %}
@@ -41,38 +41,34 @@
                 </form>
             </div>
             {% endif %}
-
-
+    </div>
+            <hr>
 
     <div class="main__comments">
         {% if user.is_authenticated %}
+        <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
+            {% csrf_token %}
+            {% for field in comment_form %}
+                {{ field.errors }}
+                {{ field.label_tag }} {{field}}
+            {% if field.help_text %}
+                {{ field.help_text }}
+            {% endif %}
+            {% endfor%}
+            <input type="submit" name="comment" class="button" value="Add Comment">
+        </form>
+    {% endif %}
+        <div class="main__comment-list">
+            {% for comment in comment_list  %}
 
-        <table>
-            <tr>
-                <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
-                    {% csrf_token %}
+                <p> {{comment.text}}</p>
+                <p>{{ comment.user.username }}<p>
+            {% endfor %}
 
-                    {% for field in comment_form %}
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{field}}
-                    {% if field.help_text %}
-                        {{ field.help_text }}
-                    {% endif %}
-                    {% endfor%}
-                    <input type="submit" name="comment" class="button" value="Add Comment">
-                </form>
-            </tr>
-        {% endif %}
+        </div>
 
     </div>
-    <table class="main__comment-list">
-        {% for comment in comment_list  %}
-        <tr>
-            <td>{{comment.text}}</td>
-        </tr>
-        {% endfor %}
 
-    </table>
 
 
 {% endblock body %}
