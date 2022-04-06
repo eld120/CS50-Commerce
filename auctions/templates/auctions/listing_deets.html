@@ -11,38 +11,11 @@
             {% include 'auctions/partials/watchlist_form.html' %}
             {% endif %}
 
-
-
-
-
-            <h6>Current Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
-            {% if user.is_authenticated %}
-                <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
-
-            <form action="{% url 'auctions:new_listing_detail' listing.slug %}" method="POST">
-                {% csrf_token %}
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                {% for field in bid_form %}
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{field }}
-                {% if field.help_text %}
-                    {{ field.help_text }}
-                {% endif %}
-                {% endfor%}
-
-
-                    <input type="submit" name="bids" class="button" value="Bid">
-                </form>
-            </div>
-            {% endif %}
+            {% include 'auctions/partials/bid_form.html' %}
+        </div>
     </div>
-            <hr>
+
+    <hr>
 
     <div class="main__comments">
         {% if user.is_authenticated %}

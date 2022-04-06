@@ -11,7 +11,7 @@
     {% else %}
         <button class="main__watchlist-toggle"
         name="watchlist remove"
-        hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
+        hx-target="#watchlist-form" hx-swap="outerHTML"
         hx-patch="{% url 'auctions:watchlist_update' listing.slug %}"
 
         ><span>&#129293</span> Add to watchlist</button>

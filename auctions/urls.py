@@ -21,4 +21,7 @@ urlpatterns = [
     path(
         "watchlist-update/<slug:slug>", views.watchlist_toggle, name="watchlist_update"
     ),
+    path(
+        "listing-bid-form/<slug:slug>", views.listing_bid_form, name="listing_bid_form"
+    ),
 ]

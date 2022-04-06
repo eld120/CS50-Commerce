@@ -207,42 +207,28 @@ def register(request):
 
 
 def new_listing_detail(request, slug):
-    # can we reduce the number of DB queries here?
     listing = get_object_or_404(Listing, slug=slug)
     current_bid = Bid(listing=listing).highest_current_bid()
+    total_bids = Bid.objects.filter(listing=listing, user=request.user).count()
 
-    comment_list = Comment.objects.filter(listing_id=listing.id).values("text")
+    comment_list = Comment.objects.filter(listing_id=listing.id)
     watchlist = Watchlist.objects.get_or_create(
         user_id=request.user.id,
         listing_id=listing.id,
     )
     if watchlist[0].active:
+        # I need to evaluate watchlist to know the value in the template
+        # TODO make the evaluation above obsolete
         pass
-    # try:
-    #     watchlist = Watchlist.objects.get(
-    #         user_id=request.user.id,
-    #         listing_id=listing.id,
-    #     )
-    #     user_cash = request.user.cash
-    # except Watchlist.DoesNotExist:
-    #     user_cash = 0
-    #     watchlist = False
 
     bid_form = BidForm(request.POST or None)
     comment_form = CommentForm(request.POST or None)
 
-    # if watchlist[0]:
-    #     watchlist_active = watchlist[0].active
-    # else:
-    #     watchlist_active = False
-    # watchlist_form = WatchlistForm(
-    #     request.POST or None, initial={"active": watchlist_active}
-    # )
-
     context = {
-        "bid_form": bid_form,
+        # "bid_form": bid_form,
         "comment_form": comment_form,
-        # "watchlist_form": watchlist_form,
+        "total_bids": total_bids,
+        "bid_form": bid_form,
         "current_bid": current_bid,
         "comment_list": comment_list,
         "watchlist": watchlist[0],
@@ -250,40 +236,12 @@ def new_listing_detail(request, slug):
         "user_cash": request.user.cash,
     }
 
-    if request.method == "POST":
-
-        # if "watchlist" in request.POST and watchlist_form.is_valid():
-        #     if watchlist[0].user == request.user:
-        #         watchlist[0].active = watchlist_form.cleaned_data["active"]
-        #         watchlist[0].save()
-        #         return redirect("auctions:new_listing_detail", slug=slug)
-        #     return render(request, "auctions/listing_deets.html", context)
-
-        if "bids" in request.POST and bid_form.is_valid():
-
-            if (
-                request.user.cash > bid_form.cleaned_data["bid"]
-                and bid_form.cleaned_data["bid"] > current_bid
-            ):
-                b = bid_form.save(commit=False)
-                b.user = request.user
-                b.listing = listing
-                # cash withdrawal can happen if the bid
-                user = request.user
-                user.subtract_cash(b.bid)
-                user.save()
-                b.save()
-                return redirect("auctions:new_listing_detail", slug=slug)
-
-            messages.error(request, f"Your bid must be greater than ${current_bid}")
-            return render(request, "auctions/listing_deets.html", context)
-
-        if "comment" in request.POST and comment_form.is_valid():
-            c = comment_form.save(commit=False)
-            c.user = request.user
-            c.listing = listing
-            c.save()
-            return redirect("auctions:new_listing_detail", slug=slug)
+    if "comment" in request.POST and comment_form.is_valid():
+        c = comment_form.save(commit=False)
+        c.user = request.user
+        c.listing = listing
+        c.save()
+        return redirect("auctions:new_listing_detail", slug=slug)
 
     return render(request, "auctions/listing_deets.html", context)
 
@@ -294,6 +252,8 @@ def watchlist_toggle(request, slug):
     listing = Listing.objects.get_or_create(slug=slug)
     watchlist = Watchlist.objects.get_or_create(user=request.user, listing=listing[0])
     if watchlist[0].active:
+        # I need to evaluate watchlist to know the value in the template
+        # TODO make the evaluation above obsolete
         pass
     if request.method == "PATCH":
 
@@ -307,4 +267,62 @@ def watchlist_toggle(request, slug):
         request,
         "auctions/partials/watchlist_form.html",
         {"watchlist": watchlist[0].active, "listing": listing[0]},
+    )
+
+
+@decorators.login_required
+def listing_bid_form(request, slug):
+    listing = get_object_or_404(Listing, slug=slug)
+    current_bid = Bid(listing=listing).highest_current_bid()
+    total_bids = Bid.objects.filter(listing=listing, user=request.user).count()
+
+    bid_form = BidForm(request.POST or None)
+
+    context = {
+        "listing": listing,
+        "current_bid": current_bid,
+        "total_bids": total_bids,
+        "bid_form": bid_form,
+        "user": request.user,
+    }
+    if request.method == "POST":
+
+        if "bid" in request.POST and bid_form.is_valid():
+            if (
+                request.user.cash > bid_form.cleaned_data["bid"]
+                and bid_form.cleaned_data["bid"] > current_bid
+            ):
+                b = bid_form.save(commit=False)
+                b.user = request.user
+                b.listing = listing
+                b.save()
+                current_bid = Bid(listing=listing).highest_current_bid()
+                total_bids = Bid.objects.filter(
+                    listing=listing, user=request.user
+                ).count()
+                return render(
+                    request,
+                    "auctions/partials/bid_form.html",
+                    {
+                        "listing": listing,
+                        "current_bid": current_bid,
+                        "total_bids": total_bids,
+                        "bid_form": BidForm(),
+                        "user_cash": request.user.cash,
+                    },
+                )
+
+            messages.error(request, f"Your bid must be greater than ${current_bid}")
+            return render(request, "auctions/partials/bid_form.html", context)
+
+    return render(
+        request,
+        "auctions/partials/bid_form.html",
+        {
+            "listing": listing,
+            "current_bid": current_bid,
+            "total_bids": total_bids,
+            "bid_form": bid_form,
+            "user_cash": request.user.cash,
+        },
     )
