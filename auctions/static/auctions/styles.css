@@ -225,7 +225,7 @@ select {
 }
 
 .main {
-  padding: 3rem 2rem;
+  padding: 1.5rem 2rem;
   overflow-y: scroll;
 }
 .main__image {
@@ -240,36 +240,33 @@ select {
 .main__watchlist-toggle:focus {
   outline: none;
 }
-.main__comments {
-  margin: 0;
+.main__comment-list {
+  margin: 1em auto;
 }
-.main__comment-list tr {
-  margin: 2.5rem;
+.main__comment-list p {
+  display: block;
+  padding: 0.5em 2.5em;
+  min-height: 5em;
 }
-.main__comment-list td {
-  display: inline-block;
-  border: solid #E8E8E8 3px;
-  padding: 1rem 2.5rem;
-  border-radius: 0.65rem;
-  width: 100%;
-  margin: 0.35rem 0;
-  color: #404040;
+.main__comment-list p p {
+  font-size: 1.25em;
+  letter-spacing: 2px;
+  color: #737373;
 }
 
-/* iPads (landscape) ----------- */
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-  /* Styles */
+@media only screen and (min-width: 35em) {
+  .main__container {
+    display: flex;
+  }
   .main__image {
-    width: 35vw;
+    max-width: 28em;
+    margin: 0 auto 0 0;
   }
-  .main__comment-list {
-    max-width: 40rem;
+  .main__forms {
+    display: grid;
+    margin: 0 auto;
+    grid-template-areas: "top top" "middle middle" "bottom bottom";
   }
-}
-/* Desktops and laptops ----------- */
-/* Large screens ----------- */
-@media only screen and (min-width: 1824px) {
-  /* Styles */
 }
 
 /*# sourceMappingURL=styles.css.map */

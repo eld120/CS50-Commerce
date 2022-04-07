@@ -38,7 +38,7 @@ def test_watchlist_listing(user_watchlist, watchlist_two, watchlist_three):
 @pytest.mark.django_db
 def test_new_listing_detail(listing_fixture, user_fixture):
 
-    assert listing_fixture.owner == user_fixture
+    assert listing_fixture.user == user_fixture
 
     client = Client()
 

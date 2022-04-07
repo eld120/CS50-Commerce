@@ -1,26 +1,21 @@
 
 
-<div id="watchlist-form">
+<div id="watchlist-form" name="csrfmiddlewaretoken" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    {% csrf_token %}
     {% if watchlist.active %}
+        <button class="main__watchlist-toggle"
+        name="watchlist remove"
+        hx-target="#watchlist-form" hx-swap="outerHTML"
+        hx-patch="{% url 'auctions:watchlist_update' listing.slug %}"
+        ><span>&#10084;&#65039;</span> Remove from watchlist</button>
+    {% else %}
+        <button class="main__watchlist-toggle"
+        name="watchlist remove"
+        hx-target="#watchlist-form" hx-swap="outerHTML"
+        hx-patch="{% url 'auctions:watchlist_update' listing.slug %}"
 
-            <button class="main__watchlist-toggle"
-            name="watchlist remove"
-            hx-target="#watchlist-form" hx-swap="outerHTML"
-            hx-get="{% url 'auctions:watchlist_update' listing.slug %}"
-            ><span>&#10084;&#65039;</span> Remove from watchlist</button>
-        {% else %}
-
-            <button class="main__watchlist-toggle"
-            name="watchlist remove"
-            hx-target="#watchlist-form" hx-swap="outerHTML" id="id_active"
-            hx-get="{% url 'auctions:watchlist_update' listing.slug %}"
-            ><span>&#129293</span> Add to watchlist</button>
-        {% endif %}
-
-
-    <!-- for True value="&#10084;&#65039;"
-    for False &#129293 -->
-
-
+        ><span>&#129293</span> Add to watchlist</button>
+    {% endif %}
+    {{watchlist.active}}
 
 </div>

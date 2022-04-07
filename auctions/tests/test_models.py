@@ -30,14 +30,14 @@ class BidTest(TestCase):
             start_price=0.99,
             auction_start=timezone.now(),
             auction_end=timezone.now() + datetime.timedelta(days=7),
-            owner=self.user,
+            user=self.user,
         )
         self.bid = Bid.objects.create(
             id=9,
             bid=5.00,
             date=timezone.now(),
             winning_bid=False,
-            owner=self.user,
+            user=self.user,
             listing=self.listing,
             active=True,
         )
@@ -48,13 +48,13 @@ class BidTest(TestCase):
         del self.bid
 
     def test_bid(self):
-        self.assertEqual(self.bid.owner, self.user)
-        self.assertEqual(self.bid.owner.id, 3)
+        self.assertEqual(self.bid.user, self.user)
+        self.assertEqual(self.bid.user.id, 3)
         self.assertNotEqual(self.bid.bid, 50.00)
 
     def test_negative_bid(self):
         with self.assertRaises(ValidationError):
-            Bid.objects.create(bid=-1.0, listing=self.listing, owner=self.user)
+            Bid.objects.create(bid=-1.0, listing=self.listing, user=self.user)
 
     # def test_minimum_bid(self):
     #     with self.assertRaises(ValidationError):
@@ -83,14 +83,14 @@ class TestUser(TestCase):
             start_price=0.99,
             auction_start=timezone.now(),
             auction_end=timezone.now() + datetime.timedelta(days=7),
-            owner=self.user,
+            user=self.user,
         )
         self.bid = Bid.objects.create(
             id=9,
             bid=5.00,
             date=timezone.now(),
             winning_bid=False,
-            owner=self.user,
+            user=self.user,
             listing=self.listing,
             active=True,
         )
@@ -113,16 +113,6 @@ class TestUser(TestCase):
         self.assertEqual(user.cash, 125.0)
         user.add_cash(100)
         self.assertEqual(user.cash, 225.0)
-
-    def test_charge_credit(self):
-        self.user.charge_credit(self.bid.bid)
-        self.user.save()
-
-        self.assertEqual(self.user.credit, -5.00)
-
-    def test_pay_credit(self):
-        self.user.pay_credit(self.bid.bid)
-        assert self.user.credit == 5.0
 
 
 class TestListing(TestCase):
@@ -147,14 +137,14 @@ class TestListing(TestCase):
             start_price=0.99,
             auction_start=timezone.now(),
             auction_end=timezone.now() + datetime.timedelta(days=7),
-            owner=self.user,
+            user=self.user,
         )
         self.bid = Bid.objects.create(
             id=9,
             bid=5.00,
             date=timezone.now(),
             winning_bid=False,
-            owner=self.user,
+            user=self.user,
             listing=self.listing,
             active=True,
         )
@@ -162,7 +152,7 @@ class TestListing(TestCase):
         self.comment = Comment.objects.create(
             text="this is a comment about a listing or a bid",
             comment_date=timezone.now(),
-            owner=self.user,
+            user=self.user,
             listing=self.listing,
         )
         self.watchlist = Watchlist.objects.create(

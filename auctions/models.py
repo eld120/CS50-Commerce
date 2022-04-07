@@ -12,9 +12,6 @@ from .validators import validate_negative_bid
 
 class User(AbstractUser):
     cash = models.FloatField(default=1000.00)
-    credit = models.FloatField(
-        default=0.0,
-    )
 
     def subtract_cash(self, cash):
         self.cash -= cash
@@ -23,14 +20,19 @@ class User(AbstractUser):
         self.cash += cash
 
     # going to make credit a negative value when charged
-    def charge_credit(self, bid):
-        self.credit -= bid
+    # def charge_credit(self, bid):
+    #     credit = Bid.objects.get
 
-    def pay_credit(self, bid):
-        self.credit += bid
+    # def pay_credit(self, bid):
+    #     credit = bid
 
     def __str__(self):
         return self.first_name + self.last_name
+
+
+def get_auction_end():
+    return timezone.localtime()
+    +datetime.timedelta(days=7),
 
 
 class Listing(models.Model):
@@ -42,12 +44,11 @@ class Listing(models.Model):
     start_price = models.FloatField(default=0.99)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=timezone.localtime()
-        + datetime.timedelta(days=7),  # not timezone aware? needs testing
+        default=get_auction_end,
         null=True,
         blank=True,
     )
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Seller", on_delete=models.DO_NOTHING
     )
 
@@ -90,13 +91,13 @@ class Bid(models.Model):
     )
     date = models.DateTimeField(auto_now=True)
     winning_bid = models.BooleanField(default=False)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     listing = models.ForeignKey(Listing, on_delete=models.DO_NOTHING)
     active = models.BooleanField(default=True)
 
     def __str__(self):
         return (
-            "Contact ID: " + str(self.owner_id) + "Listing ID: " + str(self.listing_id)
+            "Contact ID: " + str(self.user_id) + "Listing ID: " + str(self.listing_id)
         )
 
     def get_absolute_url(self):
@@ -107,6 +108,15 @@ class Bid(models.Model):
         current_bid = bid["bid__max"]
         if current_bid is None:
             current_bid = self.listing.start_price
+        return current_bid
+
+    def highest_user_bid(self):
+        bid = Bid.objects.filter(listing_id=self.listing, user=self.user).aggregate(
+            models.Max("bid")
+        )
+        current_bid = bid["bid__max"]
+        if current_bid is None:
+            current_bid = 0.0
         return current_bid
 
     def save(self, *args, **kwargs):
@@ -122,7 +132,7 @@ class Comment(models.Model):
 
     text = models.TextField(max_length=500, verbose_name="Comments")
     comment_date = models.DateTimeField(auto_now=True, null=True)
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
     listing = models.ForeignKey(Listing, null=True, on_delete=models.DO_NOTHING)
@@ -132,7 +142,7 @@ class Comment(models.Model):
     def __str__(self):
         return (
             "Contact ID: "
-            + str(self.owner)
+            + str(self.user)
             + "Listing ID: "
             + str(self.listing)
             + str(self.comment_date)
