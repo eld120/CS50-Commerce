@@ -1,0 +1,29 @@
+<div class="main__comments" >
+    {% if user.is_authenticated %}
+
+    <!-- {% for message in messages %}
+
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %} -->
+    <form  method="POST" id="comments">
+        {% csrf_token %}
+        {% for field in comment_form %}
+            {{ field.errors }}
+            {{ field.label_tag }} {{field}}
+        {% if field.help_text %}
+            {{ field.help_text }}
+        {% endif %}
+        {% endfor%}
+        <button class="button"
+        hx-post="{% url 'auctions:listing_comment_form' listing.slug %}"
+        hx-target="#comments" hx-swap="outerHTML"
+        >Add Comment</button>
+    </form>
+    {% endif %}
+    <div class="main__comment-list" id="comment-list" hx-swap-oob="true">
+        {% for comment in comment_list  %}
+            <p> {{comment.text}}</p>
+            <p>{{ comment.user.username }}<p>
+        {% endfor %}
+    </div>
+</div>

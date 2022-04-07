@@ -27,15 +27,6 @@
 
                 <button class="button"
                 hx-post="{% url 'auctions:listing_bid_form' listing.slug %}"
-                hx-target="#bid-form" hx-swap="outerHTML" name="bids"
+                hx-target="#bid-form" hx-swap="outerHTML"
                 >Place Bid</button>
                 </form>
-
-
-
-        <!-- <div id="bid-info" hx-swap-oob="true">
-            <h6>Current Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
-            {% if user.is_authenticated %}
-            <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
-            {% endif %}
-        </div> -->

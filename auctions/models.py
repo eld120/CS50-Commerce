@@ -30,6 +30,11 @@ class User(AbstractUser):
         return self.first_name + self.last_name
 
 
+def get_auction_end():
+    return timezone.localtime()
+    +datetime.timedelta(days=7),
+
+
 class Listing(models.Model):
     slug = models.SlugField(null=True)
     title = models.CharField(max_length=150, null=True)
@@ -39,8 +44,7 @@ class Listing(models.Model):
     start_price = models.FloatField(default=0.99)
     auction_start = models.DateTimeField(auto_now_add=True, null=True)
     auction_end = models.DateTimeField(
-        default=timezone.localtime()
-        + datetime.timedelta(days=7),  # not timezone aware? needs testing
+        default=get_auction_end,
         null=True,
         blank=True,
     )

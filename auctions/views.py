@@ -225,7 +225,6 @@ def new_listing_detail(request, slug):
     comment_form = CommentForm(request.POST or None)
 
     context = {
-        # "bid_form": bid_form,
         "comment_form": comment_form,
         "total_bids": total_bids,
         "bid_form": bid_form,
@@ -236,13 +235,6 @@ def new_listing_detail(request, slug):
         "user_cash": request.user.cash,
     }
 
-    if "comment" in request.POST and comment_form.is_valid():
-        c = comment_form.save(commit=False)
-        c.user = request.user
-        c.listing = listing
-        c.save()
-        return redirect("auctions:new_listing_detail", slug=slug)
-
     return render(request, "auctions/listing_deets.html", context)
 
 
@@ -251,11 +243,8 @@ def watchlist_toggle(request, slug):
 
     listing = Listing.objects.get_or_create(slug=slug)
     watchlist = Watchlist.objects.get_or_create(user=request.user, listing=listing[0])
-    if watchlist[0].active:
-        # I need to evaluate watchlist to know the value in the template
-        # TODO make the evaluation above obsolete
-        pass
-    if request.method == "PATCH":
+
+    if request.method == "PATCH" and watchlist:
 
         if watchlist[0].active:
             watchlist[0].active = False
@@ -266,7 +255,7 @@ def watchlist_toggle(request, slug):
     return render(
         request,
         "auctions/partials/watchlist_form.html",
-        {"watchlist": watchlist[0].active, "listing": listing[0]},
+        {"watchlist": watchlist[0], "listing": listing[0]},
     )
 
 
@@ -324,5 +313,40 @@ def listing_bid_form(request, slug):
             "total_bids": total_bids,
             "bid_form": bid_form,
             "user_cash": request.user.cash,
+        },
+    )
+
+
+@decorators.login_required
+def listing_comment_form(request, slug):
+    listing = get_object_or_404(Listing, slug=slug)
+    comment_list = Comment.objects.filter(listing_id=listing.id)
+
+    comment_form = CommentForm(request.POST or None)
+
+    if "text" in request.POST and comment_form.is_valid():
+        c = comment_form.save(commit=False)
+        c.user = request.user
+        c.listing = listing
+        c.save()
+        comment_list = Comment.objects.filter(listing_id=listing.id)
+        # messages.success(request, f"Thanks for your submission {request.user.username}")
+        return render(
+            request,
+            "auctions/partials/comment_form.html",
+            {
+                "comment_list": comment_list,
+                "comment_form": CommentForm(),
+                "listing": listing,
+            },
+        )
+
+    return render(
+        request,
+        "auctions/partials/comment_form.html",
+        {
+            "comment_list": comment_list,
+            "comment_form": comment_form,
+            "listing": listing,
         },
     )

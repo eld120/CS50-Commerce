@@ -1,7 +1,7 @@
 
 
 <div id="watchlist-form" name="csrfmiddlewaretoken" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-
+    {% csrf_token %}
     {% if watchlist.active %}
         <button class="main__watchlist-toggle"
         name="watchlist remove"
@@ -16,5 +16,6 @@
 
         ><span>&#129293</span> Add to watchlist</button>
     {% endif %}
+    {{watchlist.active}}
 
 </div>
