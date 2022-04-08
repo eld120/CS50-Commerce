@@ -1,8 +1,10 @@
 
 
     <div class="main__bid-info" id="bid-info" hx-swap-oob="true">
+        <p id="listing-end-date" class="sr-only">{{ listing.auction_end| date:"c" }}</p>
+        <p id="auction-end-outer">Time left: <span id="auction-end"></span></p>
         <p>Total Bids:  <span> {{ total_bids }}</span> </p>
-        <h6>Current Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
+        <h6>Starting Bid:  <span> ${{ current_bid |floatformat:2}}</span> </h6>
         {% if user.is_authenticated %}
         <h6>Available Cash:  <span> ${{ user_cash |floatformat:2}}</span> </h6>
 
@@ -24,9 +26,7 @@
                 {{ field.help_text }}
             {% endif %}
             {% endfor%}
-
-                <button class="button"
+                <button class="button" id="bid-submit"
                 hx-post="{% url 'auctions:listing_bid_form' listing.slug %}"
-                hx-target="#bid-form" hx-swap="outerHTML"
-                >Place Bid</button>
-                </form>
+                hx-target="#bid-form" hx-swap="outerHTML">Place Bid</button>
+        </form>
