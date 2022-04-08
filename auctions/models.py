@@ -31,8 +31,7 @@ class User(AbstractUser):
 
 
 def get_auction_end():
-    return timezone.localtime()
-    +datetime.timedelta(days=7),
+    return timezone.localtime() + datetime.timedelta(days=7)
 
 
 class Listing(models.Model):
