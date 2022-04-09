@@ -20,20 +20,27 @@ function listingCountdown() {
   let today = new Date();
   let timedelta = Date.parse(endDate) - today;
 
-  let day = Math.floor(timedelta / 86400000);
-  let hour = Math.floor(timedelta / 3600000);
-  let minute = Math.floor(timedelta / 60000);
-  let second = Math.floor(timedelta / 1000);
+      // TODO refactor into an iterable
+
+    day = timedelta / 86400000,
+    hour =  (day - Math.floor(day)) * 24,
+    minute = (hour - Math.floor(hour)) * 60,
+    second = (minute - Math.floor(minute)) * 60,
+
+      second = Math.floor(second)
+      hour = Math.floor(hour)
+      minute = Math.floor(minute)
+      day = Math.floor(day)
 
   if (timedelta <= 0) {
     document.querySelector("#auction-end-outer").outerHTML = "<p class='alert'>Auction Ended</p>";
     document.querySelector("#bid-submit").classList.add('sr-only')
   } else if (day < 1 && hour < 1) {
-    auctionEnd.innerHTML = `${minute} min ${second} s`;
+    auctionEnd.innerHTML = `${minute} mins ${second} s`;
   } else if (day < 1) {
-    auctionEnd.innerHTML = `${hour} hr ${minute} min`;
+    auctionEnd.innerHTML = `${hour} hrs ${minute} mins`;
   } else {
-    auctionEnd.innerHTML = `${day} day ${hour} hr`;
+    auctionEnd.innerHTML = `${day} days ${hour} hrs`;
   }
 }
 setInterval(listingCountdown, 1000);
