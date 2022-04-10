@@ -199,6 +199,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 
 if DEBUG:
     INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS

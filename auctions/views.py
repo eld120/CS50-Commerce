@@ -5,6 +5,7 @@ from django.db import IntegrityError, models
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import BidForm, CommentForm, EndForm, ListingCreateForm, WatchlistForm
@@ -264,7 +265,7 @@ def listing_bid_form(request, slug):
     listing = get_object_or_404(Listing, slug=slug)
     current_bid = Bid(listing=listing).highest_current_bid()
     total_bids = Bid.objects.filter(listing=listing, user=request.user).count()
-
+    end_date = listing.auction_end < timezone.localtime()
     bid_form = BidForm(request.POST or None)
 
     context = {
@@ -273,6 +274,7 @@ def listing_bid_form(request, slug):
         "total_bids": total_bids,
         "bid_form": bid_form,
         "user": request.user,
+        "end_date": end_date,
     }
     if request.method == "POST":
 
@@ -289,6 +291,8 @@ def listing_bid_form(request, slug):
                 total_bids = Bid.objects.filter(
                     listing=listing, user=request.user
                 ).count()
+                end_date = listing.auction_end < timezone.localtime()
+
                 return render(
                     request,
                     "auctions/partials/bid_form.html",
@@ -298,6 +302,7 @@ def listing_bid_form(request, slug):
                         "total_bids": total_bids,
                         "bid_form": BidForm(),
                         "user_cash": request.user.cash,
+                        "end_date": end_date,
                     },
                 )
 

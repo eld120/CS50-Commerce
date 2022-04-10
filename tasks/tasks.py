@@ -3,6 +3,7 @@ import datetime
 from celery.utils.log import get_task_logger
 from dateutil import tz
 from django.core.cache import cache
+from django.db.models import Q
 
 from auctions.models import Listing
 
@@ -15,21 +16,27 @@ logger = get_task_logger(__name__)
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(5, check_listing_schedules.s())
 
-    sender.add_periodic_task(10, add_something.s(9, 7))
-
 
 @app.task(name="check_listing_schedules")
 def check_listing_schedules():
-    tzinfo = tz.gettz("America/Chicago")
-    active_listings = Listing.objects.filter(active=True)
+
+    # TODO this query prob could be rewritten to filter out more dates
+    now = datetime.datetime.now(tz=tz.gettz("America/Chicago"))
+    future_time = now + datetime.timedelta(minutes=16)
+
+    active_listings = Listing.objects.filter(
+        Q(active=True) & Q(auction_end__lte=future_time)
+    )
     for listing in active_listings:
-        time_difference = abs(listing.auction_end - datetime.datetime.now(tz=tzinfo))
-        if datetime.timedelta(minutes=16) >= time_difference:
-            cache.add(f"listing_{listing.id}", time_difference, 365)
-    logger.info(f"-- Updated listing end dates {datetime.datetime.now(tz=tzinfo)} --")
+        cache.add(f"listing_{listing.id}", future_time, 365)
+
+    # for listing in active_listings:
+    #     time_difference = abs(listing.auction_end - datetime.datetime.now(tz=tzinfo))
+    #     if datetime.timedelta(minutes=16) >= time_difference:
+    #         cache.add(f"listing_{listing.id}", time_difference, 365)
+    logger.info(f"-- Updated listing end dates {now} --")
 
 
-@app.task(name="addition")
-def add_something(x, y):
-    logger.info("-- logging addition function --")
-    return x + y
+@app.task(name="end_listing")
+def async_end_listing():
+    pass
