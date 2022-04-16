@@ -5,7 +5,7 @@ from dateutil import tz
 from django.core.cache import cache
 from django.db.models import Q
 
-from auctions.models import Listing
+from auctions.models import Bid, Listing
 
 from .celery_app import app
 
@@ -16,27 +16,37 @@ logger = get_task_logger(__name__)
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(5, check_listing_schedules.s())
 
+    sender.add_periodic_task(1, end_listing.s())
+
 
 @app.task(name="check_listing_schedules")
 def check_listing_schedules():
 
-    # TODO this query prob could be rewritten to filter out more dates
     now = datetime.datetime.now(tz=tz.gettz("America/Chicago"))
     future_time = now + datetime.timedelta(minutes=16)
 
     active_listings = Listing.objects.filter(
         Q(active=True) & Q(auction_end__lte=future_time)
     )
-    for listing in active_listings:
-        cache.add(f"listing_{listing.id}", future_time, 365)
 
-    # for listing in active_listings:
-    #     time_difference = abs(listing.auction_end - datetime.datetime.now(tz=tzinfo))
-    #     if datetime.timedelta(minutes=16) >= time_difference:
-    #         cache.add(f"listing_{listing.id}", time_difference, 365)
-    logger.info(f"-- Updated listing end dates {now} --")
+    cache.add("active_listings", active_listings, 365)
+
+    logger.info(f"-- Cached active listings ending within 15 minutes of {now} --")
 
 
 @app.task(name="end_listing")
-def async_end_listing():
-    pass
+def end_listing():
+    active_listings = cache.get("active_listings")
+
+    # bids = [bid.listing_id for bid in active_listings]
+    # active_bids = Bid.objects.filter(listing_id__in=bids)
+
+    now = datetime.datetime.now(tz=tz.gettz("America/Chicago"))
+    try:
+        for listing in active_listings:
+            if listing.auction_end <= now and listing.active:
+                listing.end_listing()
+                listing.save()
+                logger.info(f"----{listing.title} ended at {now} ----")
+    except TypeError:
+        pass
