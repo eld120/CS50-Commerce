@@ -1,16 +1,26 @@
 import datetime
+from abc import abstractclassmethod
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms import DateTimeField
 from django.urls import reverse
 from django.utils import text, timezone  # ,functional
 
 from .validators import validate_negative_bid
 
 
-class User(AbstractUser):
+class BaseModel(models.Model):
+    created = DateTimeField(auto_now_add=True)
+    updated = DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class User(AbstractUser, BaseModel):
     cash = models.FloatField(default=1000.00)
 
     def subtract_cash(self, cash):
@@ -34,7 +44,7 @@ def get_auction_end():
     return timezone.localtime() + datetime.timedelta(days=7)
 
 
-class Listing(models.Model):
+class Listing(BaseModel):
     slug = models.SlugField(null=True)
     title = models.CharField(max_length=150, null=True)
     description = models.TextField(max_length=500, null=True)
@@ -66,7 +76,7 @@ class Listing(models.Model):
         super(Listing, self).save(*args, **kwargs)
 
 
-class Watchlist(models.Model):
+class Watchlist(BaseModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING
     )
@@ -84,7 +94,7 @@ class Watchlist(models.Model):
         super(Watchlist, self).save(*args, **kwargs)
 
 
-class Bid(models.Model):
+class Bid(BaseModel):
     bid = models.FloatField(
         verbose_name="Place Bid", validators=[validate_negative_bid]
     )
@@ -127,7 +137,7 @@ class Bid(models.Model):
         super(Bid, self).save(*args, **kwargs)
 
 
-class Comment(models.Model):
+class Comment(BaseModel):
 
     text = models.TextField(max_length=500, verbose_name="Comments")
     comment_date = models.DateTimeField(auto_now=True, null=True)
