@@ -1,11 +1,12 @@
 import datetime
 from abc import abstractclassmethod
+from sqlite3 import Row
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms import DateTimeField
+from django.forms import CharField, DateTimeField
 from django.urls import reverse
 from django.utils import text, timezone  # ,functional
 
@@ -13,8 +14,8 @@ from .validators import validate_negative_bid
 
 
 class BaseModel(models.Model):
-    created = DateTimeField(auto_now_add=True)
-    updated = DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -159,3 +160,23 @@ class Comment(BaseModel):
 
     def get_absolute_url(self):
         return reverse("Comment", kwargs={"slug": self.slug})
+
+
+def categories_from_csv(csv_file):
+    import csv
+    import re
+
+    with open("categories.csv", newline="") as file:
+        reader = csv.reader(file, delimiter=",", quotechar='"')
+        categories = []
+        for row in reader:
+            category_finder = re.search(r"^.+(\s>\s)", row[1])
+            categories.append(category_finder.group(0))
+
+
+class Category(models.Model):
+    CATEGORIES = []
+    listing = models.ForeignKey(
+        Listing, verbose_name="Category", on_delete=models.DO_NOTHING
+    )
+    category = models.CharField(max_length=50)
